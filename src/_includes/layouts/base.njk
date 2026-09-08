@@ -5,7 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{{ title }} — {{ site.name }}</title>
 <meta name="description" content="{{ description }}">
+{%- if noindex %}
+<meta name="robots" content="noindex, follow">
+{%- else %}
 <link rel="canonical" href="{{ site.url }}{{ page.url }}">
+{%- endif %}
 
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="{{ site.name }}">

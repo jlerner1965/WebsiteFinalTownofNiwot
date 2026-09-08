@@ -1,0 +1,97 @@
+---
+layout: layouts/base.njk
+title: Community
+description: Niwot has no town hall, so residents run it. The organizations that hold things together, and the county bodies and districts responsible for each public service.
+navKey: community
+permalink: /community/
+ogImage: niwot-tribune-storefront.jpg
+ogImageAlt: The Niwot Tribune false-front building on Second Avenue
+pageStyles: |
+  .n-srow{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1fr) minmax(130px,auto);gap:12px 28px;align-items:baseline;padding:16px 0;border-bottom:1px solid var(--n-rule)}
+  @media (max-width:900px){.n-srow{grid-template-columns:minmax(0,1fr)}}
+---
+<section class="n-bg-white" aria-labelledby="title-h">
+<div class="n-wrap" style="padding-top:clamp(28px,4vw,60px);padding-bottom:clamp(24px,3vw,44px)">
+<div class="n-g2-wide" style="align-items:end">
+<div>
+<div class="n-label">Community</div>
+<h1 class="n-display" id="title-h" style="margin-top:14px;font-size:clamp(2.5rem,1.8rem + 3.4vw,5rem);line-height:.96;max-width:17ch;color:var(--n-evergreen)">No town hall, so neighbors run it</h1>
+</div>
+<p class="n-lead" style="margin:0;max-width:50ch">Almost everything that happens in Niwot is organized by residents through local groups, and almost every public service comes from somewhere else. Both lists are below.</p>
+</div>
+</div>
+</section>
+
+<section class="n-bg-paper n-pad" id="orgs" aria-labelledby="orgs-h" style="border-top:1px solid var(--n-rule)">
+<div class="n-wrap">
+<div class="n-shead n-shead-row" style="border-bottom-color:var(--n-evergreen)">
+<div>
+<div class="n-label">Who organizes what</div>
+<h2 class="n-h2" id="orgs-h" style="margin-top:12px;color:var(--n-evergreen)">Community organizations</h2>
+</div>
+<a class="n-link" href="/plan-a-visit/#contact">Add your organization &#8594;</a>
+</div>
+<ul style="list-style:none;margin:clamp(22px,2.6vw,36px) 0 0;padding:0">
+{%- for o in organizations %}
+<li style="display:grid;grid-template-columns:minmax(0,1fr) minmax(140px,auto);gap:16px 28px;align-items:start;padding:24px 0;border-bottom:1px solid rgba(36,72,58,.22)">
+<div>
+<h3 class="n-h3" style="font-size:1.5rem;color:var(--n-evergreen)">{{ o.name }}</h3>
+<p class="n-body" style="margin:12px 0 0;max-width:64ch;font-size:.9375rem">{{ o.body }}</p>
+<div class="n-label n-label--quiet" style="margin-top:12px;font-size:12px">Runs: {{ o.runs }}</div>
+</div>
+<a class="n-link" href="{{ o.href }}" rel="noopener" style="white-space:nowrap">Visit site &#8599;</a>
+</li>
+{%- endfor %}
+</ul>
+</div>
+</section>
+
+<section class="n-bg-white n-pad" id="resources" aria-labelledby="res-h">
+<div class="n-wrap">
+<div class="n-shead">
+<div class="n-label">Resident resources</div>
+<h2 class="n-h2" id="res-h" style="color:var(--n-evergreen)">Who to contact for what</h2>
+<p class="n-body" style="margin:0;max-width:74ch">Niwot is unincorporated, so there is no town hall. Services come from Boulder County, the special districts and a water company. Each row names the body responsible and links to its own site.</p>
+</div>
+<dl style="margin:clamp(22px,2.6vw,36px) 0 0">
+{%- for s in services %}
+<div class="n-srow">
+<dt style="font-size:1.0625rem;color:var(--n-evergreen)">{{ s.service }}</dt>
+<dd class="n-body" style="margin:0;font-size:.9375rem">{{ s.handles }}</dd>
+<dd style="margin:0">
+<a class="n-link" href="{{ s.href }}" rel="noopener" style="white-space:nowrap;font-size:12px">{{ s.who }} &#8599;</a>
+</dd>
+</div>
+{%- endfor %}
+</dl>
+<div class="n-g2" style="margin-top:clamp(30px,3.6vw,52px)">
+<div class="n-callout n-callout--paper">
+<div class="n-label">Arranged privately</div>
+<p class="n-body" style="margin:10px 0 0;font-size:.9375rem">Waste and recycling collection is arranged household by household in the unincorporated area, and sanitation service varies by address. Ask a neighbour which provider covers your street.</p>
+</div>
+<div class="n-callout n-callout--sky">
+<div class="n-label" style="color:var(--n-sky-ink)">In an emergency</div>
+<p class="n-body" style="margin:10px 0 0;font-size:.9375rem">Call 911. For non-emergency county matters, contact the Boulder County Sheriff&#8217;s Office directly rather than through this site.</p>
+<a class="n-link" href="https://bouldercounty.gov/sheriff/" rel="noopener" style="display:inline-block;margin-top:12px">Sheriff&#8217;s office &#8599;</a>
+</div>
+</div>
+</div>
+</section>
+
+<section class="n-bg-green n-pad" aria-labelledby="get-h">
+<div class="n-wrap">
+<div class="n-g2-wide">
+<div>
+<div class="n-label">Get involved</div>
+<h2 class="n-h2" id="get-h" style="margin-top:12px;max-width:16ch">The quickest way in is to turn up</h2>
+</div>
+<div>
+<p class="n-body" style="margin:0;max-width:60ch;color:var(--n-paper)">The events calendar lists what has been published, and the Business Association runs much of the public programme &#8212; the summer concerts beside the caboose, the market, and the seasonal gatherings in Old Town.</p>
+<div class="n-btns" style="margin-top:24px">
+<a class="n-btn" href="/events/">See what&#8217;s on</a>
+<a class="n-btn n-btn--ghost" href="/civic/incorporation-election/">Civic information</a>
+</div>
+</div>
+</div>
+</div>
+</section>

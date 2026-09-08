@@ -1,0 +1,118 @@
+---
+layout: layouts/base.njk
+title: Events
+description: Concerts, markets and gatherings in Niwot, Colorado, with the organizer named on every entry. Month calendar, upcoming dates and the Whistle Stop Park caboose venue.
+navKey: events
+permalink: /events/
+ogImage: whistle-stop-caboose.jpg
+ogImageAlt: The red CB&Q 14649 caboose at Whistle Stop Park, strung with festoon lighting
+footMetaRight: Times confirmed with each organizer
+needsSeries: true
+scripts:
+  - /assets/js/page-events.js
+pageStyles: |
+  .n-cal{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,.8fr);gap:clamp(24px,3vw,56px);align-items:start}
+  .n-grid7{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));border-left:1px solid var(--n-rule);border-top:1px solid var(--n-rule)}
+  .n-dow{display:grid;grid-template-columns:repeat(7,minmax(0,1fr))}
+  button[data-day]{display:block;width:100%;min-height:clamp(56px,7vw,92px);padding:8px;background:var(--n-white);border:0;border-right:1px solid var(--n-rule);border-bottom:1px solid var(--n-rule);color:var(--n-ink);font:inherit;text-align:left;cursor:default}
+  button[data-day][data-has="yes"]{cursor:pointer;background:#EEE7D9}
+  button[data-day][data-has="yes"]:hover{background:#E2D9C4}
+  button[data-day][aria-pressed="true"]{background:var(--n-evergreen);color:var(--n-white)}
+  button[data-day][aria-pressed="true"] .n-daytag{color:var(--n-gold-lt)}
+  button[data-day][data-empty="yes"]{background:transparent;border-right-color:transparent}
+  .n-daytag{display:block;margin-top:6px;font-size:12px;line-height:1.25;letter-spacing:.08em;text-transform:uppercase;color:var(--n-red-ink)}
+  button[data-nav]{padding:11px 16px;background:transparent;border:2px solid var(--n-evergreen);color:var(--n-evergreen);font:inherit;font-size:12.5px;letter-spacing:.09em;text-transform:uppercase;cursor:pointer;transition:background .2s ease,color .2s ease}
+  button[data-nav]:hover{background:var(--n-evergreen);color:var(--n-white)}
+  @media (max-width:900px){.n-cal{grid-template-columns:minmax(0,1fr)}}
+---
+<section class="n-bg-white" aria-labelledby="title-h">
+<div class="n-wrap" style="padding-top:clamp(28px,4vw,60px);padding-bottom:clamp(20px,2.5vw,36px)">
+<div class="n-g2-wide" style="align-items:end">
+<div>
+<div class="n-label">Events</div>
+<h1 class="n-display" id="title-h" style="margin-top:14px;font-size:clamp(2.5rem,1.8rem + 3.4vw,5rem);line-height:.96;max-width:14ch;color:var(--n-evergreen)">What&#8217;s happening in Niwot</h1>
+</div>
+<p class="n-lead" style="margin:0;max-width:50ch">Concerts, markets and gatherings, with the organizer named on every entry. Times and dates are set by the organizer, so each listing links to their own page.</p>
+</div>
+</div>
+</section>
+
+<section class="n-bg-paper n-pad-sm" aria-labelledby="next-h" style="border-top:1px solid var(--n-rule);border-bottom:1px solid var(--n-rule)">
+<div class="n-wrap">
+<div class="n-shead n-shead-row" style="border-bottom-color:var(--n-evergreen)">
+<h2 class="n-h2" id="next-h" style="font-size:clamp(1.5rem,1.2rem + 1.2vw,2.25rem);color:var(--n-evergreen)">Coming up</h2>
+<a class="n-link" href="https://niwot.com/" rel="noopener">Organizer&#8217;s full calendar &#8599;</a>
+</div>
+{#- Rendered at build time, recomputed from the real date on load. -#}
+<div class="n-g3" style="margin-top:clamp(22px,2.6vw,36px)" data-upcoming="select">{{ eventsBuild.upcomingEventsHtml | safe }}</div>
+</div>
+</section>
+
+<section class="n-bg-white n-pad" aria-labelledby="cal-h">
+<div class="n-wrap">
+<h2 class="n-label n-label--quiet" id="cal-h" style="margin:0 0 18px">Month view</h2>
+<div class="n-cal">
+<div>
+<div style="display:flex;flex-wrap:wrap;gap:14px 20px;align-items:center;justify-content:space-between;padding-bottom:16px;border-bottom:2px solid var(--n-evergreen)">
+<div style="display:flex;align-items:baseline;gap:14px">
+<h3 aria-live="polite" data-cal-label class="n-h3" style="font-size:clamp(1.375rem,1.15rem + 1vw,2rem);color:var(--n-evergreen)">{{ eventsBuild.monthLabel }}</h3>
+<button type="button" data-cal-today hidden style="padding:0;background:none;border:0;border-bottom:1px solid currentColor;color:var(--n-sky-ink);font:inherit;font-size:12px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer">This month</button>
+</div>
+<div style="display:flex;gap:10px">
+<button type="button" data-nav data-cal-prev aria-label="Previous month">&#8592; Prev</button>
+<button type="button" data-nav data-cal-next aria-label="Next month">Next &#8594;</button>
+</div>
+</div>
+<div class="n-dow" style="margin-top:14px" aria-hidden="true">
+{%- for d in eventsBuild.dows %}
+<div class="n-label n-label--quiet" style="padding:0 8px 8px;font-size:12px">{{ d }}</div>
+{%- endfor %}
+</div>
+<div class="n-grid7" data-cal-grid role="group" aria-label="Month">{{ eventsBuild.cellsHtml | safe }}</div>
+<p class="n-small" style="margin:16px 0 0">Shaded evenings carry a recurring series. Select one for the detail, or use the list above.</p>
+</div>
+<aside aria-labelledby="detail-h" style="position:sticky;top:88px">
+<h3 class="n-label n-label--quiet" id="detail-h" style="margin:0;padding-bottom:14px;border-bottom:2px solid var(--n-evergreen)">Event detail</h3>
+{#- Never empty: with nothing selected it shows the next upcoming occurrence. -#}
+<div data-cal-detail style="padding-top:20px">{{ eventsBuild.detailHtml | safe }}</div>
+</aside>
+</div>
+</div>
+</section>
+
+<section class="n-bg-white" aria-labelledby="feat-h" style="padding-bottom:clamp(44px,6vw,104px)">
+<div class="n-wrap">
+<div class="n-rail"></div>
+<div class="n-g2" style="margin-top:clamp(24px,3vw,44px);align-items:center">
+<figure style="margin:0">
+<img src="/assets/photos/whistle-stop-caboose.jpg" alt="The red CB&amp;Q 14649 caboose on a short length of track at Whistle Stop Park, strung with festoon lighting" loading="lazy" decoding="async" style="display:block;width:100%;height:clamp(220px,26vw,380px);object-fit:cover;object-position:center 52%">
+<figcaption class="n-cap">CB&amp;Q 14649, built 1907 &#8212; Whistle Stop Park</figcaption>
+</figure>
+<div>
+<div class="n-label">The venue</div>
+<h2 class="n-h2" id="feat-h" style="margin-top:12px;font-size:clamp(1.5rem,1.2rem + 1.2vw,2.375rem);max-width:22ch;color:var(--n-evergreen)">Most of it happens beside the caboose.</h2>
+<p class="n-body" style="margin:16px 0 0;max-width:56ch">Whistle Stop Park sits at the edge of Old Town and keeps a restored Burlington Route caboose. The open lawn beside it is where the summer concerts, markets and most seasonal gatherings are held.</p>
+<div class="n-btns" style="margin-top:22px">
+<a class="n-btn n-btn--ghost" href="/plan-a-visit/#map">Find the park</a>
+<a class="n-btn n-btn--ghost" href="/plan-a-visit/#contact">Submit an event</a>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+{%- if eventsBuild.hasArchive %}
+<section class="n-bg-paper n-pad-sm" aria-labelledby="arch-h" style="border-top:1px solid var(--n-rule)">
+<div class="n-wrap">
+<h2 class="n-h2" id="arch-h" style="font-size:clamp(1.375rem,1.15rem + 1vw,1.875rem);color:var(--n-evergreen)">Archive</h2>
+<ul style="list-style:none;margin:20px 0 0;padding:0">
+{%- for a in eventsBuild.archive %}
+<li style="display:grid;grid-template-columns:minmax(120px,.3fr) minmax(0,1fr);gap:16px;padding:14px 0;border-top:1px solid rgba(36,72,58,.2)">
+<span class="n-label n-label--quiet">{{ a.when }}</span>
+<span class="n-body" style="font-size:.9375rem">{{ a.name }} &#8212; {{ a.place }}</span>
+</li>
+{%- endfor %}
+</ul>
+</div>
+</section>
+{%- endif %}

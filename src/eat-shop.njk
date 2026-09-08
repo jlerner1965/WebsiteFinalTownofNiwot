@@ -1,0 +1,111 @@
+---
+layout: layouts/base.njk
+title: Eat & Shop
+description: Kitchens, coffee, groceries and local services in Old Town and Cottonwood Square, Niwot, Colorado. Search and filter the directory by category.
+navKey: eat-shop
+permalink: /eat-shop/
+ogImage: second-avenue-patios.jpg
+ogImageAlt: Patios and hanging baskets on the 300 block of Second Avenue in Niwot
+footMetaRight: Hours and contact details via the Business Association
+scripts:
+  - /assets/js/directory.js
+pageStyles: |
+  .n-dir{display:grid;grid-template-columns:minmax(0,.3fr) minmax(0,1fr);gap:clamp(24px,3vw,60px);align-items:start}
+  .n-pair{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(16px,2vw,32px)}
+  .n-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(150px,.34fr);gap:16px 28px;align-items:start;padding:22px 0;border-bottom:1px solid var(--n-rule)}
+  button[data-chip]{display:flex;justify-content:space-between;gap:12px;width:100%;text-align:left;padding:13px 14px;background:transparent;border:0;border-top:1px solid var(--n-rule);color:var(--n-ink);font:inherit;font-size:1rem;cursor:pointer;transition:background .18s ease,color .18s ease}
+  button[data-chip]:hover{background:var(--n-paper)}
+  button[data-chip][aria-pressed="true"]{background:var(--n-evergreen);color:var(--n-white)}
+  button[data-chip][aria-pressed="true"] span{color:var(--n-gold-lt)}
+  @media (max-width:900px){.n-dir,.n-pair{grid-template-columns:minmax(0,1fr)}.n-row{grid-template-columns:minmax(0,1fr)}}
+---
+<section class="n-bg-white" aria-labelledby="title-h">
+<div class="n-wrap" style="padding-top:clamp(28px,4vw,60px);padding-bottom:clamp(20px,2.5vw,36px)">
+<div class="n-g2-wide" style="align-items:end">
+<div>
+<div class="n-label">Eat &amp; shop</div>
+<h1 class="n-display" id="title-h" style="margin-top:14px;font-size:clamp(2.5rem,1.8rem + 3.4vw,5rem);line-height:.96;max-width:16ch;color:var(--n-evergreen)">Two blocks, and most of it independent</h1>
+</div>
+<p class="n-lead" style="margin:0;max-width:50ch">Kitchens, coffee, groceries and services in Old Town and Cottonwood Square. Everything below is within a short walk of Second Avenue.</p>
+</div>
+</div>
+</section>
+
+<section class="n-bg-white" aria-label="Photographs of the commercial blocks">
+<div class="n-wrap" style="padding-bottom:clamp(28px,3.5vw,52px)">
+<div class="n-pair">
+<figure style="margin:0">
+<img src="/assets/photos/second-avenue-patios.jpg" alt="Brick and clapboard buildings on the 300 block of Second Avenue with hanging baskets and patio tables out front" decoding="async" style="display:block;width:100%;height:clamp(200px,23vw,330px);object-fit:cover;object-position:center 56%">
+<figcaption class="n-cap">Second Avenue, the 300 block</figcaption>
+</figure>
+<figure style="margin:0">
+<img src="/assets/photos/niwot-tavern-patios.jpg" alt="Umbrella-shaded patios outside the Niwot Tavern and Raza Fresa Mexican Kitchen with two bronze bear sculptures on the corner" decoding="async" style="display:block;width:100%;height:clamp(200px,23vw,330px);object-fit:cover;object-position:center 52%">
+<figcaption class="n-cap">Cottonwood Square, bear sculptures on the corner</figcaption>
+</figure>
+</div>
+</div>
+</section>
+
+<section class="n-bg-white" aria-labelledby="dir-h" style="padding-bottom:clamp(44px,6vw,104px)">
+<div class="n-wrap">
+<div class="n-rail"></div>
+<div class="n-dir" style="margin-top:clamp(24px,3vw,44px)">
+<div style="position:sticky;top:88px">
+<label class="n-label n-label--quiet" for="dir-q" style="display:block">Search</label>
+<input id="dir-q" type="search" placeholder="Name or keyword" style="width:100%;margin-top:8px;padding:13px 14px;background:var(--n-white);border:2px solid var(--n-evergreen);font:inherit;font-size:1rem;color:var(--n-ink)">
+<div class="n-label n-label--quiet" style="margin-top:26px" id="cats-h">Categories</div>
+<div style="margin-top:8px;border-bottom:1px solid var(--n-rule)" role="group" aria-labelledby="cats-h">
+{%- for c in listings.categories %}
+<button type="button" data-chip="{{ c.value }}" aria-pressed="{{ 'true' if c.value == 'All' else 'false' }}">{{ c.label }} <span style="color:var(--n-muted)">{{ c.count }}</span></button>
+{%- endfor %}
+</div>
+<a class="n-btn n-btn--ghost" href="https://niwot.com/" rel="noopener" style="margin-top:22px;width:100%">Association directory &#8599;</a>
+</div>
+<div>
+<div class="n-shead n-shead-row" style="border-bottom-color:var(--n-evergreen)">
+<h2 class="n-h2" id="dir-h" data-dir-heading style="font-size:clamp(1.5rem,1.2rem + 1.2vw,2.25rem);color:var(--n-evergreen)">Local businesses</h2>
+<span aria-live="polite" class="n-label n-label--quiet" data-dir-count>{{ listings.entries.length }} listings</span>
+</div>
+<p class="n-small" style="margin:16px 0 0;max-width:74ch">The Niwot Business Association keeps the members&#8217; directory with current hours and contact details. Each entry below links straight through to it.</p>
+{#- Every listing ships in the HTML; filtering only hides rows. Street
+    addresses and phone numbers are held with the Association rather than
+    duplicated here, so each row links there. -#}
+<ul data-dir-list style="list-style:none;margin:clamp(18px,2vw,28px) 0 0;padding:0">
+{%- for r in listings.entries %}
+<li class="n-row" data-listing data-name="{{ r.name }}" data-category="{{ r.category }}" data-note="{{ r.note }}" data-area="{{ r.area }}">
+<div>
+<h3 class="n-h3" style="font-size:1.5rem;color:var(--n-evergreen)">{{ r.name }}</h3>
+<div class="n-label" style="margin-top:8px">{{ r.category }}</div>
+<p class="n-body" style="margin:10px 0 0;max-width:58ch;font-size:.9375rem">{{ r.note }}</p>
+</div>
+<div style="display:grid;gap:8px;align-content:start">
+<div class="n-small" style="font-size:.875rem">{{ r.area }}</div>
+<a class="n-link" href="{{ r.href }}" rel="noopener" style="justify-self:start">{{ r.linkLabel }} &#8599;</a>
+</div>
+</li>
+{%- endfor %}
+</ul>
+<div data-dir-empty hidden style="padding:clamp(24px,3vw,44px) 0">
+<p class="n-h3" style="max-width:52ch;color:var(--n-evergreen)">Nothing matches that search.</p>
+<p class="n-body" style="margin:16px 0 0;max-width:58ch">Try a different word, clear the category filter, or browse the full members&#8217; directory.</p>
+<div class="n-btns" style="margin-top:22px">
+<button class="n-btn n-btn--ghost" type="button" data-dir-clear style="cursor:pointer;font-family:inherit">Clear filters</button>
+<a class="n-btn n-btn--ghost" href="https://niwot.com/" rel="noopener">Association directory</a>
+</div>
+</div>
+<div class="n-g2" style="margin-top:clamp(32px,4vw,56px)">
+<div class="n-callout n-callout--paper">
+<div class="n-label">Own a business here?</div>
+<p class="n-body" style="margin:10px 0 0;font-size:.9375rem">Send your name, category, address, phone, website and hours and it goes into the directory.</p>
+<a class="n-link" href="/plan-a-visit/#contact" style="display:inline-block;margin-top:14px">Add a listing &#8594;</a>
+</div>
+<div class="n-callout n-callout--sky">
+<div class="n-label" style="color:var(--n-sky-ink)">Planning a trip</div>
+<p class="n-body" style="margin:10px 0 0;font-size:.9375rem">Parking, walking routes and accessibility notes are on the visitor page.</p>
+<a class="n-link" href="/plan-a-visit/" style="display:inline-block;margin-top:14px">Plan a visit &#8594;</a>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>

@@ -1,0 +1,11 @@
+<header class="n-head">
+<div class="n-wrap n-head-in">
+<a class="n-mark" href="/">NIWOT<small>Community guide</small></a>
+<button class="n-burger" type="button" aria-expanded="false" aria-controls="n-menu" aria-label="Open menu"><span></span><span></span><span></span></button>
+<nav class="n-nav" id="n-menu" aria-label="Primary">
+{%- for item in nav %}
+<a{% if item.key == navKey %} class="n-on" aria-current="page"{% endif %} href="{{ item.href }}">{{ item.label }}</a>
+{%- endfor %}
+</nav>
+</div>
+</header>

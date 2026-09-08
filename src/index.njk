@@ -1,0 +1,373 @@
+---
+layout: layouts/base.njk
+title: Niwot, Colorado
+description: An independent community guide to Niwot, Colorado — what to see, where to eat, what is on, who runs what, and neutral information on the November 2026 incorporation election.
+navKey: home
+permalink: /
+needsSeries: true
+scripts:
+  - /assets/js/page-home.js
+  - /assets/js/forms.js
+structuredData:
+  "@context": https://schema.org
+  "@type": WebSite
+  name: TownofNiwot.com
+  url: https://townofniwot.com
+  description: An independent community guide to Niwot, Colorado.
+  publisher:
+    "@type": Organization
+    name: TownofNiwot.com
+    description: An independent community guide. Not a municipal government website.
+pageStyles: |
+  .n-hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.72fr);gap:clamp(24px,3vw,56px);align-items:end}
+  .n-hero-mark{font-size:clamp(4rem,14.5vw,12rem)}
+  /* The photo runs off the right edge of the container. The figure's own
+     margin must be set with margin-block, not the margin shorthand, or it
+     overrides this class and kills the bleed. */
+  .n-bleed{margin-right:calc(-1 * var(--n-gutter))}
+  .n-quick{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0 clamp(20px,3vw,52px)}
+  .n-exp{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(18px,2vw,34px)}
+  .n-exp-wide{grid-column:span 2}
+  @media (max-width:900px){.n-hero{grid-template-columns:minmax(0,1fr)}.n-bleed{margin-inline:calc(-1 * var(--n-gutter))}.n-quick{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.n-exp{grid-template-columns:minmax(0,1fr)}.n-exp-wide{grid-column:span 1}}
+  @media (max-width:560px){.n-quick{grid-template-columns:minmax(0,1fr)}.n-hero-mark{font-size:clamp(3.5rem,19vw,5rem)}}
+quick:
+  - label: Events Calendar
+    note: Month by month, with organizer links
+    href: /events/
+  - label: Business Directory
+    note: Eat, shop and local services
+    href: /eat-shop/
+  - label: Parks & Trails
+    note: Whistle Stop Park and the regional trail
+    href: /explore/#outdoors
+  - label: Community Organizations
+    note: Groups to join and who runs what
+    href: /community/
+  - label: Resident Resources
+    note: County services, water, fire, schools
+    href: /community/#resources
+  - label: 2026 Incorporation Election
+    note: Ballot questions and official resources
+    href: /civic/incorporation-election/
+categories:
+  - Coffee & Bakery
+  - Restaurants & Bars
+  - Grocery & Provisions
+  - Home & Garden
+  - Gifts & Books
+  - Arts & Makers
+  - Health & Wellness
+  - Services
+outdoors:
+  - label: Whistle Stop Park
+    body: The caboose, open lawn and the summer concert ground, at the edge of Old Town.
+  - label: Regional trail
+    body: The Boulder-to-Longmont trail corridor runs past the community and links to quiet county roads.
+  - label: Managed by
+    body: Boulder County Parks & Open Space sets trail surfaces, closures and dog rules here.
+resources:
+  - what: Roads, permits and open space
+    who: Boulder County
+    href: https://bouldercounty.gov/
+  - what: Drinking water
+    who: Left Hand Water
+    href: https://lefthandwater.org/
+  - what: Fire and rescue
+    who: Mountain View
+    href: https://www.mvfpd.org/
+  - what: Schools
+    who: St. Vrain Valley
+    href: https://www.svvsd.org/
+facts:
+  - label: The name
+    text: Niwot is named for Chief Niwot of the Southern Arapaho. The name is carried by the creek, the water district and the community.
+  - label: The grid
+    text: The street plan follows the 1875 town plat, laid out along the railroad rather than the county road grid that came later.
+  - label: The edge
+    text: Farmland begins immediately east of the storefronts. The walk from brick to open field takes about four minutes.
+---
+{#- 1. Hero -#}
+<section class="n-bg-white" aria-labelledby="hero-h">
+<div class="n-wrap" style="padding-top:clamp(24px,3.5vw,52px)">
+<div class="n-hero">
+<div style="padding-bottom:clamp(10px,1.5vw,24px)">
+<h1 class="n-display n-hero-mark" id="hero-h" style="color:var(--n-evergreen)">NIWOT</h1>
+<p class="n-lead" style="margin:clamp(14px,1.8vw,22px) 0 0;font-family:var(--n-serif);font-size:clamp(1.25rem,1.05rem + .7vw,1.75rem);line-height:1.25;color:var(--n-evergreen)">An independent community guide to Niwot, Colorado.</p>
+<div class="n-rail" style="margin-top:clamp(14px,2vw,22px)"></div>
+<div style="display:flex;flex-wrap:wrap;gap:6px 22px;margin-top:12px;font-size:12px;letter-spacing:.15em;text-transform:uppercase;color:var(--n-muted)">
+<span>Boulder County, Colorado</span><span>Pop. 4,306 &#8212; 2020 census</span><span>40.10&#176; N, 105.17&#176; W</span>
+</div>
+<p class="n-body" style="margin:clamp(16px,2vw,24px) 0 0;max-width:52ch">Two blocks of brick storefronts, a red caboose in the park, and open fields where the sidewalks stop. Small enough to walk in an afternoon, and specific enough to be worth the drive.</p>
+<div class="n-btns" style="margin-top:clamp(18px,2.4vw,30px)">
+<a class="n-btn" href="/explore/">Explore Niwot</a>
+<a class="n-btn n-btn--ghost" href="/eat-shop/">Find local businesses</a>
+<a class="n-btn n-btn--ghost" href="/events/">View events</a>
+</div>
+<a class="n-link" href="/community/#resources" style="display:inline-block;margin-top:clamp(14px,1.8vw,22px)">Resident resources &#8594;</a>
+</div>
+<figure class="n-bleed" style="margin-block:0">
+<img src="/assets/photos/second-avenue-patios.jpg" alt="Buildings on the 300 block of Second Avenue with hanging baskets, patio tables and umbrellas out front under mature trees" decoding="async" style="display:block;width:100%;height:clamp(240px,29vw,420px);object-fit:cover;object-position:center 58%">
+<figcaption class="n-cap">Second Avenue, the 300 block</figcaption>
+</figure>
+</div>
+</div>
+</section>
+
+{#- 2. Quick access -#}
+<section class="n-bg-white" aria-labelledby="quick-h">
+<div class="n-wrap" style="padding-top:clamp(32px,4.5vw,72px)">
+<h2 class="n-label n-label--quiet" id="quick-h" style="margin:0 0 12px">Go straight to</h2>
+<div class="n-rail n-rail--light" style="margin-bottom:4px"></div>
+<div class="n-quick">
+{%- for q in quick %}
+<a class="n-shift" href="{{ q.href }}" style="display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px;align-items:baseline;padding:18px 0;border-bottom:1px solid var(--n-rule);text-decoration:none">
+<span>
+<span style="display:block;font-size:1.0625rem;line-height:1.3;color:var(--n-evergreen)">{{ q.label }}</span>
+<span class="n-small" style="display:block;margin-top:4px;font-size:.875rem">{{ q.note }}</span>
+</span>
+<span aria-hidden="true" style="color:var(--n-red);font-size:1.125rem">&#8594;</span>
+</a>
+{%- endfor %}
+</div>
+</div>
+</section>
+
+{#- 3. Civic notice — compact on purpose: visible without dominating. -#}
+<section class="n-bg-sky" aria-labelledby="notice-h" style="margin-top:clamp(32px,4.5vw,72px);border-top:1px solid var(--n-sky);border-bottom:1px solid var(--n-sky)">
+<div class="n-wrap" style="padding-block:clamp(24px,3vw,40px)">
+<div class="n-g2-wide" style="align-items:center;gap:clamp(16px,2vw,44px)">
+<div>
+<h2 class="n-label" id="notice-h" style="color:var(--n-sky-ink);margin:0">Niwot incorporation election</h2>
+<div style="font-family:var(--n-serif);font-size:clamp(1.5rem,1.2rem + 1vw,2.125rem);line-height:1.1;color:var(--n-evergreen);margin-top:8px">November 3, 2026</div>
+</div>
+<div>
+<p class="n-body" style="margin:0;max-width:58ch">Review what is on the ballot, who may vote and official election resources.</p>
+<a class="n-link" href="/civic/incorporation-election/" style="display:inline-block;margin-top:14px">View the neutral ballot guide &#8594;</a>
+</div>
+</div>
+</div>
+</section>
+
+{#- 4. Upcoming events -#}
+<section class="n-bg-white n-pad" aria-labelledby="ev-h">
+<div class="n-wrap">
+<div class="n-shead n-shead-row">
+<div>
+<div class="n-label">Upcoming events</div>
+<h2 class="n-h2" id="ev-h" style="margin-top:12px;color:var(--n-evergreen)">What&#8217;s happening</h2>
+</div>
+<a class="n-link" href="/events/">Full events calendar &#8594;</a>
+</div>
+{#- Rendered at build time; refreshed from the real date on load. -#}
+<div class="n-g3" style="margin-top:clamp(24px,3vw,44px)" data-upcoming="link">{{ eventsBuild.upcomingHomeHtml | safe }}</div>
+<div class="n-g2" style="margin-top:clamp(32px,4vw,64px);padding-top:clamp(24px,3vw,40px);border-top:1px solid var(--n-rule);align-items:center">
+<figure style="margin:0">
+<img src="/assets/photos/whistle-stop-caboose.jpg" alt="The red CB&amp;Q 14649 caboose on a short length of track at Whistle Stop Park, strung with festoon lighting" loading="lazy" decoding="async" style="display:block;width:100%;height:clamp(220px,25vw,360px);object-fit:cover;object-position:center 52%">
+<figcaption class="n-cap">CB&amp;Q 14649, built 1907 &#8212; Whistle Stop Park</figcaption>
+</figure>
+<div>
+<div class="n-label">Feature</div>
+<h3 class="n-h3" style="margin-top:12px;color:var(--n-evergreen)">Summer evenings run out of a railroad caboose.</h3>
+<p class="n-body" style="margin:16px 0 0;max-width:56ch">Whistle Stop Park keeps a restored Burlington Route caboose at the edge of Old Town. The Niwot Business Association runs its free summer concert series beside it on Thursday evenings.</p>
+<div class="n-btns" style="margin-top:22px">
+<a class="n-btn" href="/events/">Open the calendar</a>
+<a class="n-btn n-btn--ghost" href="https://niwot.com/" rel="noopener">Organizer&#8217;s listings</a>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+{#- 5. Explore photo grid — four different crops, every link worded. -#}
+<section class="n-bg-paper n-pad" aria-labelledby="exp-h">
+<div class="n-wrap">
+<div class="n-shead n-shead-row">
+<div>
+<div class="n-label">Where to go</div>
+<h2 class="n-h2" id="exp-h" style="margin-top:12px;color:var(--n-evergreen)">Start on Second Avenue</h2>
+</div>
+<span class="n-small" style="max-width:44ch;color:var(--n-ink)">Park once. Everything below is within a fifteen-minute walk, except the fields.</span>
+</div>
+<div class="n-exp" style="margin-top:clamp(24px,3vw,44px)">
+<article class="n-exp-wide">
+<a href="/explore/#oldtown" style="display:block;text-decoration:none">
+<img src="/assets/photos/niwot-tribune-storefront.jpg" alt="The Niwot Tribune false-front building on Second Avenue with a shingled porch roof, painted columns and a grand piano on the sidewalk" loading="lazy" decoding="async" style="display:block;width:100%;height:clamp(260px,30vw,440px);object-fit:cover;object-position:center 52%">
+<h3 class="n-h3" style="margin-top:16px;color:var(--n-evergreen)">Old Town</h3>
+<p class="n-body" style="margin:8px 0 0;max-width:54ch;font-size:.9375rem">The brick commercial block on Second Avenue, walkable end to end in about ten minutes.</p>
+<span class="n-link" style="display:inline-block;margin-top:12px">Explore Old Town &#8594;</span>
+</a>
+</article>
+<article>
+<a href="/explore/#cottonwood" style="display:block;text-decoration:none">
+<img src="/assets/photos/niwot-tavern-patios.jpg" alt="Umbrella-shaded patios outside the Niwot Tavern and Raza Fresa Mexican Kitchen with two bronze bear sculptures on the corner" loading="lazy" decoding="async" style="display:block;width:100%;height:clamp(260px,30vw,440px);object-fit:cover;object-position:center 50%">
+<h3 class="n-h3" style="margin-top:16px;font-size:1.375rem;color:var(--n-evergreen)">Cottonwood Square</h3>
+<p class="n-body" style="margin:8px 0 0;font-size:.9375rem">The second cluster of shops, kitchens and everyday services.</p>
+<span class="n-link" style="display:inline-block;margin-top:12px">Visit the Square &#8594;</span>
+</a>
+</article>
+<article>
+<a href="/explore/#outdoors" style="display:block;text-decoration:none">
+<img src="/assets/photos/front-range-sunset-trail.jpg" alt="Sunset over the Front Range from a dirt trail on the grassland edge of Niwot" loading="lazy" decoding="async" style="display:block;width:100%;height:clamp(220px,23vw,330px);object-fit:cover;object-position:center 62%">
+<h3 class="n-h3" style="margin-top:16px;font-size:1.375rem;color:var(--n-evergreen)">Parks &amp; Trails</h3>
+<p class="n-body" style="margin:8px 0 0;font-size:.9375rem">Whistle Stop Park, the regional trail, and the fields east of the blocks.</p>
+<span class="n-link" style="display:inline-block;margin-top:12px">Find the trails &#8594;</span>
+</a>
+</article>
+<article class="n-exp-wide">
+<a href="/explore/#art" style="display:block;text-decoration:none">
+<img src="/assets/photos/niwot-gateway-sculpture.jpg" alt="The Vintage Colorado Niwot gateway sculpture, a steel arch over an oval sign, with the Flatirons behind it" loading="lazy" decoding="async" style="display:block;width:100%;height:clamp(220px,23vw,330px);object-fit:cover;object-position:center 62%">
+<h3 class="n-h3" style="margin-top:16px;font-size:1.375rem;color:var(--n-evergreen)">Public Art</h3>
+<p class="n-body" style="margin:8px 0 0;max-width:54ch;font-size:.9375rem">The steel gateway sculpture at the highway edge, and works sited around the commercial blocks.</p>
+<span class="n-link" style="display:inline-block;margin-top:12px">See the public art &#8594;</span>
+</a>
+</article>
+</div>
+</div>
+</section>
+
+{#- 6. Eat & shop -#}
+<section class="n-bg-white n-pad" aria-labelledby="shop-h">
+<div class="n-wrap">
+<div class="n-g2-wide">
+<div>
+<div class="n-label">Eat &amp; shop locally</div>
+<h2 class="n-h2" id="shop-h" style="margin-top:12px;max-width:20ch;color:var(--n-evergreen)">Independent, and mostly family-run.</h2>
+<p class="n-body" style="margin:18px 0 0;max-width:52ch">Kitchens, grocers, makers and services across Old Town and Cottonwood Square, with the Business Association directory for current hours.</p>
+<div class="n-btns" style="margin-top:24px">
+<a class="n-btn" href="/eat-shop/">Open the directory</a>
+<a class="n-btn n-btn--ghost" href="/plan-a-visit/#contact">Add a listing</a>
+</div>
+</div>
+<div>
+<div class="n-label n-label--quiet">Browse by category</div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:0 clamp(16px,2vw,36px);margin-top:10px">
+{%- for c in categories %}
+<a class="n-shift n-shift--sm" href="/eat-shop/" style="display:block;padding:14px 0;border-top:1px solid var(--n-rule);font-size:1rem;text-decoration:none">{{ c }}</a>
+{%- endfor %}
+</div>
+</div>
+</div>
+</div>
+</section>
+
+{#- 7. Parks, trails & recreation -#}
+<section class="n-bg-sage n-pad" aria-labelledby="parks-h" style="border-top:1px solid var(--n-sage);border-bottom:1px solid var(--n-sage)">
+<div class="n-wrap">
+<div class="n-g2-wide">
+<div>
+<div class="n-label">Parks, trails &amp; recreation</div>
+<h2 class="n-h2" id="parks-h" style="margin-top:12px;max-width:18ch;color:var(--n-evergreen)">The fields start where the sidewalk ends.</h2>
+<svg viewBox="0 0 260 44" role="img" aria-label="Line drawing of the Front Range horizon west of Niwot" style="display:block;width:min(260px,100%);height:auto;margin-top:20px">
+<polyline points="0,40 26,30 44,34 70,16 92,26 112,20 134,32 158,12 184,28 208,22 232,34 260,26" fill="none" stroke="#24483A" stroke-width="1.5"></polyline>
+<line x1="0" y1="43" x2="260" y2="43" stroke="#B64F3A" stroke-width="1"></line>
+</svg>
+</div>
+<div>
+<p class="n-body" style="margin:0;max-width:56ch">Whistle Stop Park sits at the edge of Old Town. The regional trail between Boulder and Longmont runs past the community, and Left Hand Creek crosses the fields to the east.</p>
+<dl style="margin:22px 0 0">
+{%- for o in outdoors %}
+<div style="display:grid;grid-template-columns:minmax(120px,.45fr) minmax(0,1fr);gap:16px;padding:14px 0;border-top:1px solid rgba(36,72,58,.25)">
+<dt class="n-label n-label--quiet" style="color:var(--n-evergreen)">{{ o.label }}</dt>
+<dd class="n-body" style="margin:0;font-size:.9375rem">{{ o.body }}</dd>
+</div>
+{%- endfor %}
+</dl>
+<a class="n-link" href="/explore/#outdoors" style="display:inline-block;margin-top:18px">Parks and trails in full &#8594;</a>
+</div>
+</div>
+</div>
+</section>
+
+{#- 8. Community -#}
+<section class="n-bg-white n-pad" aria-labelledby="comm-h">
+<div class="n-wrap">
+<div class="n-shead n-shead-row">
+<div>
+<div class="n-label">Community</div>
+<h2 class="n-h2" id="comm-h" style="margin-top:12px;color:var(--n-evergreen)">The people who run it</h2>
+</div>
+<a class="n-link" href="/community/">All organizations &#8594;</a>
+</div>
+<div class="n-g2" style="margin-top:clamp(24px,3vw,44px)">
+<div>
+<h3 class="n-h3" style="font-size:1.5rem;color:var(--n-evergreen)">Community organizations</h3>
+<p class="n-body" style="margin:12px 0 0;max-width:52ch;font-size:.9375rem">With no town government, most of what happens in Niwot is organized by residents through local groups.</p>
+<div style="margin-top:18px">
+{%- for o in organizations %}
+<div style="display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px;align-items:baseline;padding:14px 0;border-top:1px solid var(--n-rule)">
+<span style="font-size:1rem">{{ o.name }}</span>
+<a class="n-link" href="{{ o.href }}" rel="noopener" style="font-size:12px;white-space:nowrap">{{ o.linkLabel }}</a>
+</div>
+{%- endfor %}
+</div>
+</div>
+<div>
+<h3 class="n-h3" style="font-size:1.5rem;color:var(--n-evergreen)">Resident resources</h3>
+<p class="n-body" style="margin:12px 0 0;max-width:52ch;font-size:.9375rem">Niwot is unincorporated, so services come from Boulder County and a set of special districts.</p>
+<div style="margin-top:18px">
+{%- for r in resources %}
+<div style="display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px;align-items:baseline;padding:14px 0;border-top:1px solid var(--n-rule)">
+<span style="font-size:1rem">{{ r.what }}</span>
+<a class="n-link" href="{{ r.href }}" rel="noopener" style="font-size:12px;white-space:nowrap">{{ r.who }}</a>
+</div>
+{%- endfor %}
+</div>
+<a class="n-link" href="/community/#resources" style="display:inline-block;margin-top:16px">All resident resources &#8594;</a>
+</div>
+</div>
+</div>
+</section>
+
+{#- 9. Niwot history -#}
+<section class="n-bg-paper" aria-labelledby="hist-h">
+<div class="n-wrap" style="padding-top:clamp(44px,6vw,104px)">
+<div class="n-shead n-shead-row">
+<div>
+<div class="n-label">Niwot history</div>
+<h2 class="n-h2" id="hist-h" style="margin-top:12px;color:var(--n-evergreen)">The railroad shaped the Niwot we know.</h2>
+</div>
+<a class="n-link" href="/our-story/">Read our story &#8594;</a>
+</div>
+</div>
+<img src="/assets/photos/valley-haystack-foothills.jpg" alt="The valley floor below Niwot with a conical butte in the middle distance and the foothills of the Front Range behind it" loading="lazy" decoding="async" style="display:block;width:100%;height:clamp(220px,26vw,400px);object-fit:cover;object-position:center 56%;margin-top:clamp(24px,3vw,40px);filter:saturate(.82) contrast(1.02)">
+<div class="n-wrap" style="padding-top:clamp(20px,2.5vw,34px);padding-bottom:clamp(44px,6vw,104px)">
+<div class="n-g3">
+{%- for f in facts %}
+<div style="padding-top:14px;border-top:2px solid var(--n-evergreen)">
+<div class="n-label">{{ f.label }}</div>
+<p class="n-body" style="margin:10px 0 0;font-size:.9375rem">{{ f.text }}</p>
+</div>
+{%- endfor %}
+</div>
+</div>
+</section>
+
+{#- 10. Newsletter + contribute -#}
+<section class="n-bg-green n-pad" aria-labelledby="nl-h">
+<div class="n-wrap">
+<div class="n-g2">
+<div>
+<div class="n-label">Community updates</div>
+<h2 class="n-h2" id="nl-h" style="margin-top:12px;max-width:22ch">Notices by email</h2>
+<p class="n-body" style="margin:16px 0 0;max-width:52ch;color:var(--n-paper)">One message when something here changes: a new event, a confirmed listing, a corrected fact.</p>
+<form data-mailto-form data-subject="Niwot guide: notice signup" data-to="{{ site.contactEmail }}" style="display:flex;flex-wrap:wrap;gap:12px;margin-top:22px;max-width:520px">
+<label class="n-sr" for="nl-email">Your email address</label>
+<input id="nl-email" name="email" type="email" required placeholder="you@example.com" style="flex:1 1 220px;min-width:0;padding:14px;background:var(--n-white);border:2px solid var(--n-white);font:inherit;font-size:1rem;color:var(--n-ink)">
+<button class="n-btn" type="submit" style="cursor:pointer;font-family:inherit">Subscribe</button>
+</form>
+<template data-mailto-success><p role="status" style="margin:22px 0 0;padding-top:14px;border-top:3px solid var(--n-gold-lt);max-width:48ch;color:var(--n-white)">Thank you &#8212; your address is ready to send from your email client.</p></template>
+<template data-mailto-unavailable><p role="status" style="margin:22px 0 0;padding-top:14px;border-top:3px solid var(--n-gold-lt);max-width:48ch;color:var(--n-white)">Email notices are not running yet, so nothing was sent. The <a href="/events/">events calendar</a> carries the same updates in the meantime.</p></template>
+<p class="n-small" style="margin:12px 0 0;max-width:48ch;color:var(--n-sage-lt)">{% if site.contactEmail %}Your address is used only for these notices. No advertising and no third-party tracking.{% else %}Email notices are not running yet. Until they are, the events calendar and the organizations below carry the same updates.{% endif %}</p>
+</div>
+<div>
+<div class="n-label">Contribute</div>
+<h2 class="n-h2" style="margin-top:12px;max-width:22ch">Add a listing or a correction</h2>
+<p class="n-body" style="margin:16px 0 0;max-width:52ch;color:var(--n-paper)">Business owners, event organizers and residents keep this guide accurate. Send a listing, a date or a correction with its source.</p>
+<div class="n-btns" style="margin-top:24px">
+<a class="n-btn" href="/plan-a-visit/#contact">Send a submission</a>
+<a class="n-btn n-btn--ghost" href="/plan-a-visit/">Plan a visit</a>
+</div>
+</div>
+</div>
+</div>
+</section>

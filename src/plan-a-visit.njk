@@ -1,0 +1,302 @@
+---
+layout: layouts/base.njk
+title: Plan a Visit
+description: How to get to Niwot, Colorado, where to park, how to get around on foot and by bike, what can be confirmed about accessibility, and how to send a correction.
+navKey: visit
+permalink: /plan-a-visit/
+ogImage: niwot-gateway-sculpture.jpg
+ogImageAlt: The Vintage Colorado Niwot gateway sculpture with the Flatirons behind it
+scripts:
+  - /assets/js/forms.js
+pageStyles: |
+  .n-maprow{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,.75fr);gap:clamp(24px,3vw,52px);align-items:start}
+  @media (max-width:900px){.n-maprow{grid-template-columns:minmax(0,1fr)}}
+places:
+  - name: Old Town, Second Avenue
+    note: The historic commercial block
+    query: 2nd Avenue, Niwot, CO 80503
+  - name: Cottonwood Square
+    note: Shops, kitchens and services
+    query: Cottonwood Square, Niwot, CO 80503
+  - name: Whistle Stop Park
+    note: The caboose and the concert lawn
+    query: Whistle Stop Park, Niwot, CO 80503
+  - name: Trail access, east of town
+    note: Regional trail and open space
+    query: Niwot Trail, Niwot, CO 80503
+arrivals:
+  - from: From Boulder
+    time: About 20 min
+    how: North-east on the Diagonal Highway, then east into Niwot.
+  - from: From Longmont
+    time: About 15 min
+    how: South-west on the Diagonal Highway, then east into Niwot.
+  - from: From Denver
+    time: About 50 min
+    how: North on I-25, then west toward Longmont and the Diagonal Highway.
+  - from: From the airport
+    time: About 1 hr
+    how: From Denver International, depending on route and time of day.
+practical:
+  - label: Parking
+    body: Street parking along Second Avenue and lot parking serving the Old Town block and Cottonwood Square. Free at time of writing; posted restrictions apply.
+  - label: On foot
+    body: Old Town is walkable end to end in about ten minutes, with continuous sidewalks and short crossings.
+  - label: By bike
+    body: The regional trail corridor between Boulder and Longmont runs past the community and connects to quiet county roads.
+  - label: Transit
+    body: Regional bus service runs along the Diagonal corridor. Routes, stops and fares change, so check the operator before travelling.
+  - label: Dogs
+    body: Leash and waste rules on trails and open space are set by Boulder County Parks & Open Space.
+  - label: Best time
+    body: Weekday mornings for a quiet walk. Summer Thursday evenings for the concert series beside the caboose.
+nextLinks:
+  - label: Eat & Shop
+    note: Kitchens, coffee and local services
+    href: /eat-shop/
+  - label: Events
+    note: What is on, and who runs it
+    href: /events/
+  - label: Public art
+    note: The gateway sculpture and works in town
+    href: /explore/#art
+  - label: Parks & trails
+    note: Whistle Stop Park and the trail network
+    href: /explore/#outdoors
+direct:
+  - what: Roads, permits, open space
+    who: Boulder County
+    href: https://bouldercounty.gov/
+  - what: Business directory and events
+    who: Niwot Business Association
+    href: https://niwot.com/
+  - what: Water service
+    who: Left Hand Water District
+    href: https://lefthandwater.org/
+  - what: Fire and rescue
+    who: Mountain View Fire Rescue
+    href: https://www.mvfpd.org/
+  - what: Elections
+    who: Boulder County Elections
+    href: https://bouldercounty.gov/elections/
+---
+<section class="n-bg-white" aria-labelledby="title-h">
+<div class="n-wrap" style="padding-top:clamp(28px,4vw,60px);padding-bottom:clamp(20px,2.5vw,36px)">
+<div class="n-g2-wide" style="align-items:end">
+<div>
+<div class="n-label">Plan a visit</div>
+<h1 class="n-display" id="title-h" style="margin-top:14px;font-size:clamp(2.5rem,1.8rem + 3.4vw,5rem);line-height:.96;max-width:15ch;color:var(--n-evergreen)">Park once, then walk it</h1>
+</div>
+<p class="n-lead" style="margin:0;max-width:50ch">Niwot sits off the Diagonal Highway between Boulder and Longmont. Leave the car on or near Second Avenue and everything below is within a fifteen-minute walk.</p>
+</div>
+</div>
+</section>
+
+{#- Orientation map. Decorative-plus: it carries a full aria-label, and
+    everything shown in it is also available as text on this page. -#}
+<section class="n-bg-sky n-pad-sm" id="map" aria-labelledby="map-h" style="border-top:1px solid var(--n-sky);border-bottom:1px solid var(--n-sky)">
+<div class="n-wrap">
+<h2 class="n-label" id="map-h" style="color:var(--n-sky-ink);margin:0 0 18px">Orientation</h2>
+<div class="n-maprow">
+<div>
+<svg viewBox="0 0 640 372" role="img" aria-label="Schematic map of Niwot: the rail corridor and Second Avenue run through Old Town, with Whistle Stop Park at the western end, Cottonwood Square to the north-east, parking around both, and trail access to the east" style="display:block;width:100%;height:auto;background:#FAF8F2;border:1px solid #24483A">
+<g stroke="#9EAD98" stroke-width="1">
+<line x1="0" y1="96" x2="640" y2="96"></line>
+<line x1="0" y1="252" x2="640" y2="252"></line>
+<line x1="188" y1="0" x2="188" y2="372"></line>
+<line x1="316" y1="0" x2="316" y2="372"></line>
+<line x1="444" y1="0" x2="444" y2="372"></line>
+</g>
+<line x1="0" y1="330" x2="640" y2="286" stroke="#24483A" stroke-width="7" stroke-opacity=".18"></line>
+<text x="16" y="322" font-family="Instrument Sans, sans-serif" font-size="12" letter-spacing="1.4" fill="#5C6459">DIAGONAL HWY 119</text>
+<g>
+<line x1="40" y1="188" x2="600" y2="164" stroke="#B64F3A" stroke-width="2"></line>
+<g stroke="#B64F3A" stroke-width="1">
+<line x1="60" y1="180" x2="60" y2="196"></line>
+<line x1="140" y1="177" x2="140" y2="193"></line>
+<line x1="220" y1="174" x2="220" y2="190"></line>
+<line x1="300" y1="170" x2="300" y2="186"></line>
+<line x1="380" y1="167" x2="380" y2="183"></line>
+<line x1="460" y1="164" x2="460" y2="180"></line>
+<line x1="540" y1="161" x2="540" y2="177"></line>
+</g>
+</g>
+<text x="40" y="156" font-family="Instrument Sans, sans-serif" font-size="12" letter-spacing="1.4" fill="#B64F3A">RAIL CORRIDOR</text>
+<line x1="40" y1="228" x2="600" y2="228" stroke="#24483A" stroke-width="3"></line>
+<text x="404" y="248" font-family="Instrument Sans, sans-serif" font-size="12" letter-spacing="1.6" fill="#24483A">SECOND AVENUE</text>
+<rect x="150" y="196" width="196" height="26" fill="#24483A"></rect>
+<text x="158" y="214" font-family="Instrument Serif, serif" font-size="16" fill="#FAF8F2">Old Town</text>
+<rect x="404" y="60" width="168" height="26" fill="#24483A"></rect>
+<text x="412" y="78" font-family="Instrument Serif, serif" font-size="16" fill="#FAF8F2">Cottonwood Sq.</text>
+<rect x="44" y="252" width="120" height="60" fill="#9EAD98"></rect>
+<text x="52" y="276" font-family="Instrument Serif, serif" font-size="14" fill="#17352B">Whistle Stop</text>
+<text x="52" y="294" font-family="Instrument Serif, serif" font-size="14" fill="#17352B">Park</text>
+<g font-family="Instrument Sans, sans-serif" font-size="13" font-weight="600">
+<circle cx="196" cy="252" r="13" fill="#FAF8F2" stroke="#24483A" stroke-width="1.5"></circle>
+<text x="192" y="257" fill="#24483A">P</text>
+<circle cx="300" cy="252" r="13" fill="#FAF8F2" stroke="#24483A" stroke-width="1.5"></circle>
+<text x="296" y="257" fill="#24483A">P</text>
+<circle cx="470" cy="106" r="13" fill="#FAF8F2" stroke="#24483A" stroke-width="1.5"></circle>
+<text x="466" y="111" fill="#24483A">P</text>
+</g>
+<path d="M600 228 L620 200 L604 152 L628 108" fill="none" stroke="#3E6E8C" stroke-width="2" stroke-dasharray="7 6"></path>
+<text x="492" y="304" font-family="Instrument Sans, sans-serif" font-size="12" letter-spacing="1.4" fill="#3E6E8C">TRAIL ACCESS &#8594;</text>
+</svg>
+<p class="n-small" style="margin:12px 0 0">Schematic, not to scale. It shows how the pieces sit relative to one another, not exact distances or street geometry.</p>
+</div>
+<div>
+<div class="n-label n-label--quiet" style="color:var(--n-ink)">Get directions</div>
+<div style="display:grid;gap:0;margin-top:10px">
+{%- for p in places %}
+<div style="display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px;align-items:baseline;padding:14px 0;border-top:1px solid rgba(36,72,58,.25)">
+<span>
+<span style="display:block;font-size:1rem;color:var(--n-evergreen)">{{ p.name }}</span>
+<span class="n-small" style="display:block;font-size:.875rem">{{ p.note }}</span>
+</span>
+<a class="n-link" href="{{ p.query | directions }}" rel="noopener" style="white-space:nowrap;font-size:12px">Directions &#8599;</a>
+</div>
+{%- endfor %}
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<section class="n-bg-white n-pad" aria-labelledby="arrive-h">
+<div class="n-wrap">
+<div class="n-shead" style="border-bottom-color:var(--n-evergreen)">
+<div class="n-label">Arriving</div>
+<h2 class="n-h2" id="arrive-h" style="color:var(--n-evergreen)">Getting here</h2>
+<p class="n-body" style="margin:0;max-width:72ch">Drive times are estimates for normal conditions and vary with traffic, weather and construction. Check a live routing service before you set out.</p>
+</div>
+<div class="n-g4" style="margin-top:clamp(22px,2.6vw,36px)">
+{%- for a in arrivals %}
+<div style="padding-top:14px;border-top:2px solid var(--n-evergreen)">
+<h3 class="n-h3" style="font-size:1.25rem;color:var(--n-evergreen)">{{ a.from }}</h3>
+<div class="n-label" style="margin-top:10px">{{ a.time }}</div>
+<p class="n-body" style="margin:8px 0 0;font-size:.9375rem">{{ a.how }}</p>
+</div>
+{%- endfor %}
+</div>
+</div>
+</section>
+
+<section class="n-bg-paper n-pad" aria-labelledby="ground-h">
+<div class="n-wrap">
+<div class="n-g2-wide">
+<div>
+<div class="n-label">On the ground</div>
+<h2 class="n-h2" id="ground-h" style="margin-top:12px;max-width:16ch;color:var(--n-evergreen)">Parking, walking and transit</h2>
+<p class="n-small" style="margin:18px 0 0;max-width:46ch">Niwot is unincorporated, so parking rules, road work and trail closures are set by Boulder County rather than a town. Posted signs override anything written here.</p>
+<div class="n-btns" style="margin-top:22px">
+<a class="n-btn n-btn--ghost" href="https://bouldercounty.gov/" rel="noopener">Boulder County &#8599;</a>
+<a class="n-btn n-btn--ghost" href="https://www.rtd-denver.com/" rel="noopener">Regional transit &#8599;</a>
+</div>
+</div>
+<div>
+<dl style="margin:0">
+{%- for p in practical %}
+<div style="display:grid;grid-template-columns:minmax(120px,.4fr) minmax(0,1fr);gap:16px;padding:16px 0;border-top:1px solid rgba(36,72,58,.22)">
+<dt class="n-label n-label--quiet" style="color:var(--n-evergreen)">{{ p.label }}</dt>
+<dd class="n-body" style="margin:0;font-size:.9375rem">{{ p.body }}</dd>
+</div>
+{%- endfor %}
+</dl>
+</div>
+</div>
+</div>
+</section>
+
+{#- Accessibility states only what can be confirmed, and invites dated
+    corrections for what cannot. -#}
+<section class="n-bg-white n-pad-sm" aria-labelledby="acc-h">
+<div class="n-wrap">
+<div class="n-g2">
+<div class="n-callout n-callout--sky" style="padding:24px">
+<div class="n-label" style="color:var(--n-sky-ink)">Accessibility</div>
+<h2 class="n-h3" id="acc-h" style="margin-top:10px;font-size:1.375rem;color:var(--n-evergreen)">What we can confirm</h2>
+<p class="n-body" style="margin:12px 0 0;font-size:.9375rem">Second Avenue has continuous sidewalks with curb ramps at the cross streets, and the Whistle Stop Park lawn is reached from a paved path. Entrances vary across the historic block: several have a single step at the door and some have raised wooden porches.</p>
+<p class="n-body" style="margin:12px 0 0;font-size:.9375rem">Step-free access differs building by building, so contact a business directly before relying on it. Corrections to this section are welcome and published with their date.</p>
+</div>
+<div>
+<div class="n-label n-label--quiet">Then go and see</div>
+<div style="display:grid;gap:0;margin-top:10px">
+{%- for n in nextLinks %}
+<a class="n-shift n-shift--sm" href="{{ n.href }}" style="display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px;align-items:baseline;padding:16px 0;border-top:1px solid var(--n-rule);text-decoration:none">
+<span>
+<span style="display:block;font-size:1.0625rem;color:var(--n-evergreen)">{{ n.label }}</span>
+<span class="n-small" style="display:block;font-size:.875rem">{{ n.note }}</span>
+</span>
+<span aria-hidden="true" style="color:var(--n-red)">&#8594;</span>
+</a>
+{%- endfor %}
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<section class="n-bg-green n-pad" id="contact" aria-labelledby="contact-h">
+<div class="n-wrap">
+<div class="n-g2">
+<div>
+<div class="n-label">Contribute</div>
+<h2 class="n-h2" id="contact-h" style="margin-top:12px;max-width:20ch">Add a listing, an event, or a correction</h2>
+<p class="n-body" style="margin:16px 0 0;max-width:54ch;color:var(--n-paper)">Business owners, event organizers and residents keep this guide accurate. Send yours and it goes in with the date it was verified.</p>
+<form data-mailto-form data-to="{{ site.contactEmail }}" style="display:grid;gap:18px;max-width:560px;margin-top:24px">
+<div>
+<label class="n-label" for="v-kind" style="color:var(--n-gold-lt)">What is this?</label>
+<select class="n-field" id="v-kind" name="kind">
+<option>Business listing</option>
+<option>Event listing</option>
+<option>Public art inventory</option>
+<option>Accessibility correction</option>
+<option>Correction to this guide</option>
+<option>Something else</option>
+</select>
+</div>
+<div>
+<label class="n-label" for="v-name" style="color:var(--n-gold-lt)">Name of the business, event or page</label>
+<input class="n-field" id="v-name" name="subject" type="text" required placeholder="e.g. Explore &#8212; public art">
+</div>
+<div>
+<label class="n-label" for="v-detail" style="color:var(--n-gold-lt)">Details</label>
+<textarea class="n-field" id="v-detail" name="detail" rows="5" required></textarea>
+</div>
+<div>
+<label class="n-label" for="v-src" style="color:var(--n-gold-lt)">Link to your own page or the source</label>
+<input class="n-field" id="v-src" name="source" type="url" placeholder="https://">
+</div>
+<div>
+<label class="n-label" for="v-email" style="color:var(--n-gold-lt)">Your email</label>
+<input class="n-field" id="v-email" name="email" type="email" placeholder="Used only to reply about this submission">
+</div>
+<div style="display:flex;flex-wrap:wrap;gap:16px;align-items:center">
+<button class="n-btn" type="submit" style="cursor:pointer;font-family:inherit">Send submission</button>
+{%- if not site.contactEmail %}
+<span class="n-small" style="max-width:36ch;color:var(--n-sage-lt)">This form is not connected yet. Use the direct contacts beside it in the meantime.</span>
+{%- endif %}
+</div>
+</form>
+<template data-mailto-success><p role="status" style="margin:24px 0 0;padding-top:16px;border-top:3px solid var(--n-gold-lt);max-width:54ch;color:var(--n-white)">Thank you &#8212; your submission is ready to send from your email client.</p></template>
+<template data-mailto-unavailable><p role="status" style="margin:24px 0 0;padding-top:16px;border-top:3px solid var(--n-gold-lt);max-width:54ch;color:var(--n-white)">This form is not connected yet, so nothing was sent. Use the direct contacts listed beside this form &#8212; each one is the responsible body for its subject.</p></template>
+</div>
+<div>
+<div class="n-label">Go direct instead</div>
+<p class="n-body" style="margin:12px 0 0;max-width:42ch;color:var(--n-paper)">For anything official &#8212; permits, roads, ballots, water &#8212; the responsible body is the only reliable contact.</p>
+<div style="margin-top:20px">
+{%- for d in direct %}
+<div style="display:grid;gap:4px;padding:14px 0;border-top:1px solid rgba(158,173,152,.35)">
+<span class="n-label n-label--quiet" style="color:var(--n-sage-lt)">{{ d.what }}</span>
+<a class="n-link" href="{{ d.href }}" rel="noopener" style="justify-self:start">{{ d.who }} &#8599;</a>
+</div>
+{%- endfor %}
+<div style="display:grid;gap:4px;padding:14px 0;border-top:1px solid rgba(158,173,152,.35);border-bottom:1px solid rgba(158,173,152,.35)">
+<span class="n-label n-label--quiet" style="color:var(--n-sage-lt)">Emergency</span>
+<span style="color:var(--n-white)">Call 911</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>

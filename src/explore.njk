@@ -1,0 +1,155 @@
+---
+layout: layouts/base.njk
+title: Explore
+description: A field guide to four places in Niwot, Colorado, in walking order — Old Town, Cottonwood Square, the public art, and the parks and trails.
+navKey: explore
+permalink: /explore/
+ogImage: niwot-tribune-storefront.jpg
+ogImageAlt: The Niwot Tribune false-front building on Second Avenue with a grand piano on the sidewalk
+pageStyles: |
+  .n-entry{display:grid;grid-template-columns:64px minmax(0,1fr) minmax(0,.85fr);gap:clamp(16px,2.5vw,44px);align-items:start}
+  /* Flipped rows put the photo before the text. Placed by column, not by
+     order: order:-1 moves the figure into the 64px numeral track and crushes
+     it to 64px wide. */
+  .n-entry--flip{grid-template-columns:64px minmax(0,.85fr) minmax(0,1fr)}
+  .n-entry--flip>figure{grid-column:2;grid-row:1}
+  .n-entry--flip>div{grid-column:3;grid-row:1}
+  @media (max-width:900px){.n-entry,.n-entry--flip{grid-template-columns:minmax(0,1fr)}.n-entry--flip>figure,.n-entry--flip>div{grid-column:auto;grid-row:auto}}
+---
+<section class="n-bg-white" aria-labelledby="title-h">
+<div class="n-wrap" style="padding-top:clamp(28px,4vw,60px);padding-bottom:clamp(24px,3vw,44px)">
+<div class="n-g2-wide" style="align-items:end">
+<div>
+<div class="n-label">Field guide</div>
+<h1 class="n-display" id="title-h" style="margin-top:14px;font-size:clamp(2.5rem,1.8rem + 3.4vw,5rem);line-height:.96;max-width:16ch;color:var(--n-evergreen)">Four places, in walking order</h1>
+</div>
+<div>
+<p class="n-lead" style="margin:0;max-width:48ch">Old Town first, then Cottonwood Square, then whatever the weather allows. The whole loop is under two miles.</p>
+<svg viewBox="0 0 240 34" role="img" aria-label="Line drawing of the Front Range horizon west of Niwot" style="display:block;width:min(240px,100%);height:auto;margin-top:20px">
+<polyline points="0,30 24,22 42,26 66,10 88,19 108,14 130,24 154,7 180,21 206,15 240,25" fill="none" stroke="#24483A" stroke-width="1.5"></polyline>
+<line x1="0" y1="33" x2="240" y2="33" stroke="#B64F3A" stroke-width="1"></line>
+</svg>
+</div>
+</div>
+</div>
+</section>
+<div class="n-wrap"><div class="n-rail"></div></div>
+
+{#- 01 Old Town — white ground -#}
+<section class="n-bg-white" id="oldtown" aria-labelledby="e1-h">
+<div class="n-wrap" style="padding-block:clamp(28px,3.5vw,60px)">
+<div class="n-entry">
+<span class="n-num" aria-hidden="true" style="font-size:clamp(2rem,1.5rem + 1.6vw,3.25rem)">01</span>
+<div>
+<h2 class="n-h2" id="e1-h" style="font-size:clamp(1.75rem,1.4rem + 1.4vw,2.75rem);color:var(--n-evergreen)">Old Town</h2>
+<p class="n-body" style="margin:16px 0 0;max-width:58ch">The brick and false-front commercial block on Second Avenue is the reason the rest of this page exists. It dates from the railroad period and it is still where the community gathers.</p>
+<p class="n-body" style="margin:14px 0 0;max-width:58ch;font-size:.9375rem">Walk it end to end in about ten minutes. Cross streets are short and the sidewalks are continuous.</p>
+<dl style="margin:22px 0 0">
+<div style="display:grid;grid-template-columns:minmax(110px,.44fr) minmax(0,1fr);gap:16px;padding:12px 0;border-top:1px solid var(--n-rule)">
+<dt class="n-label n-label--quiet">Getting there</dt>
+<dd class="n-body" style="margin:0;font-size:.9375rem">Street parking along Second Avenue and the adjacent lots.</dd>
+</div>
+<div style="display:grid;grid-template-columns:minmax(110px,.44fr) minmax(0,1fr);gap:16px;padding:12px 0;border-top:1px solid var(--n-rule)">
+<dt class="n-label n-label--quiet">Best for</dt>
+<dd class="n-body" style="margin:0;font-size:.9375rem">Coffee, browsing, and the historic building fronts.</dd>
+</div>
+</dl>
+<a class="n-link" href="/eat-shop/" style="display:inline-block;margin-top:18px">Who is on the block &#8594;</a>
+</div>
+<figure style="margin:0">
+<img src="/assets/photos/niwot-tribune-storefront.jpg" alt="The Niwot Tribune false-front building on Second Avenue with a shingled porch roof, painted columns and a grand piano on the sidewalk" decoding="async" style="display:block;width:100%;height:clamp(220px,25vw,350px);object-fit:cover;object-position:center 52%">
+<figcaption class="n-cap">The Niwot Tribune building, Second Avenue</figcaption>
+</figure>
+</div>
+</div>
+</section>
+
+{#- 02 Cottonwood Square — paper ground, photo leads -#}
+<section class="n-bg-paper" id="cottonwood" aria-labelledby="e2-h">
+<div class="n-wrap" style="padding-block:clamp(28px,3.5vw,60px)">
+<div class="n-entry n-entry--flip">
+<span class="n-num" aria-hidden="true" style="font-size:clamp(2rem,1.5rem + 1.6vw,3.25rem)">02</span>
+<div>
+<h2 class="n-h2" id="e2-h" style="font-size:clamp(1.75rem,1.4rem + 1.4vw,2.75rem);color:var(--n-evergreen)">Cottonwood Square</h2>
+<p class="n-body" style="margin:16px 0 0;max-width:58ch">The second cluster of shops and everyday services, north-east of Old Town. Less historic, more practical, and where a lot of residents actually run errands. Two bronze bears sit on the corner.</p>
+<dl style="margin:22px 0 0">
+<div style="display:grid;grid-template-columns:minmax(110px,.44fr) minmax(0,1fr);gap:16px;padding:12px 0;border-top:1px solid rgba(36,72,58,.22)">
+<dt class="n-label n-label--quiet">Getting there</dt>
+<dd class="n-body" style="margin:0;font-size:.9375rem">A short walk or a two-minute drive from Old Town. Lot parking.</dd>
+</div>
+<div style="display:grid;grid-template-columns:minmax(110px,.44fr) minmax(0,1fr);gap:16px;padding:12px 0;border-top:1px solid rgba(36,72,58,.22)">
+<dt class="n-label n-label--quiet">Best for</dt>
+<dd class="n-body" style="margin:0;font-size:.9375rem">Lunch on a patio, and the practical errands.</dd>
+</div>
+</dl>
+<a class="n-link" href="/eat-shop/" style="display:inline-block;margin-top:18px">Browse by category &#8594;</a>
+</div>
+<figure style="margin:0">
+<img src="/assets/photos/niwot-tavern-patios.jpg" alt="Umbrella-shaded patios outside the Niwot Tavern and Raza Fresa Mexican Kitchen with two bronze bear sculptures on the corner" loading="lazy" decoding="async" style="display:block;width:100%;height:clamp(220px,25vw,350px);object-fit:cover;object-position:center 50%">
+<figcaption class="n-cap">Cottonwood Square, bears on the corner</figcaption>
+</figure>
+</div>
+</div>
+</section>
+
+{#- 03 Public art — white ground. No works are named: titles, artists and
+    locations are not yet confirmed, and the page says so rather than guessing. -#}
+<section class="n-bg-white" id="art" aria-labelledby="e3-h">
+<div class="n-wrap" style="padding-block:clamp(28px,3.5vw,60px)">
+<div class="n-entry">
+<span class="n-num" aria-hidden="true" style="font-size:clamp(2rem,1.5rem + 1.6vw,3.25rem)">03</span>
+<div>
+<h2 class="n-h2" id="e3-h" style="font-size:clamp(1.75rem,1.4rem + 1.4vw,2.75rem);color:var(--n-evergreen)">Public art</h2>
+<p class="n-body" style="margin:16px 0 0;max-width:58ch">The steel gateway sculpture stands at the highway edge of the community, an oval sign held inside two curving rails. Further works are sited around the commercial blocks, close enough to see on the same walk.</p>
+<div class="n-callout n-callout--sky" style="margin-top:22px;padding:20px 22px;max-width:60ch">
+<div class="n-label" style="color:var(--n-sky-ink)">Help us map it</div>
+<p class="n-body" style="margin:10px 0 0;font-size:.9375rem">A piece-by-piece inventory with titles, artists and locations is being compiled. Send a verified list and it goes in with artist credit.</p>
+<a class="n-link" href="/plan-a-visit/#contact" style="display:inline-block;margin-top:12px">Contribute the inventory &#8594;</a>
+</div>
+</div>
+<figure style="margin:0">
+<img src="/assets/photos/niwot-gateway-sculpture.jpg" alt="The Vintage Colorado Niwot gateway sculpture, a steel arch over an oval sign, with the Flatirons behind it" loading="lazy" decoding="async" style="display:block;width:100%;height:clamp(220px,25vw,350px);object-fit:cover;object-position:center 62%">
+<figcaption class="n-cap">The gateway sculpture at the highway edge</figcaption>
+</figure>
+</div>
+</div>
+</section>
+
+{#- 04 Parks & trails — pale sage ground, photo leads. The portrait photo gets
+    a taller frame so the crop keeps both the sunset band and the trail. -#}
+<section class="n-bg-sage" id="outdoors" aria-labelledby="e4-h" style="border-top:1px solid var(--n-sage);border-bottom:1px solid var(--n-sage)">
+<div class="n-wrap" style="padding-block:clamp(28px,3.5vw,60px)">
+<div class="n-entry n-entry--flip">
+<span class="n-num" aria-hidden="true" style="font-size:clamp(2rem,1.5rem + 1.6vw,3.25rem)">04</span>
+<div>
+<h2 class="n-h2" id="e4-h" style="font-size:clamp(1.75rem,1.4rem + 1.4vw,2.75rem);color:var(--n-evergreen)">Parks &amp; trails</h2>
+<p class="n-body" style="margin:16px 0 0;max-width:58ch">Whistle Stop Park sits at the edge of Old Town and keeps the restored caboose. The regional trail between Boulder and Longmont runs past the community, and Left Hand Creek crosses the fields east of the built-up blocks.</p>
+<p class="n-body" style="margin:14px 0 0;max-width:58ch;font-size:.9375rem">Trail surfaces, closures and dog rules are set by the managing agency rather than by a town, since Niwot is unincorporated.</p>
+<dl style="margin:22px 0 0">
+<div style="display:grid;grid-template-columns:minmax(110px,.44fr) minmax(0,1fr);gap:16px;padding:12px 0;border-top:1px solid rgba(36,72,58,.25)">
+<dt class="n-label n-label--quiet" style="color:var(--n-evergreen)">Managed by</dt>
+<dd class="n-body" style="margin:0;font-size:.9375rem"><a class="n-link" href="https://bouldercounty.gov/" rel="noopener">Boulder County Parks &amp; Open Space &#8599;</a></dd>
+</div>
+<div style="display:grid;grid-template-columns:minmax(110px,.44fr) minmax(0,1fr);gap:16px;padding:12px 0;border-top:1px solid rgba(36,72,58,.25)">
+<dt class="n-label n-label--quiet" style="color:var(--n-evergreen)">Best for</dt>
+<dd class="n-body" style="margin:0;font-size:.9375rem">Walking and cycling; the eastern fields at sunset.</dd>
+</div>
+</dl>
+</div>
+<figure style="margin:0">
+<img src="/assets/photos/front-range-sunset-trail.jpg" alt="Sunset over the Front Range from a dirt trail on the grassland edge of Niwot" loading="lazy" decoding="async" style="display:block;width:100%;height:clamp(300px,36vw,500px);object-fit:cover;object-position:center 58%">
+<figcaption class="n-cap">The trail at the edge of the grassland, looking west</figcaption>
+</figure>
+</div>
+</div>
+</section>
+
+<section class="n-bg-white n-pad-sm" aria-label="Next steps">
+<div class="n-wrap">
+<div class="n-btns">
+<a class="n-btn" href="/eat-shop/">Where to eat and shop</a>
+<a class="n-btn n-btn--ghost" href="/plan-a-visit/">Plan a visit</a>
+<a class="n-btn n-btn--ghost" href="/events/">What&#8217;s on</a>
+</div>
+</div>
+</section>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ title }} — {{ site.name }}</title>
+<meta name="description" content="{{ description }}">
+<link rel="canonical" href="{{ site.url }}{{ page.url }}">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="{{ site.name }}">
+<meta property="og:title" content="{{ title }}">
+<meta property="og:description" content="{{ description }}">
+<meta property="og:url" content="{{ site.url }}{{ page.url }}">
+<meta property="og:image" content="{{ site.url }}/assets/photos/{{ ogImage | default('second-avenue-patios.jpg') }}">
+<meta property="og:image:alt" content="{{ ogImageAlt | default('Buildings on the 300 block of Second Avenue in Niwot, with hanging baskets and patio tables out front') }}">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/guide.css">
+<script src="/assets/js/guide.js" defer></script>
+{%- if pageStyles %}
+<style>{{ pageStyles | safe }}</style>
+{%- endif %}
+{%- if structuredData %}
+<script type="application/ld+json">{{ structuredData | jsonify | safe }}</script>
+{%- endif %}
+</head>
+<body>
+<div{% if bodyClass %} class="{{ bodyClass }}"{% endif %}>
+<a class="n-skip" href="#main">Skip to main content</a>
+{% include "partials/header.njk" %}
+<main id="main">
+{{ content | safe }}
+</main>
+{% include "partials/footer.njk" %}
+</div>
+{%- if needsSeries %}
+{#- The event series, emitted once so the browser and the build read exactly
+    the same data. -#}
+<script type="application/json" id="niwot-series">{{ series | jsonify | safe }}</script>
+{%- endif %}
+{%- for src in scripts %}
+<script type="module" src="{{ src }}"></script>
+{%- endfor %}
+</body>
+</html>

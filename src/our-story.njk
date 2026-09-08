@@ -1,0 +1,121 @@
+---
+layout: layouts/base.njk
+title: Our Story
+description: How the railroad, the 1875 town plat and Chief Niwot of the Southern Arapaho shaped Niwot, Colorado — a sourced timeline with its references named inline.
+navKey: story
+permalink: /our-story/
+ogImage: old-town-aerial.jpg
+ogImageAlt: Autumn aerial view of Niwot showing the commercial buildings, the street grid and the farmland beyond
+pageStyles: |
+  .n-open{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.6fr);gap:clamp(24px,3vw,56px);align-items:end}
+  .n-era{display:grid;grid-template-columns:minmax(0,.26fr) minmax(0,1fr);gap:clamp(14px,2.5vw,44px);align-items:start}
+  @media (max-width:900px){.n-open,.n-era{grid-template-columns:minmax(0,1fr)}}
+---
+<section class="n-bg-white" aria-labelledby="title-h">
+<div class="n-wrap" style="padding-top:clamp(28px,4vw,60px)">
+<div class="n-open">
+<div>
+<div class="n-label">Our story</div>
+<h1 class="n-display" id="title-h" style="margin-top:14px;font-size:clamp(2.5rem,1.8rem + 3.4vw,5.25rem);line-height:.96;max-width:18ch;color:var(--n-evergreen)">The railroad shaped the Niwot we know.</h1>
+</div>
+{#- The source aerial is oversaturated and only 547px wide; it is desaturated
+    to match the documentary treatment and never displayed wider than ~500px. -#}
+<figure style="margin:0">
+<img src="/assets/photos/old-town-aerial.jpg" alt="Aerial view of Niwot in autumn showing the commercial buildings, the street grid and the farmland and rail corridor beyond" decoding="async" style="display:block;width:100%;height:clamp(200px,22vw,320px);object-fit:cover;object-position:center 50%;filter:saturate(.68) contrast(.96) brightness(1.02)">
+<figcaption class="n-cap">The grid, the corridor and the fields it was built to serve</figcaption>
+</figure>
+</div>
+</div>
+</section>
+
+<section class="n-bg-white" aria-label="Introduction">
+<div class="n-wrap" style="padding-top:clamp(28px,3.5vw,56px);padding-bottom:clamp(32px,4vw,64px)">
+<div class="n-read">
+<p class="n-lead" style="margin:0">Niwot exists because a rail line was built through the Left Hand valley in the 1870s. The town plat was recorded in 1875, and the street grid still follows the tracks rather than the county roads that came later. The brick block on Second Avenue is what remains of that decision.</p>
+<p class="n-body" style="margin:22px 0 0">It has never been an incorporated municipality. There is no mayor and no town hall, which is part of why the place feels the way it does: what happens here is organized by the people who live here, through the business association, the arts groups and the neighbors who show up.</p>
+</div>
+</div>
+</section>
+
+<section class="n-bg-paper n-pad" aria-labelledby="name-h">
+<div class="n-wrap">
+<div class="n-shead" style="border-bottom-color:var(--n-evergreen)">
+<div class="n-label">The name</div>
+<h2 class="n-h2" id="name-h" style="color:var(--n-evergreen);max-width:24ch">Niwot is named for Chief Niwot.</h2>
+</div>
+<div class="n-read" style="padding-top:clamp(20px,2.5vw,34px)">
+<p class="n-body" style="margin:0">Chief Niwot was a leader of the Southern Arapaho, whose people lived in and travelled through this part of the Front Range long before the town site was surveyed. His name, rendered in English as &#8220;left hand,&#8221; is carried by the creek that crosses the valley, by the water district, and by the community itself.</p>
+<p class="n-body" style="margin:20px 0 0">In November 1864, Colorado volunteer cavalry attacked an encampment of Cheyenne and Arapaho people at Sand Creek, killing mostly women, children and elders. Chief Niwot was among those wounded there and died shortly afterward. The Sand Creek Massacre is recognized today as a massacre by the United States government, and it is inseparable from the history of the name this community uses.</p>
+<p class="n-body" style="margin:20px 0 0">That history is not a decorative origin story, and a community guide is not its proper author. The account above is deliberately brief and points to the nations and institutions that hold it.</p>
+<div class="n-callout" style="margin-top:28px;background:var(--n-white)">
+<div class="n-label n-label--quiet" style="color:var(--n-ink)">Read further</div>
+<div style="display:grid;gap:12px;margin-top:14px">
+<a class="n-link" href="https://www.nps.gov/sand/index.htm" rel="noopener">Sand Creek Massacre National Historic Site, National Park Service &#8599;</a>
+<a class="n-link" href="https://www.northernarapaho.com/" rel="noopener">Northern Arapaho Tribe &#8599;</a>
+<a class="n-link" href="https://cheyenneandarapaho-nsn.gov/" rel="noopener">Cheyenne and Arapaho Tribes &#8599;</a>
+<a class="n-link" href="https://www.historycolorado.org/" rel="noopener">History Colorado &#8599;</a>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<section class="n-bg-white n-pad" aria-labelledby="tl-h">
+<div class="n-wrap">
+<div class="n-shead" style="border-bottom-color:var(--n-evergreen)">
+<div class="n-label">Timeline</div>
+<h2 class="n-h2" id="tl-h" style="color:var(--n-evergreen)">How the community got here</h2>
+<p class="n-body" style="margin:0;max-width:72ch">Each entry names what it rests on. Where a date is contested or unverified, it says so rather than carrying an approximation.</p>
+</div>
+<ol style="list-style:none;margin:clamp(24px,3vw,44px) 0 0;padding:0">
+{%- for e in eras %}
+<li class="n-era" style="padding:clamp(22px,2.8vw,40px) 0;border-bottom:1px solid var(--n-rule)">
+<div>
+<div class="n-num" style="font-size:clamp(1.5rem,1.2rem + 1.3vw,2.5rem)">{{ e.when }}</div>
+<div class="n-label n-label--quiet" style="margin-top:10px;font-size:12px">{{ e.source }}</div>
+</div>
+<div>
+<h3 class="n-h3" style="color:var(--n-evergreen)">{{ e.title }}</h3>
+<p class="n-body" style="margin:12px 0 0;max-width:66ch">{{ e.body }}</p>
+</div>
+</li>
+{%- endfor %}
+</ol>
+</div>
+</section>
+
+<section class="n-bg-green n-pad" aria-labelledby="today-h">
+<div class="n-wrap">
+<div class="n-g2-wide">
+<div>
+<div class="n-label">Niwot today</div>
+<h2 class="n-h2" id="today-h" style="margin-top:12px;max-width:18ch">A community of about four thousand people.</h2>
+</div>
+<div>
+<p class="n-body" style="margin:0;max-width:62ch;color:var(--n-paper)">Two commercial clusters, a historic district, and farmland that starts where the sidewalks stop. Services come from Boulder County and a set of special districts rather than a town government, and in November 2026 residents inside a proposed boundary vote on whether that should change.</p>
+<div class="n-btns" style="margin-top:24px">
+<a class="n-btn" href="/civic/incorporation-election/">The 2026 election</a>
+<a class="n-btn n-btn--ghost" href="/community/">Community organizations</a>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<section class="n-bg-white" id="sources" aria-labelledby="src-h" style="padding-block:clamp(44px,6vw,104px)">
+<div class="n-wrap">
+<div class="n-g2-wide">
+<div>
+<div class="n-label">Sources and corrections</div>
+<h2 class="n-h2" id="src-h" style="margin-top:12px;font-size:clamp(1.5rem,1.2rem + 1.2vw,2.25rem);max-width:18ch;color:var(--n-evergreen)">Editorial standards</h2>
+</div>
+<div>
+<p class="n-body" style="margin:0;max-width:66ch">Population is the 2020 census figure for the Niwot census designated place. Historical dates come from the recorded town plat and county records. Indigenous history follows the published material of the Arapaho and Cheyenne nations, the National Park Service and History Colorado rather than this guide&#8217;s own summary.</p>
+<p class="n-body" style="margin:18px 0 0;max-width:66ch">If something here is wrong, it is corrected with the date and a note describing what changed. A claim that cannot be supported is removed rather than softened.</p>
+<div class="n-btns" style="margin-top:24px">
+<a class="n-btn" href="/plan-a-visit/#contact">Report a correction</a>
+</div>
+</div>
+</div>
+</div>
+</section>

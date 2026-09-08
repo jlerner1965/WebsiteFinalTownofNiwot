@@ -1,0 +1,36 @@
+<footer class="n-foot">
+<div class="n-wrap" style="padding-top:clamp(40px,5vw,76px);padding-bottom:clamp(28px,3.5vw,48px)">
+<div class="n-foot-cols">
+<div class="n-foot-col">
+<div class="n-foot-mark">NIWOT</div>
+<div class="n-rail n-rail--light" style="max-width:220px"></div>
+</div>
+<div class="n-foot-col">
+<h2>Visit</h2>
+<a href="/explore/">Explore</a>
+<a href="/eat-shop/">Eat &amp; Shop</a>
+<a href="/events/">Events</a>
+<a href="/plan-a-visit/">Plan a Visit</a>
+</div>
+<div class="n-foot-col">
+<h2>Community</h2>
+<a href="/community/">Organizations</a>
+<a href="/community/#resources">Resident resources</a>
+<a href="/our-story/">Our Story</a>
+</div>
+<div class="n-foot-col">
+<h2>Civic</h2>
+<a href="/civic/incorporation-election/">Civic Information</a>
+<a href="https://niwotelection.org/" rel="noopener">Election Commission &#8599;</a>
+<a href="https://bouldercounty.gov/elections/" rel="noopener">Boulder County Elections &#8599;</a>
+</div>
+</div>
+{#- The disclaimer is required verbatim on every page. It lives in the shared
+    layout so it cannot be dropped from one page by accident. #}
+<p class="n-disclaim" style="margin:clamp(28px,3.5vw,48px) 0 0;padding-top:18px;border-top:1px solid rgba(158,173,152,.3)">{{ site.disclaimer }}</p>
+<div class="n-foot-meta" style="margin-top:20px">
+<span>{{ footMetaLeft | default('Reviewed ' + site.reviewed) }}</span>
+<span>{{ footMetaRight | default('Photography licensed for use on this site') }}</span>
+</div>
+</div>
+</footer>

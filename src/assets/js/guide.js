@@ -1,0 +1,29 @@
+// Mobile navigation for the Niwot guide. One behaviour, no dependencies.
+(function () {
+  function wire() {
+    var head = document.querySelector('.n-head');
+    var btn = head && head.querySelector('.n-burger');
+    if (!head || !btn || btn.dataset.wired) return;
+    btn.dataset.wired = '1';
+    btn.addEventListener('click', function () {
+      var open = head.classList.toggle('n-open');
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      btn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    });
+    head.querySelectorAll('.n-nav a').forEach(function (a) {
+      a.addEventListener('click', function () {
+        head.classList.remove('n-open');
+        btn.setAttribute('aria-expanded', 'false');
+      });
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && head.classList.contains('n-open')) {
+        head.classList.remove('n-open');
+        btn.setAttribute('aria-expanded', 'false');
+        btn.focus();
+      }
+    });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', wire);
+  else wire();
+})();

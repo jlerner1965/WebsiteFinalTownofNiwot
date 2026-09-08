@@ -130,8 +130,10 @@ government seals, marketing text over photographs, pure black body text.
   body size, this is why.
 - **`[id] { scroll-margin-top: 80px }`** in `guide.css` is required. Without
   it the sticky header covers every in-page anchor target.
-- **The homepage hero bleed** needs `margin-block: 0` on the figure. A
-  `margin: 0` shorthand overrides `.n-bleed` and kills the bleed.
+- **The homepage hero photo is contained, not bled.** The design handoff
+  specified it bleeding off the screen edge; the client asked for it inside
+  the gutter, sharing a right edge with the nav and body copy. `verify.mjs`
+  asserts that alignment, so re-introducing a bleed will fail the checks.
 - **Flipped Explore entries** are placed by explicit `grid-column`, never by
   `order: -1` — `order` moves the figure into the 64px numeral track and
   crushes the photo to 64px wide.
@@ -222,9 +224,8 @@ at desktop and mobile widths it checks:
 two widths and is the gate; run the sweep after any layout change.
 
 Plus targeted checks on the four known traps and on each interactive piece:
-the hero bleed reaching the screen edge at 768 through 2560 (it cancelled only
-the gutter at first, which falls short past the 1440px container), the Explore
-flip not crushing its photo, anchor clearance under the sticky header, directory search / category /
+the hero photo aligned to the content edge and clear of the screen edge at 390
+through 2560, the Explore flip not crushing its photo, anchor clearance under the sticky header, directory search / category /
 no-match / clear, the calendar opening on the current month with a populated
 detail rail, and the mobile menu's `aria-expanded`, Escape-to-close and focus
 restoration.

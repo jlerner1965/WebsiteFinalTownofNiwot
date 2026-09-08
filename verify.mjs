@@ -209,10 +209,9 @@ for (const [name, path] of PAGES) {
 const ctx = await browser.newContext({ viewport: { width: 1280, height: 900 } });
 const page = await ctx.newPage();
 
-// The homepage hero photo must reach the right edge of the screen at every
-// width — including above the 1440px container, where cancelling only the
-// gutter leaves it short and it reads as an unfinished edge.
-const bleedWidths = [768, 1024, 1280, 1440, 1920, 2560];
+// The homepage hero photo sits inside the gutter, sharing its right edge
+// with the nav and the body copy rather than bleeding off the screen.
+const bleedWidths = [390, 768, 1024, 1280, 1440, 1920, 2560];
 const bleedResults = [];
 for (const w of bleedWidths) {
   const bctx = await browser.newContext({ viewport: { width: w, height: 900 } });
@@ -220,19 +219,26 @@ for (const w of bleedWidths) {
   await bp.goto('http://localhost:8099/', { waitUntil: 'load' });
   await bp.waitForTimeout(120);
   const r = await bp.evaluate(() => {
-    const img = document.querySelector('.n-bleed img');
+    const img = document.querySelector('.n-hero figure img');
+    const wrap = document.querySelector('.n-hero').closest('.n-wrap');
+    const box = wrap.getBoundingClientRect();
+    const contentRight = box.right - parseFloat(getComputedStyle(wrap).paddingRight);
     return {
       right: Math.round(img.getBoundingClientRect().right),
+      contentRight: Math.round(contentRight),
       edge: document.documentElement.clientWidth,
       scrollW: document.documentElement.scrollWidth,
     };
   });
-  if (Math.abs(r.right - r.edge) > 1) note(`home @ ${w}px: hero photo stops ${r.edge - r.right}px short of the edge`);
-  if (r.scrollW > r.edge + 1) note(`home @ ${w}px: bleed caused horizontal scroll (${r.scrollW} vs ${r.edge})`);
-  bleedResults.push(`${w}→${r.right}`);
+  if (Math.abs(r.right - r.contentRight) > 1) {
+    note(`home @ ${w}px: hero photo is not aligned to the content edge (${r.right} vs ${r.contentRight})`);
+  }
+  if (r.right >= r.edge - 1) note(`home @ ${w}px: hero photo is touching the screen edge`);
+  if (r.scrollW > r.edge + 1) note(`home @ ${w}px: horizontal scroll (${r.scrollW} vs ${r.edge})`);
+  bleedResults.push(`${w}→${r.edge - r.right}px`);
   await bctx.close();
 }
-console.log(`✓ hero bleed reaches the screen edge at every width: ${bleedResults.join(', ')}`);
+console.log(`✓ hero photo clears the screen edge at every width: ${bleedResults.join(', ')}`);
 
 // Explore flipped entries must not crush the photo into the 64px numeral track.
 await page.goto('http://localhost:8099/explore/', { waitUntil: 'load' });

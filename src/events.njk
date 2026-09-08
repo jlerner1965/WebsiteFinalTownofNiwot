@@ -23,7 +23,26 @@ pageStyles: |
   .n-daytag{display:block;margin-top:6px;font-size:12px;line-height:1.25;letter-spacing:.08em;text-transform:uppercase;color:var(--n-red-ink)}
   button[data-nav]{padding:11px 16px;background:transparent;border:2px solid var(--n-evergreen);color:var(--n-evergreen);font:inherit;font-size:12.5px;letter-spacing:.09em;text-transform:uppercase;cursor:pointer;transition:background .2s ease,color .2s ease}
   button[data-nav]:hover{background:var(--n-evergreen);color:var(--n-white)}
-  @media (max-width:900px){.n-cal{grid-template-columns:minmax(0,1fr)}}
+  .n-detail{position:sticky;top:88px}
+  /* A sticky rail is only sticky against something scrolling beside it. Once
+     the calendar stacks, it would just pin itself over the page. */
+  @media (max-width:900px){.n-cal{grid-template-columns:minmax(0,1fr)}.n-detail{position:static}}
+  /* "View details" is a bare button, so it misses the touch padding guide.css
+     gives .n-link. 22px is not a tap target. The padding lives here rather
+     than in the inline style calendar-core.js writes, because an inline style
+     wins over a media query and the button would stay 22px on a phone. */
+  .n-jump{padding:0}
+  @media (max-width:1080px){.n-jump{padding-top:12px;padding-bottom:12px}}
+  /* A seventh of a phone screen is about 34px of usable cell, and the series
+     name is clipped to "MARKI". Below this width the name stays in the
+     accessible name of the day button and a square marker carries it
+     visually, matched by the shaded ground and explained under the grid. */
+  @media (max-width:620px){
+  button[data-day]{position:relative;padding:6px 4px}
+  .n-daytag{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+  button[data-day][data-has="yes"]::after{content:"";display:block;width:9px;height:9px;margin-top:6px;background:var(--n-red)}
+  button[data-day][aria-pressed="true"]::after{background:var(--n-gold-lt)}
+  }
 ---
 <section class="n-bg-white" aria-labelledby="title-h">
 <div class="n-wrap" style="padding-top:clamp(28px,4vw,60px);padding-bottom:clamp(20px,2.5vw,36px)">
@@ -69,9 +88,9 @@ pageStyles: |
 {%- endfor %}
 </div>
 <div class="n-grid7" data-cal-grid role="group" aria-label="Month">{{ eventsBuild.cellsHtml | safe }}</div>
-<p class="n-small" style="margin:16px 0 0">Shaded evenings carry a recurring series. Select one for the detail, or use the list above.</p>
+<p class="n-small" style="margin:16px 0 0">Shaded days &#8212; marked with a square on a narrow screen &#8212; carry a recurring series. Select one for the detail, or use the list above.</p>
 </div>
-<aside aria-labelledby="detail-h" style="position:sticky;top:88px">
+<aside class="n-detail" aria-labelledby="detail-h">
 <h3 class="n-label n-label--quiet" id="detail-h" style="margin:0;padding-bottom:14px;border-bottom:2px solid var(--n-evergreen)">Event detail</h3>
 {#- Never empty: with nothing selected it shows the next upcoming occurrence. -#}
 <div data-cal-detail style="padding-top:20px">{{ eventsBuild.detailHtml | safe }}</div>

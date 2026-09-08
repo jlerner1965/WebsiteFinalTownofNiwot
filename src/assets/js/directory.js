@@ -17,7 +17,7 @@ if (rows.length && search) {
   const state = { cat: 'All', q: '' };
 
   const haystack = (row) =>
-    [row.dataset.name, row.dataset.category, row.dataset.note, row.dataset.area]
+    [row.dataset.name, row.dataset.category, row.dataset.note, row.dataset.area, row.dataset.address]
       .join(' ')
       .toLowerCase();
 

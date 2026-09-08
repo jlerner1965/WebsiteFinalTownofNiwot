@@ -67,7 +67,7 @@ template except the prose that belongs to a specific page.
 |---|---|
 | `site.js` | Name, canonical URL, review dates, the legal disclaimer |
 | `nav.js` | Primary navigation, in render order |
-| `listings.js` | Business directory, with category counts derived from the entries |
+| `listings.js` | Business directory and its provenance, with category counts derived from the entries |
 | `series.js` | Recurring event series (see "The calendar") |
 | `organizations.js` | Community organizations |
 | `services.js` | Resident resources — which body handles what |
@@ -216,15 +216,24 @@ of the design, not a content-team preference:
 
 ## Content status
 
-Two areas are intentionally sparse. Both accept real data through `src/_data/`
-with no template changes.
-
-- **Directory** ships with four listings — the businesses whose signage is
-  legible in the supplied photographs. Street addresses and phone numbers were
-  deliberately not invented; each row links to the Business Association for
-  current hours and contact details.
+- **Directory** carries the Niwot businesses that published sources name and
+  show as trading — 56 of them across ten categories, compiled from the Niwot
+  Business Association directory, the *Left Hand Valley Courier* and each
+  business's own site. Street addresses are included where a source publishes one; phone
+  numbers still are not, because they go stale faster than anything else on a
+  listing, so every row links out for current hours and contact details. The
+  header comment in `src/_data/listings.js` records where the data came from,
+  which businesses were dropped as closed, and where two sources disagreed.
+  Coverage is not a claim of completeness — a sole trader with no public
+  listing will not be in it, and the page says so.
 - **Events** carry organizer-published timing rather than specific dates,
   because per-season dates weren't confirmable.
+
+Both accept real data through `src/_data/` with no template changes. Adding a
+listing is one object in `listings.js`; `note` and `address` are optional and
+the template renders what is set, so a row with only a name, a category and a
+place is valid. A new category appears in the rail automatically, and a
+category with no entries is dropped rather than shown as a dead filter.
 
 ## What still needs building
 
@@ -250,6 +259,17 @@ with no template changes.
    casual bots; sustained abuse would need a store (Vercel KV).
 4. **Real map.** The schematic SVG on Plan a Visit is an orientation device. If
    an interactive map is wanted, keep the schematic as the no-JS fallback.
+
+   It is also the one thing on the site that does not read well on a phone. The
+   SVG is a 640×372 landscape that scales to the column, so at 390px its labels
+   render at 7–9 CSS px — under the 12px floor the rest of the site holds to.
+   `verify.mjs` does not catch it because the computed `font-size` on an SVG
+   `<text>` is the attribute value, not what lands on the screen. Enlarging the
+   type inside the existing viewBox overflows the label plates and pushes
+   "TRAIL ACCESS →" past the right edge, and putting the map in a horizontal
+   scroller trips both overflow checks, so the fix is a portrait viewBox for
+   narrow screens rather than a CSS patch. Everything the map shows is also on
+   the page as text, and the caption says it is schematic.
 5. **Re-verify the ballot content** against
    [niwotelection.org](https://niwotelection.org/) after the September 11, 2026
    printer's-proof review, and update `verified` in `src/_data/site.js`.
@@ -267,6 +287,15 @@ at desktop and mobile widths it checks:
 - no rounded corners
 - the disclaimer present verbatim
 - headings not collapsed to body size (the `clamp()` trap)
+
+At 390px it additionally checks the things that pass every one of the above
+and still make a page unusable on a phone:
+
+- no `position: sticky` element except the header — a rail that is sticky in a
+  two-column layout pins itself over the content once the columns stack
+- calendar day labels inside their cell — an overflowing label is painted over
+  by the next cell's background rather than clipped, so nothing else notices
+- every standalone control at least 40px tall
 
 `widths.mjs` is a slower companion: it sweeps 26 viewport widths from 320 to
 2560 across every page looking for horizontal overflow. `verify.mjs` runs at

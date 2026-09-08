@@ -8,7 +8,11 @@ ogImage: niwot-tribune-storefront.jpg
 ogImageAlt: The Niwot Tribune false-front building on Second Avenue
 pageStyles: |
   .n-srow{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1fr) minmax(130px,auto);gap:12px 28px;align-items:baseline;padding:16px 0;border-bottom:1px solid var(--n-rule)}
-  @media (max-width:900px){.n-srow{grid-template-columns:minmax(0,1fr)}}
+  .n-orow{display:grid;grid-template-columns:minmax(0,1fr) minmax(140px,auto);gap:16px 28px;align-items:start;padding:24px 0;border-bottom:1px solid rgba(36,72,58,.22)}
+  /* Both lists stack at the same width. Left in two columns on a phone, the
+     140px reserved for "Visit site" leaves about 150px for the body copy,
+     which reads four words to a line. */
+  @media (max-width:900px){.n-srow,.n-orow{grid-template-columns:minmax(0,1fr)}}
 ---
 <section class="n-bg-white" aria-labelledby="title-h">
 <div class="n-wrap" style="padding-top:clamp(28px,4vw,60px);padding-bottom:clamp(24px,3vw,44px)">
@@ -33,7 +37,7 @@ pageStyles: |
 </div>
 <ul style="list-style:none;margin:clamp(22px,2.6vw,36px) 0 0;padding:0">
 {%- for o in organizations %}
-<li style="display:grid;grid-template-columns:minmax(0,1fr) minmax(140px,auto);gap:16px 28px;align-items:start;padding:24px 0;border-bottom:1px solid rgba(36,72,58,.22)">
+<li class="n-orow">
 <div>
 <h3 class="n-h3" style="font-size:1.5rem;color:var(--n-evergreen)">{{ o.name }}</h3>
 <p class="n-body" style="margin:12px 0 0;max-width:64ch;font-size:.9375rem">{{ o.body }}</p>

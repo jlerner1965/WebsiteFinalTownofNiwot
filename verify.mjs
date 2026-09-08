@@ -42,6 +42,7 @@ const COUNTS = {
   'our-story': { '.n-era': 5 },
   civic: { '.n-status > div': 6, '#ballot li': 3, '#fiscal li': 5, '#after li': 5, '#official a.n-btn': 7 },
   'plan-a-visit': { '.n-g4 > div': 4, 'form [name]': 5 },
+  404: { '.n-lost a': 6 },
 };
 
 const PAGES = [
@@ -53,6 +54,7 @@ const PAGES = [
   ['our-story', '/our-story/'],
   ['civic', '/civic/incorporation-election/'],
   ['plan-a-visit', '/plan-a-visit/'],
+  ['404', '/404.html'],
 ];
 
 /* Set CHROMIUM_PATH to point at an existing Chromium instead of the one

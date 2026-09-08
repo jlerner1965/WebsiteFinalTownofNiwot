@@ -21,10 +21,18 @@ structuredData:
 pageStyles: |
   .n-hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.72fr);gap:clamp(24px,3vw,56px);align-items:end}
   .n-hero-mark{font-size:clamp(4rem,14.5vw,12rem)}
-  /* The photo runs off the right edge of the container. The figure's own
-     margin must be set with margin-block, not the margin shorthand, or it
-     overrides this class and kills the bleed. */
-  .n-bleed{margin-right:calc(-1 * var(--n-gutter))}
+  /* The photo runs off the right edge of the SCREEN, not merely the 1440px
+     container: past that width the container is centred, so cancelling only
+     the gutter leaves the photo ending in open margin — 240px short at
+     1920px — which reads as an unfinished edge rather than a bleed. So the
+     centring margin is cancelled too.
+     The figure's own margin must be set with margin-block, not the margin
+     shorthand, or it overrides this class and kills the bleed. */
+  .n-bleed{margin-right:calc(-1 * (var(--n-gutter) + max(0px, (100vw - var(--n-max)) / 2)))}
+  /* 100vw counts the scrollbar, so the rule above overhangs by a few pixels.
+     Clip it rather than let that become a horizontal scrollbar. `clip` (not
+     `hidden`) leaves the vertical axis visible and creates no scroll box. */
+  .n-hero-sec{overflow-x:clip}
   .n-quick{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0 clamp(20px,3vw,52px)}
   .n-exp{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(18px,2vw,34px)}
   .n-exp-wide{grid-column:span 2}
@@ -87,7 +95,7 @@ facts:
     text: Farmland begins immediately east of the storefronts. The walk from brick to open field takes about four minutes.
 ---
 {#- 1. Hero -#}
-<section class="n-bg-white" aria-labelledby="hero-h">
+<section class="n-bg-white n-hero-sec" aria-labelledby="hero-h">
 <div class="n-wrap" style="padding-top:clamp(24px,3.5vw,52px)">
 <div class="n-hero">
 <div style="padding-bottom:clamp(10px,1.5vw,24px)">

@@ -129,6 +129,28 @@ for (const [name, path] of PAGES) {
     imgs.filter((i) => !i.ok).forEach((i) => note(`${name}/${label}: image failed: ${i.src}`));
     imgs.filter((i) => i.alt === null || i.alt.trim() === '').forEach((i) => note(`${name}/${label}: image missing alt: ${i.src}`));
 
+    // Text ink, not just boxes. An unbreakable word paints outside its box
+    // without widening it, so a box-only check reports clean while glyphs
+    // are visibly clipped.
+    const spills = await page.evaluate(() => {
+      const out = [];
+      const walk = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+      const edge = document.documentElement.clientWidth;
+      let n;
+      while ((n = walk.nextNode())) {
+        if (!n.textContent.trim()) continue;
+        const r = document.createRange();
+        r.selectNodeContents(n);
+        const b = r.getBoundingClientRect();
+        if (b.width === 0) continue;
+        if (b.right > edge + 1 || b.left < -1) {
+          out.push(n.textContent.trim().slice(0, 30) + ` (${Math.round(b.left)}..${Math.round(b.right)} vs ${edge})`);
+        }
+      }
+      return out.slice(0, 4);
+    });
+    spills.forEach((t) => note(`${name}/${label}: text ink outside the viewport: ${t}`));
+
     // Minimum rendered text size 12px.
     const tiny = await page.evaluate(() => {
       const out = [];
@@ -187,14 +209,30 @@ for (const [name, path] of PAGES) {
 const ctx = await browser.newContext({ viewport: { width: 1280, height: 900 } });
 const page = await ctx.newPage();
 
-// Homepage hero photo must bleed to the right edge of the window.
-await page.goto('http://localhost:8099/', { waitUntil: 'load' });
-const bleed = await page.evaluate(() => {
-  const img = document.querySelector('.n-bleed img');
-  return { right: Math.round(img.getBoundingClientRect().right), win: window.innerWidth };
-});
-if (Math.abs(bleed.right - bleed.win) > 1) note(`home: hero photo does not bleed (right=${bleed.right}, window=${bleed.win})`);
-else console.log(`✓ hero bleed: image right ${bleed.right} == window ${bleed.win}`);
+// The homepage hero photo must reach the right edge of the screen at every
+// width — including above the 1440px container, where cancelling only the
+// gutter leaves it short and it reads as an unfinished edge.
+const bleedWidths = [768, 1024, 1280, 1440, 1920, 2560];
+const bleedResults = [];
+for (const w of bleedWidths) {
+  const bctx = await browser.newContext({ viewport: { width: w, height: 900 } });
+  const bp = await bctx.newPage();
+  await bp.goto('http://localhost:8099/', { waitUntil: 'load' });
+  await bp.waitForTimeout(120);
+  const r = await bp.evaluate(() => {
+    const img = document.querySelector('.n-bleed img');
+    return {
+      right: Math.round(img.getBoundingClientRect().right),
+      edge: document.documentElement.clientWidth,
+      scrollW: document.documentElement.scrollWidth,
+    };
+  });
+  if (Math.abs(r.right - r.edge) > 1) note(`home @ ${w}px: hero photo stops ${r.edge - r.right}px short of the edge`);
+  if (r.scrollW > r.edge + 1) note(`home @ ${w}px: bleed caused horizontal scroll (${r.scrollW} vs ${r.edge})`);
+  bleedResults.push(`${w}→${r.right}`);
+  await bctx.close();
+}
+console.log(`✓ hero bleed reaches the screen edge at every width: ${bleedResults.join(', ')}`);
 
 // Explore flipped entries must not crush the photo into the 64px numeral track.
 await page.goto('http://localhost:8099/explore/', { waitUntil: 'load' });

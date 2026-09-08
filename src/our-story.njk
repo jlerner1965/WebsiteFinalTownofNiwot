@@ -21,7 +21,7 @@ pageStyles: |
 {#- The source aerial is oversaturated and only 547px wide; it is desaturated
     to match the documentary treatment and never displayed wider than ~500px. -#}
 <figure style="margin:0">
-<img src="/assets/photos/old-town-aerial.jpg" alt="Aerial view of Niwot in autumn showing the commercial buildings, the street grid and the farmland and rail corridor beyond" decoding="async" style="display:block;width:100%;height:clamp(200px,22vw,320px);object-fit:cover;object-position:center 50%;filter:saturate(.68) contrast(.96) brightness(1.02)">
+{% photo "old-town-aerial.jpg", "Aerial view of Niwot in autumn showing the commercial buildings, the street grid and the farmland and rail corridor beyond", "(max-width: 900px) calc(100vw - 40px), (max-width: 1440px) 34vw, 480px", "display:block;width:100%;height:clamp(200px,22vw,320px);object-fit:cover;object-position:center 50%;filter:saturate(.68) contrast(.96) brightness(1.02)", true %}
 <figcaption class="n-cap">The grid, the corridor and the fields it was built to serve</figcaption>
 </figure>
 </div>

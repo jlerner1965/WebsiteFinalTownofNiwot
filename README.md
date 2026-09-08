@@ -76,6 +76,36 @@ template except the prose that belongs to a specific page.
 
 Point these at a CMS and the templates take the new data unchanged.
 
+### Photographs
+
+Templates never reference `/assets/photos/` directly — they call the `photo`
+shortcode, which runs the source through
+[eleventy-img](https://www.11ty.dev/docs/plugins/image/):
+
+```njk
+{% raw %}{% photo "second-avenue-patios.jpg", "alt text", "sizes", "style", true %}{% endraw %}
+```
+
+The last argument marks an above-the-fold image (eager + `fetchpriority`);
+omit it and the image is lazy-loaded. The shortcode throws if alt text is
+missing, so an unlabelled photograph cannot reach the build.
+
+Each source is emitted as AVIF, WebP and JPEG at five widths, and `width`
+/`height` are set from the source so nothing shifts as images load. Nothing
+is ever upscaled — `old-town-aerial.jpg` is 547px wide and simply yields
+fewer variants, which is also why the handoff says never to display it wider
+than ~500px.
+
+`sizes` is per-instance and describes the grid slot the image occupies. Get it
+wrong and the browser picks a variant that is too small (blurry) or too large
+(wasteful), so it is worth updating when a layout changes.
+
+Measured on the homepage: **3.9MB → 0.43MB** at 1280px, **0.13MB** at 390px.
+This adds roughly 45 seconds to a cold build.
+
+The originals stay published because the Open Graph tags point at them —
+social scrapers want a stable JPEG URL, and page visitors never fetch them.
+
 ### Forms
 
 The two forms POST to `/api/contact` natively, so they work with JavaScript
@@ -216,9 +246,8 @@ with no template changes.
    would need a store (Vercel KV) and is not wired up.
 2. **Content source.** Move `src/_data/` to a CMS when there is someone to
    maintain it.
-3. **Responsive images.** Photographs are served as single JPEGs.
-   Below-the-fold images are lazy-loaded, but WebP/AVIF with `srcset` would cut
-   the payload substantially.
+3. **Per-IP rate limiting on the form.** The honeypot and length caps stop
+   casual bots; sustained abuse would need a store (Vercel KV).
 4. **Real map.** The schematic SVG on Plan a Visit is an orientation device. If
    an interactive map is wanted, keep the schematic as the no-JS fallback.
 5. **Re-verify the ballot content** against

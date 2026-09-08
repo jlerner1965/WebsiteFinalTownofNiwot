@@ -173,6 +173,17 @@ government seals, marketing text over photographs, pure black body text.
   specified it bleeding off the screen edge; the client asked for it inside
   the gutter, sharing a right edge with the nav and body copy. `verify.mjs`
   asserts that alignment, so re-introducing a bleed will fail the checks.
+- **The schematic map is two SVGs, not one.** An SVG scales to its column, so
+  a 12-unit label in a 640-unit viewBox only renders at 12px when the map is
+  drawn 640px wide. The landscape map is used where the column can give it
+  that; below 720px a portrait version with a 300-unit viewBox takes over, and
+  `.n-maprow` stays one column until 1200px so the landscape one is never
+  squeezed into half a narrow page. Only one is displayed, so each carries its
+  own `aria-label` and a screen reader hears a single map. The page-level
+  "text under 12px" check cannot see this class of bug — the computed
+  `font-size` on an SVG `<text>` is the attribute value, not what lands on the
+  screen — so `verify.mjs` measures the rendered size separately, at eleven
+  widths from 320 to 2560.
 - **Flipped Explore entries** are placed by explicit `grid-column`, never by
   `order: -1` — `order` moves the figure into the 64px numeral track and
   crushes the photo to 64px wide.
@@ -257,19 +268,8 @@ category with no entries is dropped rather than shown as a dead filter.
    maintain it.
 3. **Per-IP rate limiting on the form.** The honeypot and length caps stop
    casual bots; sustained abuse would need a store (Vercel KV).
-4. **Real map.** The schematic SVG on Plan a Visit is an orientation device. If
-   an interactive map is wanted, keep the schematic as the no-JS fallback.
-
-   It is also the one thing on the site that does not read well on a phone. The
-   SVG is a 640×372 landscape that scales to the column, so at 390px its labels
-   render at 7–9 CSS px — under the 12px floor the rest of the site holds to.
-   `verify.mjs` does not catch it because the computed `font-size` on an SVG
-   `<text>` is the attribute value, not what lands on the screen. Enlarging the
-   type inside the existing viewBox overflows the label plates and pushes
-   "TRAIL ACCESS →" past the right edge, and putting the map in a horizontal
-   scroller trips both overflow checks, so the fix is a portrait viewBox for
-   narrow screens rather than a CSS patch. Everything the map shows is also on
-   the page as text, and the caption says it is schematic.
+4. **Real map.** The schematic SVGs on Plan a Visit are an orientation device.
+   If an interactive map is wanted, keep the schematics as the no-JS fallback.
 5. **Re-verify the ballot content** against
    [niwotelection.org](https://niwotelection.org/) after the September 11, 2026
    printer's-proof review, and update `verified` in `src/_data/site.js`.
@@ -293,6 +293,8 @@ and still make a page unusable on a phone:
 
 - no `position: sticky` element except the header — a rail that is sticky in a
   two-column layout pins itself over the content once the columns stack
+- schematic map labels rendered at 12px or more, measured after the SVG has
+  been scaled to its column, at eleven widths from 320 to 2560
 - calendar day labels inside their cell — an overflowing label is painted over
   by the next cell's background rather than clipped, so nothing else notices
 - every standalone control at least 40px tall

@@ -1,77 +1,91 @@
 /* Submission and newsletter forms.
 
-   These compose a mailto: link, which is a stopgap — see README.md, "What
-   still needs building". A real endpoint replaces this module; the markup and
-   the success state stay as they are.
+   The forms POST to /api/contact on their own, so they work with this file
+   absent or broken. This only upgrades the experience: it posts the same
+   payload in the background and renders the outcome in place, instead of
+   navigating away to /thanks/.
 
-   When no destination address is configured the form does not pretend to have
-   sent anything: the surrounding template says so, and submitting is a no-op
-   beyond native validation. */
+   Outcome text comes from the endpoint, not from here — so a form that
+   cannot deliver says exactly why rather than showing a thank-you the
+   server never earned. */
 
-function outcomeNode(form, selector) {
+function outcomeNode(form, selector, text) {
   const template = form.parentElement.querySelector(selector);
   if (!template) return null;
-  return template.content.firstElementChild.cloneNode(true);
-}
-
-function fieldValue(form, name) {
-  const field = form.elements[name];
-  return field ? field.value : '';
-}
-
-function compose(form) {
-  const kind = fieldValue(form, 'kind');
-  const subject = fieldValue(form, 'subject');
-  const detail = fieldValue(form, 'detail');
-  const source = fieldValue(form, 'source');
-  const email = fieldValue(form, 'email');
-
-  /* The newsletter form carries only an address. */
-  if (!subject && !detail) {
-    return {
-      subject: form.dataset.subject || 'Niwot guide',
-      body: 'Please add this address to update notices: ' + email,
-    };
+  const node = template.content.firstElementChild.cloneNode(true);
+  if (text) {
+    const slot = node.querySelector('[data-message]');
+    if (slot) slot.textContent = text;
   }
-
-  return {
-    subject: 'Niwot guide: ' + (subject || 'submission'),
-    body: [
-      'Kind: ' + kind,
-      'Subject: ' + subject,
-      '',
-      detail,
-      '',
-      'Source: ' + source,
-      'From: ' + email,
-    ].join('\n'),
-  };
+  return node;
 }
 
-document.querySelectorAll('[data-mailto-form]').forEach((form) => {
-  form.addEventListener('submit', (event) => {
-    event.preventDefault();
-    const to = (form.dataset.to || '').trim();
+function show(form, node) {
+  if (!node) return;
+  form.replaceWith(node);
+  /* role="status" announces it; move focus so keyboard users land on it. */
+  node.setAttribute('tabindex', '-1');
+  node.focus();
+}
 
-    if (to) {
-      const message = compose(form);
-      window.location.href =
-        'mailto:' + to +
-        '?subject=' + encodeURIComponent(message.subject) +
-        '&body=' + encodeURIComponent(message.body);
+function setBusy(form, busy) {
+  const button = form.querySelector('button[type="submit"]');
+  if (!button) return;
+  button.disabled = busy;
+  button.textContent = busy ? 'Sending…' : button.dataset.label || button.textContent;
+}
+
+document.querySelectorAll('[data-contact-form]').forEach((form) => {
+  const button = form.querySelector('button[type="submit"]');
+  if (button) button.dataset.label = button.textContent;
+
+  form.addEventListener('submit', async (event) => {
+    /* Let the browser handle its own validation first. */
+    if (!form.reportValidity()) return;
+
+    event.preventDefault();
+    setBusy(form, true);
+
+    let payload;
+    let ok = false;
+    try {
+      const response = await fetch(form.action, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify(Object.fromEntries(new FormData(form))),
+      });
+      payload = await response.json();
+      ok = response.ok && payload.ok;
+    } catch {
+      payload = {
+        message:
+          'That could not be sent — the connection failed. Please try again, or use the direct contacts on this page.',
+      };
     }
 
-    /* Without a destination nothing was handed off, so the page must not
-       claim it was. It says what happened and where to go instead. */
-    const outcome = outcomeNode(
-      form,
-      to ? '[data-mailto-success]' : '[data-mailto-unavailable]'
-    );
-    if (!outcome) return;
+    setBusy(form, false);
 
-    form.replaceWith(outcome);
-    /* role="status" announces it; move focus so keyboard users land on it. */
-    outcome.setAttribute('tabindex', '-1');
-    outcome.focus();
+    if (ok) {
+      show(form, outcomeNode(form, '[data-form-success]'));
+      return;
+    }
+
+    /* Errors keep the form in place so the reader can correct and retry;
+       only an unconfigured endpoint replaces it, since retrying is futile. */
+    if (payload && payload.configured === false) {
+      show(form, outcomeNode(form, '[data-form-unavailable]', payload.message));
+      return;
+    }
+
+    let error = form.querySelector('[data-form-error]');
+    if (!error) {
+      error = document.createElement('p');
+      error.setAttribute('data-form-error', '');
+      error.setAttribute('role', 'alert');
+      error.className = 'n-small';
+      error.style.cssText = 'margin:14px 0 0;max-width:48ch;color:var(--n-gold-lt)';
+      form.appendChild(error);
+    }
+    error.textContent = payload ? payload.message : 'That could not be sent.';
   });
 });

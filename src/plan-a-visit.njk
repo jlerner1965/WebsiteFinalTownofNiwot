@@ -243,7 +243,11 @@ direct:
 <div class="n-label">Contribute</div>
 <h2 class="n-h2" id="contact-h" style="margin-top:12px;max-width:20ch">Add a listing, an event, or a correction</h2>
 <p class="n-body" style="margin:16px 0 0;max-width:54ch;color:var(--n-paper)">Business owners, event organizers and residents keep this guide accurate. Send yours and it goes in with the date it was verified.</p>
-<form data-mailto-form data-to="{{ site.contactEmail }}" style="display:grid;gap:18px;max-width:560px;margin-top:24px">
+<form data-contact-form method="post" action="/api/contact" style="display:grid;gap:18px;max-width:560px;margin-top:24px">
+<div class="n-sr" aria-hidden="true">
+<label for="v-company">Leave this field empty</label>
+<input id="v-company" name="company" type="text" tabindex="-1" autocomplete="off">
+</div>
 <div>
 <label class="n-label" for="v-kind" style="color:var(--n-gold-lt)">What is this?</label>
 <select class="n-field" id="v-kind" name="kind">
@@ -273,13 +277,10 @@ direct:
 </div>
 <div style="display:flex;flex-wrap:wrap;gap:16px;align-items:center">
 <button class="n-btn" type="submit" style="cursor:pointer;font-family:inherit">Send submission</button>
-{%- if not site.contactEmail %}
-<span class="n-small" style="max-width:36ch;color:var(--n-sage-lt)">This form is not connected yet. Use the direct contacts beside it in the meantime.</span>
-{%- endif %}
 </div>
 </form>
-<template data-mailto-success><p role="status" style="margin:24px 0 0;padding-top:16px;border-top:3px solid var(--n-gold-lt);max-width:54ch;color:var(--n-white)">Thank you &#8212; your submission is ready to send from your email client.</p></template>
-<template data-mailto-unavailable><p role="status" style="margin:24px 0 0;padding-top:16px;border-top:3px solid var(--n-gold-lt);max-width:54ch;color:var(--n-white)">This form is not connected yet, so nothing was sent. Use the direct contacts listed beside this form &#8212; each one is the responsible body for its subject.</p></template>
+<template data-form-success><p role="status" style="margin:24px 0 0;padding-top:16px;border-top:3px solid var(--n-gold-lt);max-width:54ch;color:var(--n-white)">Thank you &#8212; your submission has been sent. It goes in with the date it was verified.</p></template>
+<template data-form-unavailable><p role="status" data-message style="margin:24px 0 0;padding-top:16px;border-top:3px solid var(--n-gold-lt);max-width:54ch;color:var(--n-white)">This form is not connected yet, so nothing was sent. Use the direct contacts listed beside this form &#8212; each one is the responsible body for its subject.</p></template>
 </div>
 <div>
 <div class="n-label">Go direct instead</div>

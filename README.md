@@ -47,6 +47,7 @@ src/
   assets/
     css/guide.css      Palette, chrome, grids, graphic devices
     js/                Mobile menu, calendar, directory, forms
+api/contact.js        Form endpoint (Vercel Function)
     photos/            Eight licensed photographs
   *.njk               One file per page
 eleventy.config.js
@@ -64,7 +65,7 @@ template except the prose that belongs to a specific page.
 
 | File | Holds |
 |---|---|
-| `site.js` | Name, canonical URL, contact address, review dates, the legal disclaimer |
+| `site.js` | Name, canonical URL, review dates, the legal disclaimer |
 | `nav.js` | Primary navigation, in render order |
 | `listings.js` | Business directory, with category counts derived from the entries |
 | `series.js` | Recurring event series (see "The calendar") |
@@ -74,6 +75,14 @@ template except the prose that belongs to a specific page.
 | `election.js` | 2026 election: status, ballot questions, fiscal issues, official resources |
 
 Point these at a CMS and the templates take the new data unchanged.
+
+### Forms
+
+The two forms POST to `/api/contact` natively, so they work with JavaScript
+absent or broken; the endpoint answers a normal form post with a 303 to
+`/thanks/`. `forms.js` only upgrades that — it posts the same payload in the
+background and renders the outcome in place. Outcome text comes from the
+endpoint rather than the page, so a form that cannot deliver says why.
 
 ### The calendar
 
@@ -189,11 +198,22 @@ with no template changes.
 
 ## What still needs building
 
-1. **Form backend.** The submission and newsletter forms compose a `mailto:`
-   link. Replace `src/assets/js/forms.js` with a real endpoint plus spam
-   protection and a server-rendered success state. Until `site.contactEmail` is
-   set, the forms say plainly that they are not connected rather than claiming
-   a submission was sent.
+1. **Set the form's environment variables.** The endpoint is built
+   (`api/contact.js`) but inert until these are set in Vercel → Project →
+   Settings → Environment Variables:
+
+   | Variable | Purpose |
+   |---|---|
+   | `CONTACT_EMAIL` | Where submissions are delivered. Required. |
+   | `RESEND_API_KEY` | A [Resend](https://resend.com) API key. Required. |
+   | `CONTACT_FROM` | Verified sender, e.g. `guide@townofniwot.com`. Defaults to `onboarding@resend.dev`, which only delivers to the address owning the Resend account — testing only. |
+
+   Until both required variables are set the endpoint returns 503 and the
+   forms say so, rather than showing a thank-you nothing earned. Swapping
+   Resend for another provider is one `fetch` call in `api/contact.js`.
+
+   Spam protection is a honeypot field plus length caps. Per-IP rate limiting
+   would need a store (Vercel KV) and is not wired up.
 2. **Content source.** Move `src/_data/` to a CMS when there is someone to
    maintain it.
 3. **Responsive images.** Photographs are served as single JPEGs.

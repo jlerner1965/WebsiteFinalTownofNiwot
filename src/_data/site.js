@@ -7,11 +7,11 @@ export default {
   /* Canonical origin, used for canonical URLs and Open Graph tags. */
   url: 'https://townofniwot.com',
 
-  /* Destination for the submission and newsletter forms.
-     These forms compose a mailto: link, which is a stopgap — see README.md,
-     "What still needs building". While this is empty the forms say so plainly
-     rather than silently discarding what somebody typed. */
-  contactEmail: '',
+  /* The submission and newsletter forms POST to /api/contact, a Vercel
+     Function. Its destination and provider key are environment variables,
+     not build-time config, so they never enter the repository — see
+     api/contact.js for the list. Until they are set the endpoint returns 503
+     and the forms say so rather than swallowing what somebody typed. */
 
   /* Editorial stamps. `reviewed` is the sitewide content review; `verified` is
      the stricter, dated check applied to the election page only. */

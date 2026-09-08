@@ -349,14 +349,16 @@ facts:
 <div class="n-label">Community updates</div>
 <h2 class="n-h2" id="nl-h" style="margin-top:12px;max-width:22ch">Notices by email</h2>
 <p class="n-body" style="margin:16px 0 0;max-width:52ch;color:var(--n-paper)">One message when something here changes: a new event, a confirmed listing, a corrected fact.</p>
-<form data-mailto-form data-subject="Niwot guide: notice signup" data-to="{{ site.contactEmail }}" style="display:flex;flex-wrap:wrap;gap:12px;margin-top:22px;max-width:520px">
+<form data-contact-form method="post" action="/api/contact" style="display:flex;flex-wrap:wrap;gap:12px;margin-top:22px;max-width:520px">
+<input type="hidden" name="kind" value="newsletter">
+<span class="n-sr" aria-hidden="true"><label for="nl-company">Leave this field empty</label><input id="nl-company" name="company" type="text" tabindex="-1" autocomplete="off"></span>
 <label class="n-sr" for="nl-email">Your email address</label>
 <input id="nl-email" name="email" type="email" required placeholder="you@example.com" style="flex:1 1 220px;min-width:0;padding:14px;background:var(--n-white);border:2px solid var(--n-white);font:inherit;font-size:1rem;color:var(--n-ink)">
 <button class="n-btn" type="submit" style="cursor:pointer;font-family:inherit">Subscribe</button>
 </form>
-<template data-mailto-success><p role="status" style="margin:22px 0 0;padding-top:14px;border-top:3px solid var(--n-gold-lt);max-width:48ch;color:var(--n-white)">Thank you &#8212; your address is ready to send from your email client.</p></template>
-<template data-mailto-unavailable><p role="status" style="margin:22px 0 0;padding-top:14px;border-top:3px solid var(--n-gold-lt);max-width:48ch;color:var(--n-white)">Email notices are not running yet, so nothing was sent. The <a href="/events/">events calendar</a> carries the same updates in the meantime.</p></template>
-<p class="n-small" style="margin:12px 0 0;max-width:48ch;color:var(--n-sage-lt)">{% if site.contactEmail %}Your address is used only for these notices. No advertising and no third-party tracking.{% else %}Email notices are not running yet. Until they are, the events calendar and the organizations below carry the same updates.{% endif %}</p>
+<template data-form-success><p role="status" style="margin:22px 0 0;padding-top:14px;border-top:3px solid var(--n-gold-lt);max-width:48ch;color:var(--n-white)">Thank you &#8212; your address is ready to send from your email client.</p></template>
+<template data-form-unavailable><p role="status" data-message style="margin:22px 0 0;padding-top:14px;border-top:3px solid var(--n-gold-lt);max-width:48ch;color:var(--n-white)">Email notices are not running yet, so nothing was sent. The <a href="/events/">events calendar</a> carries the same updates in the meantime.</p></template>
+<p class="n-small" style="margin:12px 0 0;max-width:48ch;color:var(--n-sage-lt)">Your address is used only for these notices. No advertising and no third-party tracking.</p>
 </div>
 <div>
 <div class="n-label">Contribute</div>

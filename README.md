@@ -212,13 +212,19 @@ at desktop and mobile widths it checks:
 - no horizontal overflow
 - every image loads and carries alt text
 - no rendered text below 12px
+- no text ink painted outside the viewport (boxes alone miss clipped glyphs)
 - no rounded corners
 - the disclaimer present verbatim
 - headings not collapsed to body size (the `clamp()` trap)
 
+`widths.mjs` is a slower companion: it sweeps 26 viewport widths from 320 to
+2560 across every page looking for horizontal overflow. `verify.mjs` runs at
+two widths and is the gate; run the sweep after any layout change.
+
 Plus targeted checks on the four known traps and on each interactive piece:
-the hero bleed reaching the window edge, the Explore flip not crushing its
-photo, anchor clearance under the sticky header, directory search / category /
+the hero bleed reaching the screen edge at 768 through 2560 (it cancelled only
+the gutter at first, which falls short past the 1440px container), the Explore
+flip not crushing its photo, anchor clearance under the sticky header, directory search / category /
 no-match / clear, the calendar opening on the current month with a populated
 detail rail, and the mobile menu's `aria-expanded`, Escape-to-close and focus
 restoration.

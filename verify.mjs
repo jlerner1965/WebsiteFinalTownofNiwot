@@ -8,6 +8,7 @@ import { createServer } from 'node:http';
 import { readFile, stat, mkdir } from 'node:fs/promises';
 import { extname, join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import listings from './src/_data/listings.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, '_site');
@@ -36,7 +37,7 @@ await new Promise((r) => server.listen(8099, r));
 const COUNTS = {
   home: { '[data-upcoming] article': 3, '.n-quick a': 6, '.n-exp article': 4 },
   explore: { '.n-entry': 4, '.n-entry--flip': 2 },
-  'eat-shop': { '[data-listing]': 4, '[data-chip]': 7 },
+  'eat-shop': { '[data-listing]': listings.entries.length, '[data-chip]': listings.categories.length },
   events: { '[data-upcoming] article': 3, '[data-day]': 28 },
   community: { '.n-srow': 9, '#orgs li': 2 },
   'our-story': { '.n-era': 5 },
@@ -275,22 +276,39 @@ if (!outside.length) console.log('✓ map: every label sits inside the viewBox')
 await page.goto('http://localhost:8099/eat-shop/', { waitUntil: 'load' });
 await page.waitForTimeout(400);
 const visible = () => page.evaluate(() => Array.from(document.querySelectorAll('[data-listing]')).filter((r) => !r.hidden).length);
-if ((await visible()) !== 4) note('eat-shop: expected 4 listings on load');
+/* Expectations come from the data, not from a number typed here: the
+   directory grows, and a hardcoded count turns every new listing into a
+   failing check. The haystack matches directory.js field for field. */
+const matching = (term) =>
+  listings.entries.filter((e) =>
+    [e.name, e.category, e.note, e.area, e.address].join(' ').toLowerCase().includes(term)
+  ).length;
+const totalListings = listings.entries.length;
+const restaurants = listings.entries.filter((e) => e.category === 'Restaurants & Bars').length;
+if ((await visible()) !== totalListings) note(`eat-shop: expected ${totalListings} listings on load`);
 await page.fill('#dir-q', 'coffee');
 await page.waitForTimeout(120);
 const afterSearch = await visible();
-if (afterSearch !== 1) note(`eat-shop: search "coffee" showed ${afterSearch}, expected 1`);
+if (afterSearch !== matching('coffee')) note(`eat-shop: search "coffee" showed ${afterSearch}, expected ${matching('coffee')}`);
 await page.fill('#dir-q', 'zzzz');
 await page.waitForTimeout(120);
 const emptyShown = await page.evaluate(() => !document.querySelector('[data-dir-empty]').hidden);
 if (!emptyShown) note('eat-shop: no-match state did not appear');
 await page.click('[data-dir-clear]');
 await page.waitForTimeout(120);
-if ((await visible()) !== 4) note('eat-shop: Clear filters did not restore all listings');
+if ((await visible()) !== totalListings) note('eat-shop: Clear filters did not restore all listings');
+/* The directory is searched by street as well as by name. */
+await page.fill('#dir-q', 'second avenue');
+await page.waitForTimeout(120);
+const byStreet = await visible();
+if (byStreet !== matching('second avenue')) note(`eat-shop: street search showed ${byStreet}, expected ${matching('second avenue')}`);
+/* "Clear filters" only exists inside the no-match state, so empty the box. */
+await page.fill('#dir-q', '');
+await page.waitForTimeout(120);
 await page.click('[data-chip="Restaurants & Bars"]');
 await page.waitForTimeout(120);
 const byCat = await visible();
-if (byCat !== 3) note(`eat-shop: category filter showed ${byCat}, expected 3`);
+if (byCat !== restaurants) note(`eat-shop: category filter showed ${byCat}, expected ${restaurants}`);
 const heading = await page.textContent('[data-dir-heading]');
 if (heading.trim() !== 'Restaurants & Bars') note(`eat-shop: heading did not update (${heading})`);
 console.log('✓ directory: search, no-match, clear and category filter all behave');
@@ -353,6 +371,65 @@ const closed = await mp.evaluate(() => ({
 }));
 if (closed.shown || closed.expanded !== 'false' || !closed.focused) note(`mobile: Escape did not close and restore focus: ${JSON.stringify(closed)}`);
 console.log('✓ mobile menu: collapses, toggles aria state, Escape closes and restores focus');
+
+/* Sticky rails are for two-column layouts. Once a page stacks into one
+   column the rail has nothing to scroll against and pins itself on top of
+   the content it belongs to — which is exactly what the directory filter
+   did. Below the breakpoint the sticky header is the only sticky thing. */
+const MOBILE_PAGES = ['/', '/explore/', '/eat-shop/', '/events/', '/community/', '/our-story/', '/civic/incorporation-election/', '/plan-a-visit/'];
+const stuck = [];
+for (const path of MOBILE_PAGES) {
+  await mp.goto('http://localhost:8099' + path, { waitUntil: 'load' });
+  await mp.waitForTimeout(200);
+  const found = await mp.evaluate(() =>
+    Array.from(document.querySelectorAll('body *'))
+      .filter((el) => getComputedStyle(el).position === 'sticky' && !el.classList.contains('n-head'))
+      .map((el) => el.tagName.toLowerCase() + (el.className ? '.' + String(el.className).trim().split(/\s+/)[0] : ''))
+  );
+  found.forEach((f) => stuck.push(`${path} ${f}`));
+}
+stuck.forEach((f) => note(`mobile: sticky element in a stacked layout: ${f}`));
+if (!stuck.length) console.log('✓ mobile: no sticky rails pinned over stacked content');
+
+/* A seventh of a phone screen is not wide enough for a series name, and an
+   overflowing label is painted over by the next cell's background rather
+   than clipped — no scrollbar, no console warning, just "MARKI". */
+await mp.goto('http://localhost:8099/events/', { waitUntil: 'load' });
+await mp.waitForTimeout(300);
+const spilledTags = await mp.evaluate(() =>
+  Array.from(document.querySelectorAll('.n-daytag'))
+    .filter((el) => {
+      const r = el.getBoundingClientRect();
+      if (r.width <= 1) return false; // visually hidden, read aloud instead
+      const cell = el.closest('button').getBoundingClientRect();
+      return r.right > cell.right + 0.5 || r.left < cell.left - 0.5;
+    })
+    .map((el) => el.textContent)
+);
+spilledTags.forEach((t) => note(`mobile: calendar day label "${t}" overflows its cell`));
+if (!spilledTags.length) console.log('✓ mobile: calendar day labels stay inside their cell');
+
+/* Touch targets. Standalone controls need height under a fingertip; links
+   sitting inside a sentence are exempt, as they are in WCAG 2.2. */
+const smallTargets = [];
+for (const path of MOBILE_PAGES) {
+  await mp.goto('http://localhost:8099' + path, { waitUntil: 'load' });
+  await mp.waitForTimeout(200);
+  const found = await mp.evaluate(() =>
+    Array.from(document.querySelectorAll('button, .n-btn, .n-link, input:not([tabindex="-1"]), select, textarea'))
+      .filter((el) => {
+        const r = el.getBoundingClientRect();
+        if (!r.width && !r.height) return false;
+        if (el.closest('.n-sr')) return false;
+        return r.height < 40;
+      })
+      .map((el) => `${el.tagName.toLowerCase()} «${(el.textContent || el.type || '').trim().slice(0, 24)}» ${Math.round(el.getBoundingClientRect().height)}px`)
+  );
+  [...new Set(found)].forEach((f) => smallTargets.push(`${path} ${f}`));
+}
+smallTargets.forEach((t) => note(`mobile: control below a 40px touch target: ${t}`));
+if (!smallTargets.length) console.log('✓ mobile: every standalone control clears a 40px touch target');
+
 await m.close();
 
 await ctx.close();

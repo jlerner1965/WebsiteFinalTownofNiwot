@@ -198,9 +198,9 @@ export function renderUpcoming(list, mode, reference) {
     .map((occ) => {
       const action =
         mode === 'select'
-          ? '<button type="button" data-jump="' +
+          ? '<button type="button" class="n-jump" data-jump="' +
             occ.date.getFullYear() + '-' + occ.date.getMonth() + '-' + occ.date.getDate() +
-            '" style="margin-top:auto;align-self:start;padding:0;background:none;border:0;border-bottom:1px solid currentColor;color:var(--n-sky-ink);font:inherit;font-size:13px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer">View details &#8594;</button>'
+            '" style="margin-top:auto;align-self:start;background:none;border:0;border-bottom:1px solid currentColor;color:var(--n-sky-ink);font:inherit;font-size:13px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer">View details &#8594;</button>'
           : '<a class="n-link" href="/events/" style="margin-top:auto;align-self:start">View details &#8594;</a>';
       return (
         '<article style="display:flex;flex-direction:column;gap:10px;padding-top:16px;border-top:3px solid var(--n-red)">' +

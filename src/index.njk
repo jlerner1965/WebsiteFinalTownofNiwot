@@ -48,15 +48,6 @@ quick:
   - label: 2026 Incorporation Election
     note: Ballot questions and official resources
     href: /civic/incorporation-election/
-categories:
-  - Coffee & Bakery
-  - Restaurants & Bars
-  - Grocery & Provisions
-  - Home & Garden
-  - Gifts & Books
-  - Arts & Makers
-  - Health & Wellness
-  - Services
 outdoors:
   - label: Whistle Stop Park
     body: The caboose, open lawn and the summer concert ground, at the edge of Old Town.
@@ -240,9 +231,11 @@ facts:
 <div>
 <div class="n-label n-label--quiet">Browse by category</div>
 <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:0 clamp(16px,2vw,36px);margin-top:10px">
-{%- for c in categories %}
-<a class="n-shift n-shift--sm" href="/eat-shop/" style="display:block;padding:14px 0;border-top:1px solid var(--n-rule);font-size:1rem;text-decoration:none">{{ c }}</a>
-{%- endfor %}
+{#- The same categories the directory renders, counted from the same data,
+    so the two pages cannot drift apart. -#}
+{%- for c in listings.categories %}{% if c.value != 'All' %}
+<a class="n-shift n-shift--sm" href="/eat-shop/" style="display:block;padding:14px 0;border-top:1px solid var(--n-rule);font-size:1rem;text-decoration:none">{{ c.label }} <span style="color:var(--n-muted)">{{ c.count }}</span></a>
+{%- endif %}{% endfor %}
 </div>
 </div>
 </div>

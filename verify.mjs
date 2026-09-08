@@ -259,18 +259,55 @@ const anchor = await page.evaluate(() => {
 if (anchor.top < anchor.header) note(`explore: anchor #outdoors lands under the sticky header (top=${anchor.top}, header=${anchor.header})`);
 else console.log(`✓ anchor clearance: #outdoors top ${anchor.top} >= header ${anchor.header}`);
 
-// Every label in the schematic map must sit inside its viewBox.
-await page.goto('http://localhost:8099/plan-a-visit/', { waitUntil: 'load' });
-const outside = await page.evaluate(() => {
-  const svg = document.querySelector('#map svg');
-  const vb = svg.viewBox.baseVal;
-  return Array.from(svg.querySelectorAll('text'))
-    .map((t) => ({ text: t.textContent, box: t.getBBox() }))
-    .filter(({ box }) => box.x < vb.x || box.y < vb.y || box.x + box.width > vb.x + vb.width || box.y + box.height > vb.y + vb.height)
-    .map(({ text, box }) => `${text} @ ${Math.round(box.x)},${Math.round(box.y)} ${Math.round(box.width)}x${Math.round(box.height)}`);
-});
-outside.forEach((o) => note(`plan-a-visit: map label outside viewBox: ${o}`));
-if (!outside.length) console.log('✓ map: every label sits inside the viewBox');
+/* The schematic map, at every width. Two things to hold: labels inside the
+   viewBox, and labels actually readable once rendered.
+
+   The second is the one that hid for a long time. An SVG scales to its
+   column, so a 12-unit label in a 640-unit viewBox lands at 12px only when
+   the map is drawn 640px wide — below that it shrinks, and the page-level
+   "text under 12px" check never sees it, because the computed font-size on an
+   SVG <text> is the attribute value, not what reaches the screen. On a phone
+   the landscape map was painting its labels at 7px. There are now two maps,
+   landscape and portrait, and only the displayed one can be measured —
+   getBBox() throws on a display:none element. */
+const MAP_WIDTHS = [320, 390, 620, 720, 721, 900, 1024, 1199, 1200, 1440, 2560];
+let mapMin = Infinity;
+for (const width of MAP_WIDTHS) {
+  const mctx = await browser.newContext({ viewport: { width, height: 900 } });
+  const mpage = await mctx.newPage();
+  await mpage.goto('http://localhost:8099/plan-a-visit/', { waitUntil: 'load' });
+  await mpage.waitForTimeout(150);
+  const r = await mpage.evaluate(() => {
+    const svg = Array.from(document.querySelectorAll('#map svg')).find(
+      (s) => getComputedStyle(s).display !== 'none'
+    );
+    if (!svg) return null;
+    const vb = svg.viewBox.baseVal;
+    const scale = svg.getBoundingClientRect().width / vb.width;
+    const texts = Array.from(svg.querySelectorAll('text'));
+    return {
+      outside: texts
+        .map((t) => ({ text: t.textContent, box: t.getBBox() }))
+        .filter(({ box }) => box.x < vb.x || box.y < vb.y || box.x + box.width > vb.x + vb.width || box.y + box.height > vb.y + vb.height)
+        .map(({ text, box }) => `${text} @ ${Math.round(box.x)},${Math.round(box.y)} ${Math.round(box.width)}x${Math.round(box.height)}`),
+      smallest: texts.reduce(
+        (min, t) => Math.min(min, parseFloat(getComputedStyle(t).fontSize) * scale),
+        Infinity
+      ),
+      smallestText: texts
+        .map((t) => ({ t: t.textContent, px: parseFloat(getComputedStyle(t).fontSize) * scale }))
+        .sort((a, b) => a.px - b.px)[0].t,
+    };
+  });
+  await mctx.close();
+  if (!r) { note(`plan-a-visit/${width}: no map is displayed`); continue; }
+  r.outside.forEach((o) => note(`plan-a-visit/${width}: map label outside viewBox: ${o}`));
+  if (r.smallest < 12) {
+    note(`plan-a-visit/${width}: map label "${r.smallestText}" renders at ${r.smallest.toFixed(1)}px`);
+  }
+  mapMin = Math.min(mapMin, r.smallest);
+}
+console.log(`✓ map: labels inside the viewBox and never under ${mapMin.toFixed(1)}px, 320 through 2560`);
 
 // Directory filtering.
 await page.goto('http://localhost:8099/eat-shop/', { waitUntil: 'load' });

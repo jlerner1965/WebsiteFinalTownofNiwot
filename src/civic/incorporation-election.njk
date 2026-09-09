@@ -3,7 +3,7 @@ layout: layouts/base.njk
 title: 2026 Niwot Incorporation Election
 seoTitle: 2026 Niwot Incorporation Election | TownofNiwot.com
 crumbLabel: 2026 Incorporation Election
-description: Neutral voter information on the November 3, 2026 Niwot incorporation election — the three ballot questions, the five fiscal issues, what happens next, and the official election resources.
+description: "Neutral voter information on the November 3, 2026 Niwot incorporation election: the ballot questions, fiscal issues, what happens next, and official resources."
 navKey: civic
 permalink: /civic/incorporation-election/
 bodyClass: n-civic
@@ -146,10 +146,10 @@ pageStyles: |
 </div>
 <div style="margin-top:16px;padding:18px 20px;border:1px solid #24483A;border-left-width:3px">
 <div class="n-label n-label--quiet" style="color:#252B27">Campaign material</div>
-<p class="n-body" style="margin:8px 0 0;font-size:.9375rem">Two organizations campaign on this question and publish their own analysis. Their material is advocacy, not official election information, and is labeled as such wherever it appears here.</p>
+<p class="n-body" style="margin:8px 0 0;font-size:.9375rem">Three organizations campaign on this question and publish their own analysis. Their material is advocacy, not official election information, and is labeled as such wherever it appears here.</p>
 <div style="display:grid;gap:8px;margin-top:12px">
 {%- for c in election.campaigns %}
-<a class="n-link" href="{{ c.href }}" rel="noopener">{{ c.label }} &#8599;</a>
+<a class="n-link" href="{{ c.href }}" rel="noopener">{{ c.label }} <span aria-hidden="true">&#8599;</span></a>
 {%- endfor %}
 </div>
 </div>

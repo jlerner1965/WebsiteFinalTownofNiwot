@@ -29,6 +29,10 @@ const findings = [];
 for (const path of PAGES) {
   for (const width of WIDTHS) {
     const ctx = await browser.newContext({ viewport: { width, height: 900 } });
+    /* Nothing off-origin is fetched, as in verify.mjs: the only external
+       dependency is Google Fonts, and a page load that waits on it hangs
+       wherever the network is closed. */
+    await ctx.route('**/*', (route) => (route.request().url().startsWith('http://localhost:8097') ? route.continue() : route.abort()));
     const page = await ctx.newPage();
     await page.goto('http://localhost:8097' + path, { waitUntil: 'load' });
     await page.waitForTimeout(120);
@@ -37,10 +41,22 @@ for (const path of PAGES) {
       const doc = document.documentElement;
       const win = window.innerWidth;
       const over = [];
+      /* A box hidden inside a clipped ancestor (the visually-hidden honeypot
+         wrapper, an overflow:hidden crop) cannot paint past anything. */
+      const clipped = (el) => {
+        for (let a = el.parentElement; a && a !== document.body; a = a.parentElement) {
+          const o = getComputedStyle(a).overflow;
+          if (o === 'hidden' || o === 'clip') {
+            const b = a.getBoundingClientRect();
+            if (b.right <= win + 1 && b.left >= -1) return true;
+          }
+        }
+        return false;
+      };
       for (const el of document.querySelectorAll('body *')) {
         const r = el.getBoundingClientRect();
         if (r.width === 0 && r.height === 0) continue;
-        if (r.right > win + 1 || r.left < -1) {
+        if ((r.right > win + 1 || r.left < -1) && !clipped(el)) {
           over.push({
             tag: el.tagName.toLowerCase(),
             cls: (el.getAttribute('class') || '').slice(0, 42),

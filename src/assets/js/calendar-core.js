@@ -209,8 +209,8 @@ export function buildCells(events, year, month1, sel) {
       has,
       selected: sel === d,
       aria: has
-        ? d + ' ' + MONTHS[month1 - 1] + ' — ' + hits.map((h) => h.event.name + (h.event.status !== 'confirmed' ? ' (' + statusLabel(h.event.status).toLowerCase() + ')' : '')).join(', ')
-        : d + ' ' + MONTHS[month1 - 1],
+        ? MONTHS[month1 - 1] + ' ' + d + ' — ' + hits.map((h) => h.event.name + (h.event.status !== 'confirmed' ? ' (' + statusLabel(h.event.status).toLowerCase() + ')' : '')).join(', ')
+        : MONTHS[month1 - 1] + ' ' + d,
     });
   }
   return cells;
@@ -222,17 +222,19 @@ export function statusLabel(status) {
   return { confirmed: 'Confirmed', cancelled: 'Cancelled', postponed: 'Postponed', tentative: 'Expected — date not confirmed' }[status] || status;
 }
 
-/* "Fri 11 September"; the year is added when it is not the current one. */
+/* "Fri, September 11" — month first, as the "Checked September 9, 2026"
+   stamp beside it and the rest of a Colorado audience write dates; the year
+   is added when it is not the current one. */
 export function dayLabel(iso, now) {
   const { y, m, d } = parseIso(iso);
-  const base = DOWS[(weekdayOf(iso) + 6) % 7] + ' ' + d + ' ' + MONTHS[m - 1];
+  const base = DOWS[(weekdayOf(iso) + 6) % 7] + ', ' + MONTHS[m - 1] + ' ' + d;
   const currentYear = now ? parseIso(now.date).y : y;
-  return y === currentYear ? base : base + ' ' + y;
+  return y === currentYear ? base : base + ', ' + y;
 }
 
 export function longDate(iso) {
   const { y, m, d } = parseIso(iso);
-  return DOWS[(weekdayOf(iso) + 6) % 7] + ' ' + d + ' ' + MONTHS[m - 1] + ' ' + y;
+  return DOWS[(weekdayOf(iso) + 6) % 7] + ', ' + MONTHS[m - 1] + ' ' + d + ', ' + y;
 }
 
 export function clockTime(time) {
@@ -344,7 +346,7 @@ export function renderDetail(details) {
         (detail.status !== 'confirmed' ? '<div class="n-label" style="margin-top:8px">' + escapeHtml(statusLabel(detail.status)) + '</div>' : '') +
         '<dl style="margin:20px 0 0">' + renderRows(detail.rows) + '</dl>' +
         (detail.note ? '<p class="n-body" style="margin:18px 0 0;font-size:.9375rem">' + escapeHtml(detail.note) + '</p>' : '') +
-        '<a class="n-btn" href="' + escapeHtml(detail.href) + '" rel="noopener" style="margin-top:20px">' + escapeHtml(detail.linkLabel) + ' &#8599;</a>' +
+        '<a class="n-btn" href="' + escapeHtml(detail.href) + '" rel="noopener" style="margin-top:20px">' + escapeHtml(detail.linkLabel) + ' <span aria-hidden="true">&#8599;</span></a>' +
         '</div>'
     )
     .join('');
@@ -354,9 +356,15 @@ export function renderDetail(details) {
    `mode: 'select'` loads the occurrence into the detail rail in place. */
 export function renderUpcoming(list, mode, now) {
   if (!list.length) {
+    /* The events page has its "Expected" list further down; the homepage
+       has no such list, so it points at the events page instead. */
+    const expected =
+      mode === 'select'
+        ? 'The expected seasonal events are listed below'
+        : 'The expected seasonal events are listed on the <a href="/events/#expected">events calendar</a>';
     return (
       '<p class="n-body" data-upcoming-empty style="margin:0;max-width:56ch">Nothing is confirmed on the calendar right now. ' +
-      'The expected seasonal events are listed below, and the organizers’ own pages carry anything announced since this page was checked.</p>'
+      expected + ', and the organizers’ own pages carry anything announced since this page was checked.</p>'
     );
   }
   return list
@@ -365,8 +373,8 @@ export function renderUpcoming(list, mode, now) {
       const action =
         mode === 'select'
           ? '<button type="button" class="n-jump" data-jump="' + inst.date + '"' +
-            ' style="margin-top:auto;align-self:start;background:none;border:0;border-bottom:1px solid currentColor;color:var(--n-sky-ink);font:inherit;font-size:13px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer">View details &#8594;</button>'
-          : '<a class="n-link" href="/events/#cal-h" style="margin-top:auto;align-self:start">View details &#8594;</a>';
+            ' style="margin-top:auto;align-self:start;background:none;border:0;border-bottom:1px solid currentColor;color:var(--n-sky-ink);font:inherit;font-size:13px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer">View details <span aria-hidden="true">&#8594;</span></button>'
+          : '<a class="n-link" href="/events/#cal-h" style="margin-top:auto;align-self:start">View details <span aria-hidden="true">&#8594;</span></a>';
       const time = timeLabel(inst);
       return (
         '<article data-event-id="' + escapeHtml(inst.id) + '" data-event-date="' + inst.date + '" data-event-status="' + escapeHtml(ev.status) + '" style="display:flex;flex-direction:column;gap:10px;padding-top:16px;border-top:3px solid var(--n-red)">' +
@@ -392,7 +400,7 @@ export function renderExpected(list) {
         '<div><h3 class="n-h3" style="font-size:1.25rem;color:var(--n-evergreen)">' + escapeHtml(ev.name) + '</h3>' +
         '<p class="n-body" style="margin:8px 0 0;max-width:60ch;font-size:.9375rem">' + escapeHtml(ev.description) + '</p>' +
         '<div class="n-small" style="margin-top:8px;font-size:.875rem">' + escapeHtml(ev.location.name) + ' &#183; ' + escapeHtml(ev.organizer.name) + '</div>' +
-        '<a class="n-link" href="' + escapeHtml(ev.sourceUrl) + '" rel="noopener" style="display:inline-block;margin-top:12px">Organizer’s page &#8599;</a></div>' +
+        '<a class="n-link" href="' + escapeHtml(ev.sourceUrl) + '" rel="noopener" style="display:inline-block;margin-top:12px">Organizer’s page <span aria-hidden="true">&#8599;</span></a></div>' +
         '</li>'
     )
     .join('');

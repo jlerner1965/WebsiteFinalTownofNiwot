@@ -41,7 +41,7 @@ before(() => {
 
 test('all eight primary pages, the privacy page, the 404 and the utility files are built', () => {
   for (const url of [...INDEXABLE, '/thanks/']) assert.ok(fs.existsSync(fileFor(url)), url);
-  for (const file of ['404.html', 'sitemap.xml', 'robots.txt', 'favicon.svg']) assert.ok(fs.existsSync(path.join(ROOT, file)), file);
+  for (const file of ['404.html', 'sitemap.xml', 'robots.txt', 'favicon.svg', 'favicon.ico', 'apple-touch-icon.png']) assert.ok(fs.existsSync(path.join(ROOT, file)), file);
 });
 
 test('titles, descriptions, canonicals and Open Graph tags are unique and correct', () => {

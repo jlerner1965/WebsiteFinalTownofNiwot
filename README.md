@@ -18,8 +18,12 @@ npm run build      # static output into _site/
 npm test           # data validation, event logic, endpoint and built-site checks
 npm run verify     # browser checks against _site/ (see "Verification")
 npm run check      # build, test and verify in one go
+npm run links      # every external link in _site/ answers 2xx (needs an open network)
 node lighthouse.mjs   # Lighthouse against _site/, six pages on desktop
 ```
+
+The September 2026 pre-launch audit — what was checked, what was fixed and
+what still needs a person — is in `PRE-LAUNCH-AUDIT.md`.
 
 Output is plain static HTML in `_site/`. It needs no server-side runtime and
 deploys to any static host; the one function (`api/contact.js`) is a Vercel
@@ -63,6 +67,7 @@ eleventy.config.js
 vercel.json         Redirects, security headers, cache policy
 verify.mjs          Browser checks against the built site
 lighthouse.mjs      Lighthouse against the built site
+linkcheck.mjs       External link check against the built site
 ```
 
 Page-specific CSS stays in each page's `pageStyles` front matter and is
@@ -204,6 +209,11 @@ Image processing adds roughly 45 seconds to a cold build and is cached in
 
 The originals stay published because the Open Graph tags point at them —
 social scrapers want a stable JPEG URL, and page visitors never fetch them.
+The layout's `ogImageDimensions` shortcode reads each share image's size at
+build time and emits `og:image:width` and `og:image:height`, which is what
+lets Facebook render the image on the first share rather than the second.
+`old-town-aerial.jpg` is too small for a share card (547px wide against the
+1200×630 social platforms expect), so no page uses it as `ogImage`.
 
 ### Forms
 
@@ -502,3 +512,9 @@ read as a site defect.
 Eight photographs in `src/assets/photos/`, supplied by the client and licensed
 for use on this site. Do not substitute stock photography. `old-town-aerial.jpg`
 is only 547px wide — never display it wider than ~500px.
+
+The site icon is `src/assets/favicon.svg` (the wordmark's evergreen ground,
+caboose-red rule and serif N). `favicon.ico` (32px, for crawlers and browsers
+that request the legacy path or do not read SVG icons) and
+`apple-touch-icon.png` (180px, the iOS home-screen bookmark) are rasterised
+from it; regenerate both if the SVG changes.

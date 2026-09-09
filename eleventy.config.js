@@ -88,6 +88,29 @@ export default function (eleventyConfig) {
 
   eleventyConfig.addPassthroughCopy({ 'src/assets/photos': 'assets/photos' });
   eleventyConfig.addPassthroughCopy({ 'src/assets/favicon.svg': 'favicon.svg' });
+  eleventyConfig.addPassthroughCopy({ 'src/assets/favicon.ico': 'favicon.ico' });
+  eleventyConfig.addPassthroughCopy({ 'src/assets/apple-touch-icon.png': 'apple-touch-icon.png' });
+
+  /* Open Graph image dimensions, read from the photograph. Facebook renders
+     a share image on the first share only when the page declares the size;
+     without it the image is fetched after the post is up and appears from
+     the second share on. Read once per file — the same photo heads most
+     pages. */
+  const ogSizes = new Map();
+  eleventyConfig.addAsyncShortcode('ogImageDimensions', async (file) => {
+    if (!ogSizes.has(file)) {
+      /* statsOnly reads the source's dimensions without writing any file. */
+      const stats = await Image(path.join('src/assets/photos', file), { statsOnly: true, widths: ['auto'], formats: ['jpeg'], outputDir: '_site/img/', urlPath: '/img/' });
+      const { width, height } = stats.jpeg[0];
+      ogSizes.set(file, { width, height });
+    }
+    const { width, height } = ogSizes.get(file);
+    return [
+      `<meta property="og:image:width" content="${width}">`,
+      `<meta property="og:image:height" content="${height}">`,
+      '<meta property="og:image:type" content="image/jpeg">',
+    ].join('\n');
+  });
 
   // Directions links are composed the same way everywhere on the site.
   eleventyConfig.addFilter('directions', (query) =>

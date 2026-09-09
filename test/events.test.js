@@ -125,9 +125,9 @@ test('the month grid and the detail rail agree with the list', () => {
   assert.equal(cells.filter((c) => c.has).length, 1);
   const now = { date: '2026-09-09', time: '12:00' };
   const detail = detailFor(instancesOn(list, '2026-10-02')[0], now);
-  assert.equal(detail.rows[0].v, 'Fri 2 October');
+  assert.equal(detail.rows[0].v, 'Fri, October 2');
   assert.equal(detail.rows[1].v, '6–9 pm, Mountain Time');
-  assert.ok(renderUpcoming(buildUpcoming(list, now), 'link', now).includes('Fri 2 October'));
+  assert.ok(renderUpcoming(buildUpcoming(list, now), 'link', now).includes('Fri, October 2'));
 });
 
 test('structured data is emitted only for confirmed, cancelled or postponed future instances', () => {

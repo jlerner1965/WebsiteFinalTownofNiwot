@@ -107,10 +107,16 @@ const official = [
   { label: 'Ballot drop-off and voting locations', href: 'https://bouldercounty.gov/elections/' },
 ];
 
-/* Both campaigns, listed together and labeled identically. Neither is an
-   election authority and neither is presented as one. */
+/* Every registered campaign committee, listed together and labeled
+   identically. None is an election authority and none is presented as one.
+   Niwot Together was added in the September 2026 pre-launch audit: the Left
+   Hand Valley Courier reported its first campaign-finance filing on
+   August 12, 2026, a week after Neighbors for Niwot's. Re-check the
+   Secretary of State's TRACER filings for new committees before the
+   election. */
 const campaigns = [
   { label: 'Niwot Incorporation Committee — campaign material', href: 'https://www.niwot.town/' },
+  { label: 'Niwot Together — campaign material', href: 'https://niwottogether.org/' },
   { label: 'Neighbors for Niwot — campaign material', href: 'https://neighborsforniwot.org/' },
 ];
 

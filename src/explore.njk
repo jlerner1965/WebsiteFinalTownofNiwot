@@ -8,13 +8,13 @@ permalink: /explore/
 ogImage: niwot-tribune-storefront.jpg
 ogImageAlt: The Niwot Tribune false-front building on Second Avenue with a grand piano on the sidewalk
 pageStyles: |
-  .n-entry{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.85fr);gap:clamp(16px,2.5vw,44px);align-items:start}
+  .n-entry{display:grid;grid-template-columns:64px minmax(0,1fr) minmax(0,.85fr);gap:clamp(16px,2.5vw,44px);align-items:start}
   /* Flipped rows put the photo before the text. Placed by column, not by
-     order: the two tracks are unequal, and `order` would move the content
-     without moving the widths. */
-  .n-entry--flip{grid-template-columns:minmax(0,.85fr) minmax(0,1fr)}
-  .n-entry--flip>figure{grid-column:1;grid-row:1}
-  .n-entry--flip>div{grid-column:2;grid-row:1}
+     order: order:-1 moves the figure into the 64px numeral track and crushes
+     it to 64px wide. */
+  .n-entry--flip{grid-template-columns:64px minmax(0,.85fr) minmax(0,1fr)}
+  .n-entry--flip>figure{grid-column:2;grid-row:1}
+  .n-entry--flip>div{grid-column:3;grid-row:1}
   @media (max-width:900px){.n-entry,.n-entry--flip{grid-template-columns:minmax(0,1fr)}.n-entry--flip>figure,.n-entry--flip>div{grid-column:auto;grid-row:auto}}
 ---
 <section class="n-bg-white" aria-labelledby="title-h">
@@ -40,6 +40,7 @@ pageStyles: |
 <section class="n-bg-white" id="oldtown" aria-labelledby="e1-h">
 <div class="n-wrap" style="padding-block:clamp(28px,3.5vw,60px)">
 <div class="n-entry">
+<span class="n-num" aria-hidden="true" style="font-size:clamp(2rem,1.5rem + 1.6vw,3.25rem)">01</span>
 <div>
 <h2 class="n-h2" id="e1-h" style="font-size:clamp(1.75rem,1.4rem + 1.4vw,2.75rem);color:var(--n-evergreen)">Old Town</h2>
 <p class="n-body" style="margin:16px 0 0;max-width:58ch">The brick and false-front commercial block on Second Avenue is the reason the rest of this page exists. It dates from the railroad period and it is still where the community gathers.</p>
@@ -68,6 +69,7 @@ pageStyles: |
 <section class="n-bg-paper" id="cottonwood" aria-labelledby="e2-h">
 <div class="n-wrap" style="padding-block:clamp(28px,3.5vw,60px)">
 <div class="n-entry n-entry--flip">
+<span class="n-num" aria-hidden="true" style="font-size:clamp(2rem,1.5rem + 1.6vw,3.25rem)">02</span>
 <div>
 <h2 class="n-h2" id="e2-h" style="font-size:clamp(1.75rem,1.4rem + 1.4vw,2.75rem);color:var(--n-evergreen)">Cottonwood Square</h2>
 <p class="n-body" style="margin:16px 0 0;max-width:58ch">The second cluster of shops and everyday services, north-east of Old Town. Less historic, more practical, and where a lot of residents actually run errands. Two bronze bears sit on the corner.</p>
@@ -96,6 +98,7 @@ pageStyles: |
 <section class="n-bg-white" id="art" aria-labelledby="e3-h">
 <div class="n-wrap" style="padding-block:clamp(28px,3.5vw,60px)">
 <div class="n-entry">
+<span class="n-num" aria-hidden="true" style="font-size:clamp(2rem,1.5rem + 1.6vw,3.25rem)">03</span>
 <div>
 <h2 class="n-h2" id="e3-h" style="font-size:clamp(1.75rem,1.4rem + 1.4vw,2.75rem);color:var(--n-evergreen)">Public art</h2>
 <p class="n-body" style="margin:16px 0 0;max-width:58ch">The steel gateway sculpture stands at the highway edge of the community, an oval sign held inside two curving rails. Further works are sited around the commercial blocks, close enough to see on the same walk.</p>
@@ -118,6 +121,7 @@ pageStyles: |
 <section class="n-bg-sage" id="outdoors" aria-labelledby="e4-h" style="border-top:1px solid var(--n-sage);border-bottom:1px solid var(--n-sage)">
 <div class="n-wrap" style="padding-block:clamp(28px,3.5vw,60px)">
 <div class="n-entry n-entry--flip">
+<span class="n-num" aria-hidden="true" style="font-size:clamp(2rem,1.5rem + 1.6vw,3.25rem)">04</span>
 <div>
 <h2 class="n-h2" id="e4-h" style="font-size:clamp(1.75rem,1.4rem + 1.4vw,2.75rem);color:var(--n-evergreen)">Parks &amp; trails</h2>
 <p class="n-body" style="margin:16px 0 0;max-width:58ch">Whistle Stop Park sits at the edge of Old Town and keeps the restored caboose. The regional trail between Boulder and Longmont runs past the community, and Left Hand Creek crosses the fields east of the built-up blocks.</p>

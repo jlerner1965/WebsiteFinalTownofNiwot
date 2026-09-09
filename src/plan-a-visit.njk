@@ -59,7 +59,7 @@ practical:
   - label: By bike
     body: The regional trail corridor between Boulder and Longmont runs past the community and connects to quiet county roads.
   - label: Transit
-    body: Regional bus service runs along the Diagonal corridor. Routes, stops and fares change, so check the operator before travelling.
+    body: Regional bus service runs along the Diagonal corridor. Routes, stops and fares change, so check the operator before traveling.
   - label: Dogs
     body: Leash and waste rules on trails and open space are set by Boulder County Parks & Open Space.
   - label: Best time
@@ -208,7 +208,7 @@ direct:
 <span style="display:block;font-size:1rem;color:var(--n-evergreen)">{{ p.name }}</span>
 <span class="n-small" style="display:block;font-size:.875rem">{{ p.note }}</span>
 </span>
-<a class="n-link" href="{{ p.query | directions }}" rel="noopener" style="white-space:nowrap;font-size:12px">Directions &#8599;</a>
+<a class="n-link" href="{{ p.query | directions }}" rel="noopener" style="white-space:nowrap;font-size:12px">Directions <span aria-hidden="true">&#8599;</span></a>
 </div>
 {%- endfor %}
 </div>
@@ -244,8 +244,8 @@ direct:
 <h2 class="n-h2" id="ground-h" style="margin-top:12px;max-width:16ch;color:var(--n-evergreen)">Parking, walking and transit</h2>
 <p class="n-small" style="margin:18px 0 0;max-width:46ch">Niwot is unincorporated, so parking rules, road work and trail closures are set by Boulder County rather than a town. Posted signs override anything written here.</p>
 <div class="n-btns" style="margin-top:22px">
-<a class="n-btn n-btn--ghost" href="https://bouldercounty.gov/" rel="noopener">Boulder County &#8599;</a>
-<a class="n-btn n-btn--ghost" href="https://www.rtd-denver.com/" rel="noopener">Regional transit &#8599;</a>
+<a class="n-btn n-btn--ghost" href="https://bouldercounty.gov/" rel="noopener">Boulder County <span aria-hidden="true">&#8599;</span></a>
+<a class="n-btn n-btn--ghost" href="https://www.rtd-denver.com/" rel="noopener">Regional transit <span aria-hidden="true">&#8599;</span></a>
 </div>
 </div>
 <div>
@@ -345,7 +345,7 @@ direct:
 {%- for d in direct %}
 <div style="display:grid;gap:4px;padding:14px 0;border-top:1px solid rgba(158,173,152,.35)">
 <span class="n-label n-label--quiet" style="color:var(--n-sage-lt)">{{ d.what }}</span>
-<a class="n-link" href="{{ d.href }}" rel="noopener" style="justify-self:start">{{ d.who }} &#8599;</a>
+<a class="n-link" href="{{ d.href }}" rel="noopener" style="justify-self:start">{{ d.who }} <span aria-hidden="true">&#8599;</span></a>
 </div>
 {%- endfor %}
 <div style="display:grid;gap:4px;padding:14px 0;border-top:1px solid rgba(158,173,152,.35);border-bottom:1px solid rgba(158,173,152,.35)">

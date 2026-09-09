@@ -2,7 +2,7 @@
 layout: layouts/base.njk
 title: Events
 seoTitle: Niwot Events Calendar | TownofNiwot.com
-description: Confirmed events in Niwot, Colorado, each checked against the organizer's own page — concerts, art walks, dances and seasonal gatherings — with a month calendar and the annual events still waiting on a date.
+description: Confirmed events in Niwot, Colorado — concerts, art walks, dances and seasonal gatherings — each one checked against the organizer's own page.
 navKey: events
 permalink: /events/
 ogImage: whistle-stop-caboose.jpg
@@ -54,7 +54,7 @@ pageStyles: |
 <div class="n-label">Events</div>
 <h1 class="n-display" id="title-h" style="margin-top:14px;font-size:clamp(2.5rem,1.8rem + 3.4vw,5rem);line-height:.96;max-width:14ch;color:var(--n-evergreen)">What&#8217;s happening in Niwot</h1>
 </div>
-<p class="n-lead" style="margin:0;max-width:50ch">Concerts, markets and gatherings, with the organizer named on every entry. A date appears here only once it has been read on the organizer&#8217;s own page, and each entry links there. Times are Mountain Time.</p>
+<p class="n-lead" style="margin:0;max-width:50ch">Concerts, art walks and gatherings, with the organizer named on every entry. A date appears here only once it has been read on the organizer&#8217;s own page, and each entry links there. Times are Mountain Time.</p>
 </div>
 </div>
 </section>
@@ -63,7 +63,7 @@ pageStyles: |
 <div class="n-wrap">
 <div class="n-shead n-shead-row" style="border-bottom-color:var(--n-evergreen)">
 <h2 class="n-h2" id="next-h" style="font-size:clamp(1.5rem,1.2rem + 1.2vw,2.25rem);color:var(--n-evergreen)">Coming up</h2>
-<a class="n-link" href="https://niwot.com/upcoming-events/" rel="noopener">Organizer&#8217;s full calendar &#8599;</a>
+<a class="n-link" href="https://niwot.com/upcoming-events/" rel="noopener">Organizer&#8217;s full calendar <span aria-hidden="true">&#8599;</span></a>
 </div>
 {#- Rendered at build time, recomputed from the real date on load. -#}
 <div class="n-g3" style="margin-top:clamp(22px,2.6vw,36px)" data-upcoming="select">{{ eventsBuild.upcomingEventsHtml | safe }}</div>
@@ -82,7 +82,7 @@ pageStyles: |
 </div>
 <div style="display:flex;gap:10px">
 <button type="button" data-nav data-cal-prev aria-label="Previous month">&#8592; Prev</button>
-<button type="button" data-nav data-cal-next aria-label="Next month">Next &#8594;</button>
+<button type="button" data-nav data-cal-next aria-label="Next month">Next <span aria-hidden="true">&#8594;</span></button>
 </div>
 </div>
 <div class="n-dow" style="margin-top:14px" aria-hidden="true">

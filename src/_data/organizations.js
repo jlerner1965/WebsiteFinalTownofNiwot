@@ -3,7 +3,7 @@
 export default [
   {
     name: 'Niwot Business Association',
-    body: 'The membership organization for local businesses. It maintains the members’ directory with current hours and contact details, and runs much of the public events programme including the summer concert series at Whistle Stop Park.',
+    body: 'The membership organization for local businesses. It maintains the members’ directory with current hours and contact details, and runs much of the public events program including the summer concert series at Whistle Stop Park.',
     runs: 'Business directory, events calendar, summer concerts, seasonal markets',
     href: 'https://niwot.com/',
     linkLabel: 'niwot.com',

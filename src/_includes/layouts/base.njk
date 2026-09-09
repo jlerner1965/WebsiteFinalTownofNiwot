@@ -17,11 +17,18 @@
 <meta property="og:title" content="{{ seoTitle | default(title + ' — ' + site.name) }}">
 <meta property="og:description" content="{{ description }}">
 <meta property="og:url" content="{{ site.url }}{{ page.url }}">
-<meta property="og:image" content="{{ site.url }}/assets/photos/{{ ogImage | default('second-avenue-patios.jpg') }}">
+{%- set ogFile = ogImage | default('second-avenue-patios.jpg') %}
+<meta property="og:image" content="{{ site.url }}/assets/photos/{{ ogFile }}">
+{% ogImageDimensions ogFile %}
 <meta property="og:image:alt" content="{{ ogImageAlt | default('Buildings on the 300 block of Second Avenue in Niwot, with hanging baskets and patio tables out front') }}">
 <meta name="twitter:card" content="summary_large_image">
 
+{# The ICO is for browsers and crawlers that request /favicon.ico or do
+   not read SVG icons; the PNG is what iOS uses for a home-screen bookmark. #}
+<link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="theme-color" content="#24483A">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">

@@ -101,7 +101,7 @@ function clean(value, max, multiline = false) {
 export function validate(fields) {
   const errors = [];
   const kind = clean(fields.kind || 'Something else', 60);
-  if (!KINDS.includes(kind)) errors.push({ field: 'kind', message: 'Unrecognised submission type.' });
+  if (!KINDS.includes(kind)) errors.push({ field: 'kind', message: 'Unrecognized submission type.' });
 
   const email = clean(fields.email, LIMITS.email);
   const subject = clean(fields.subject, LIMITS.subject);

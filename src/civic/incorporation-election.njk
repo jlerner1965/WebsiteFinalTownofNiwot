@@ -66,11 +66,11 @@ pageStyles: |
 </div>
 {#- Unnumbered on purpose: this guide's ordering is not the ballot's, and a
     numeral beside each item could be read as one. -#}
-<ul style="list-style:none;margin:clamp(20px,2.5vw,32px) 0 0;padding:0">
+<ul style="list-style:none;margin:clamp(24px,3vw,40px) 0 0;padding:0">
 {%- for q in election.questions %}
-<li style="padding:clamp(20px,2.5vw,32px) 0;border-bottom:1px solid var(--n-rule)">
-<h3 class="n-h3" style="max-width:30ch;color:#24483A">{{ q.title }}</h3>
-<p class="n-body" style="margin:12px 0 0;max-width:66ch">{{ q.body }}</p>
+<li style="padding:clamp(20px,2.5vw,34px) 0;border-bottom:1px solid var(--n-rule)">
+<h3 class="n-h3" style="color:#24483A">{{ q.title }}</h3>
+<p class="n-body" style="margin:12px 0 0;max-width:72ch">{{ q.body }}</p>
 </li>
 {%- endfor %}
 </ul>
@@ -85,11 +85,11 @@ pageStyles: |
 <h2 class="n-h2" id="f-h" style="color:#24483A">Five fiscal issues</h2>
 <p class="n-body" style="max-width:74ch;margin:0">Each is a separate authorization. They are listed here as filed, without argument about whether they are advisable.</p>
 </div>
-<ul style="list-style:none;margin:clamp(20px,2.5vw,32px) 0 0;padding:0">
+<ul style="list-style:none;margin:clamp(24px,3vw,40px) 0 0;padding:0">
 {%- for f in election.fiscal %}
 <li style="padding:clamp(18px,2.2vw,28px) 0;border-bottom:1px solid rgba(36,72,58,.22)">
-<h3 class="n-h3" style="font-size:clamp(1.25rem,1.1rem + .5vw,1.5rem);max-width:34ch;color:#24483A">{{ f.title }}</h3>
-<p class="n-body" style="margin:10px 0 0;max-width:66ch">{{ f.body }}</p>
+<h3 style="margin:0;font-size:1.125rem;line-height:1.35;color:#24483A;font-weight:600">{{ f.title }}</h3>
+<p class="n-body" style="margin:8px 0 0;max-width:72ch;font-size:.9375rem">{{ f.body }}</p>
 </li>
 {%- endfor %}
 </ul>

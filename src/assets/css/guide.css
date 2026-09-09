@@ -227,3 +227,479 @@ textarea.n-field { resize: vertical; }
 /* ---- fieldsets carry no chrome of their own ---- */
 fieldset { min-width: 0; margin: 0; padding: 0; border: 0; }
 legend { padding: 0; }
+
+/* ---- 2026 visual refresh -------------------------------------------------
+   A Front Range editorial treatment layered over the existing content and
+   interaction model. The square-edged railway identity remains intact. */
+
+:root {
+  --n-white: #FFFEFD;
+  --n-paper: #F1EDE3;
+  --n-evergreen: #173F3A;
+  --n-forest: #0F302D;
+  --n-red: #A64F32;
+  --n-sage: #9CAD9F;
+  --n-sage-lt: #C5D2CB;
+  --n-sage-pale: #EAF0EC;
+  --n-sky: #A9C7D2;
+  --n-sky-lt: #C8DEE7;
+  --n-sky-pale: #E9F1F5;
+  --n-gold: #D7B77C;
+  --n-gold-lt: #E5D3A8;
+  --n-ink: #1C2928;
+  --n-muted: #596864;
+  --n-rule: #D6D6CE;
+  --n-red-ink: #843E2A;
+  --n-sky-ink: #315E78;
+  --n-gutter: clamp(24px, 4vw, 48px);
+  --n-max: 1240px;
+}
+
+body {
+  background: var(--n-white);
+  font-size: 17px;
+  line-height: 1.65;
+  overflow-x: hidden;
+}
+
+img { display: block; }
+
+a { text-underline-offset: 4px; }
+
+.n-display,
+.n-h2,
+.n-h3 { text-wrap: balance; }
+
+.n-pad { padding-block: clamp(64px, 7vw, 96px); }
+
+/* Light, editorial masthead. The same navigation and mobile-menu behavior
+   remain in place; only the visual treatment changes. */
+.n-head {
+  min-height: 76px;
+  background: rgba(255, 254, 253, .96);
+  border-bottom: 1px solid var(--n-rule);
+  box-shadow: 0 8px 26px rgba(15, 48, 45, .06);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+}
+
+.n-head-in { min-height: 76px; }
+
+.n-mark {
+  color: var(--n-ink);
+  font-size: 1.75rem;
+  letter-spacing: .13em;
+}
+
+.n-mark:hover { color: var(--n-red-ink); }
+
+.n-mark small {
+  display: inline-block;
+  margin: 0 0 0 12px;
+  padding-left: 12px;
+  border-left: 1px solid var(--n-ink);
+  color: var(--n-muted);
+  font-size: .7rem;
+  font-weight: 600;
+  letter-spacing: .08em;
+  vertical-align: .15em;
+}
+
+.n-nav { gap: 4px clamp(14px, 1.8vw, 28px); }
+
+.n-nav a {
+  position: relative;
+  padding: 28px 0 24px;
+  border: 0;
+  color: var(--n-ink);
+  font-size: .75rem;
+  font-weight: 600;
+  letter-spacing: .075em;
+}
+
+.n-nav a::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: 19px;
+  left: 0;
+  height: 2px;
+  background: var(--n-red);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform .18s ease;
+}
+
+.n-nav a:hover,
+.n-nav a.n-on { color: var(--n-red-ink); }
+
+.n-nav a:hover::after,
+.n-nav a.n-on::after { transform: scaleX(1); }
+
+.n-head :where(a, button):focus-visible { outline-color: var(--n-red); }
+
+.n-burger {
+  width: 44px;
+  height: 44px;
+  padding: 10px;
+  border: 0;
+}
+
+.n-burger span { background: var(--n-ink); }
+
+.n-btn {
+  min-height: 50px;
+  padding: 14px 20px;
+  font-weight: 600;
+  letter-spacing: .085em;
+  box-shadow: 0 8px 18px rgba(15, 48, 45, .10);
+  transition: background .18s ease, border-color .18s ease, color .18s ease, transform .18s ease, box-shadow .18s ease;
+}
+
+.n-btn:hover {
+  background: var(--n-red);
+  border-color: var(--n-red);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px rgba(15, 48, 45, .14);
+}
+
+.n-btn--ghost { box-shadow: none; }
+
+.n-link {
+  font-weight: 600;
+  letter-spacing: .07em;
+}
+
+.n-link span { display: inline-block; transition: transform .18s ease; }
+.n-link:hover span { transform: translateX(3px); }
+
+.n-shead {
+  padding-bottom: 22px;
+  border-bottom-width: 2px;
+}
+
+.n-label { font-weight: 600; }
+
+.n-callout {
+  padding: clamp(22px, 3vw, 32px);
+  box-shadow: 0 12px 32px rgba(15, 48, 45, .06);
+}
+
+.n-field {
+  min-height: 50px;
+  border-width: 1px;
+  transition: border-color .18s ease, box-shadow .18s ease;
+}
+
+.n-field:focus {
+  border-color: var(--n-red);
+  box-shadow: 0 0 0 3px rgba(166, 79, 50, .14);
+}
+
+.n-crumbs { background: var(--n-white); }
+
+/* Homepage: cinematic split masthead using the existing headline, copy,
+   actions and licensed Second Avenue photograph. */
+.n-home-hero {
+  overflow: hidden;
+  background: var(--n-evergreen);
+}
+
+.n-home-hero > .n-wrap {
+  max-width: none;
+  padding: 0 !important;
+}
+
+.n-home .n-hero {
+  min-height: 550px;
+  grid-template-columns: minmax(0, 48%) minmax(0, 52%);
+  gap: 0;
+  align-items: stretch;
+  background: var(--n-evergreen);
+}
+
+.n-home .n-hero > div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(52px, 6vw, 84px) clamp(32px, 5vw, 72px) clamp(52px, 6vw, 84px) max(var(--n-gutter), calc((100vw - var(--n-max)) / 2 + var(--n-gutter))) !important;
+  color: var(--n-white);
+}
+
+.n-home .n-hero-mark {
+  color: var(--n-white) !important;
+  font-size: clamp(4.5rem, 8vw, 7.5rem);
+  line-height: .84;
+  letter-spacing: -.045em;
+}
+
+.n-home .n-hero-mark + .n-lead {
+  color: #F0A782 !important;
+  font-family: var(--n-serif) !important;
+  font-size: clamp(1.45rem, 1.15rem + .9vw, 2rem) !important;
+}
+
+.n-home .n-hero .n-rail {
+  border-color: var(--n-gold);
+  background-image: repeating-linear-gradient(90deg, var(--n-gold) 0 2px, transparent 2px 12px);
+}
+
+.n-home .n-hero .n-rail + div { color: var(--n-sage-lt) !important; }
+
+.n-home .n-hero .n-body { color: #E5ECE8 !important; }
+
+.n-home .n-hero .n-btn {
+  background: var(--n-white);
+  border-color: var(--n-white);
+  color: var(--n-ink);
+}
+
+.n-home .n-hero .n-btn:hover {
+  background: var(--n-gold-lt);
+  border-color: var(--n-gold-lt);
+  color: var(--n-forest);
+}
+
+.n-home .n-hero .n-btn--ghost {
+  background: transparent;
+  border-color: rgba(255, 255, 255, .7);
+  color: var(--n-white);
+}
+
+.n-home .n-hero figure {
+  position: relative;
+  min-height: 550px;
+  overflow: hidden;
+  background: var(--n-forest);
+}
+
+.n-home .n-hero figure::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(23, 63, 58, .2), transparent 28%), linear-gradient(0deg, rgba(0, 0, 0, .28), transparent 34%);
+  pointer-events: none;
+}
+
+.n-home .n-hero figure picture { display: block; height: 100%; }
+
+.n-home .n-hero figure img {
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 550px;
+  object-fit: cover !important;
+}
+
+.n-home .n-hero figure .n-cap {
+  position: absolute;
+  z-index: 2;
+  right: 22px;
+  bottom: 18px;
+  margin: 0;
+  color: var(--n-white);
+}
+
+/* Fast paths sit immediately under the hero, in one crisp editorial row. */
+.n-home-quick {
+  padding: 30px 0 38px;
+  background: #F8F6F0;
+  border-bottom: 1px solid var(--n-rule);
+}
+
+.n-home-quick > .n-wrap { padding-top: 0 !important; }
+
+.n-home .n-quick {
+  counter-reset: quick-link;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 0 18px;
+  border-top: 2px solid var(--n-ink);
+}
+
+.n-home .n-quick > a {
+  counter-increment: quick-link;
+  min-height: 118px;
+  align-content: space-between !important;
+  padding: 14px 0 10px !important;
+  border-bottom-color: var(--n-rule) !important;
+}
+
+.n-home .n-quick > a::before {
+  content: "0" counter(quick-link);
+  grid-column: 1 / -1;
+  color: var(--n-red-ink);
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .1em;
+}
+
+.n-home .n-quick > a > span:first-child { align-self: end; }
+
+.n-home .n-quick .n-small {
+  max-width: 18ch;
+  font-size: .78rem !important;
+  line-height: 1.35;
+}
+
+/* A restrained civic notice between the utility links and editorial body. */
+.n-home-notice {
+  margin-top: 0 !important;
+  background: var(--n-sky-pale);
+  border-color: var(--n-sky) !important;
+}
+
+.n-home-notice > .n-wrap { padding-block: 28px !important; }
+
+/* Events become the homepage's dark, high-contrast anchor. */
+.n-home-events {
+  background: #173247;
+  color: var(--n-white);
+}
+
+.n-home-events .n-shead { border-bottom-color: #71808A; }
+.n-home-events .n-label { color: var(--n-gold-lt); }
+.n-home-events .n-h2 { color: var(--n-white) !important; }
+.n-home-events .n-link { color: var(--n-white); }
+
+.n-home-events [data-upcoming] article {
+  min-height: 220px;
+  padding: 22px 20px 20px !important;
+  border-top-width: 4px !important;
+  background: rgba(255, 255, 255, .045);
+  transition: background .18s ease, transform .18s ease;
+}
+
+.n-home-events [data-upcoming] article:hover {
+  background: rgba(255, 255, 255, .075);
+  transform: translateY(-3px);
+}
+
+.n-home-events [data-upcoming] .n-h3 { color: var(--n-white) !important; }
+.n-home-events [data-upcoming] .n-body { color: #D5DDE1 !important; }
+.n-home-events [data-upcoming] .n-small { color: #BFCBD1; }
+
+/* Destination cards: photographs stay prominent while each existing link
+   receives a clearer, more tactile surface. */
+.n-home-explore { background: var(--n-white); }
+
+.n-home .n-exp { gap: 24px; }
+
+.n-home .n-exp article {
+  padding: 0 0 26px;
+  border-top: 4px solid var(--n-evergreen);
+  background: #F8F6F0;
+  box-shadow: 0 14px 34px rgba(15, 48, 45, .07);
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.n-home .n-exp article:nth-child(2),
+.n-home .n-exp article:nth-child(4) { border-top-color: var(--n-red); }
+
+.n-home .n-exp article:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 42px rgba(15, 48, 45, .11);
+}
+
+.n-home .n-exp article h3,
+.n-home .n-exp article p,
+.n-home .n-exp article .n-link { margin-inline: 24px !important; }
+
+.n-home .n-exp article picture { overflow: hidden; }
+
+.n-home .n-exp article img { transition: transform .45s ease; }
+.n-home .n-exp article:hover img { transform: scale(1.018); }
+
+.n-home-shop { background: #F8F6F0; }
+
+.n-home-community {
+  background: var(--n-sage-pale);
+  border-color: var(--n-sage) !important;
+}
+
+.n-home-history { background: var(--n-white); }
+
+.n-home-history .n-g3 > div {
+  padding: 22px 22px 24px !important;
+  border-top-width: 4px !important;
+  background: #F8F6F0;
+}
+
+.n-home-contact { background: var(--n-evergreen); }
+
+/* The existing footer information remains unchanged in a denser finish. */
+.n-foot { background: #10282A; }
+
+.n-foot-cols { gap: clamp(30px, 4vw, 64px); }
+
+.n-foot a { color: #D5E0DB; }
+.n-foot .n-disclaim,
+.n-foot .n-foot-meta { color: #AABCB5; }
+
+@media (max-width: 1080px) {
+  .n-head { min-height: 68px; }
+  .n-head-in { min-height: 68px; }
+  .n-nav {
+    top: 100%;
+    padding: 8px var(--n-gutter) 20px;
+    background: var(--n-white);
+    border-bottom: 1px solid var(--n-rule);
+    box-shadow: 0 18px 30px rgba(15, 48, 45, .12);
+  }
+  .n-nav a {
+    padding: 15px 0;
+    border-bottom: 1px solid var(--n-rule);
+    color: var(--n-ink);
+    font-size: 1rem;
+  }
+  .n-nav a::after { display: none; }
+  .n-nav a.n-on { border-bottom-color: var(--n-red); }
+  .n-home .n-quick { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+@media (max-width: 900px) {
+  .n-home .n-hero {
+    min-height: 0;
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .n-home .n-hero > div {
+    min-height: 470px;
+    padding: 56px var(--n-gutter) !important;
+  }
+  .n-home .n-hero figure,
+  .n-home .n-hero figure img { min-height: 390px; }
+  .n-home .n-exp { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .n-home .n-exp-wide { grid-column: span 2; }
+}
+
+@media (max-width: 680px) {
+  :root { --n-gutter: 20px; }
+  .n-mark { font-size: 1.5rem; }
+  .n-mark small {
+    display: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+  .n-home .n-hero > div { min-height: 440px; }
+  .n-home .n-hero-mark { font-size: clamp(4rem, 21vw, 6rem); }
+  .n-home .n-hero .n-btns { display: grid; }
+  .n-home .n-hero .n-btn { width: 100%; text-align: center; }
+  .n-home .n-hero figure,
+  .n-home .n-hero figure img { min-height: 320px; }
+  .n-home .n-quick { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .n-home .n-exp { grid-template-columns: minmax(0, 1fr); }
+  .n-home .n-exp-wide { grid-column: span 1; }
+  .n-home-events [data-upcoming] article { min-height: 0; }
+}
+
+@media (max-width: 430px) {
+  .n-home .n-quick { grid-template-columns: minmax(0, 1fr); }
+  .n-home .n-quick > a { min-height: 98px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .n-home .n-exp article,
+  .n-home .n-exp article img,
+  .n-home-events [data-upcoming] article,
+  .n-link span,
+  .n-btn { transition: none; }
+}

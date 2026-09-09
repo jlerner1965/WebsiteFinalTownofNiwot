@@ -35,9 +35,10 @@ places:
   - name: Whistle Stop Park
     note: The caboose and the concert lawn
     query: Whistle Stop Park, Niwot, CO 80503
-  - name: Trail access, east of town
-    note: Regional trail and open space
-    query: Niwot Trail, Niwot, CO 80503
+  - name: LoBo Regional Trail
+    note: The Boulder–Longmont trail through Niwot; the county page carries the map
+    href: https://bouldercounty.gov/open-space/parks-and-trails/lobo-trail/
+    linkLabel: Trail page
 arrivals:
   - from: From Boulder
     time: About 20 min
@@ -57,9 +58,9 @@ practical:
   - label: On foot
     body: Old Town is walkable end to end in about ten minutes, with continuous sidewalks and short crossings.
   - label: By bike
-    body: The regional trail corridor between Boulder and Longmont runs past the community and connects to quiet county roads.
+    body: The Longmont-to-Boulder (LoBo) Regional Trail runs through Niwot and connects to quiet county roads. The county’s trail page carries the map.
   - label: Transit
-    body: Regional bus service runs along the Diagonal corridor. Routes, stops and fares change, so check the operator before traveling.
+    body: RTD’s Route BOLT runs between Boulder and Longmont along the Diagonal, with a stop at Highway 119 and Niwot Road. Construction of the CO 119 bus rapid transit line has been changing stops on this corridor, so check the route page before traveling.
   - label: Dogs
     body: Leash and waste rules on trails and open space are set by Boulder County Parks & Open Space.
   - label: Best time
@@ -78,9 +79,15 @@ nextLinks:
     note: Whistle Stop Park and the trail network
     href: /explore/#outdoors
 direct:
-  - what: Roads, permits, open space
-    who: Boulder County
-    href: https://bouldercounty.gov/
+  - what: County roads and snow removal
+    who: County Road Maintenance
+    href: https://bouldercounty.gov/transportation/road-maintenance/
+  - what: Building permits and land use
+    who: Boulder County Planning
+    href: https://bouldercounty.gov/property-and-land/land-use/planning/
+  - what: Trails and open space
+    who: Trail closures and alerts
+    href: https://bouldercounty.gov/open-space/parks-and-trails/trail-closures/
   - what: Business directory and events
     who: Niwot Business Association
     href: https://niwot.com/
@@ -101,7 +108,7 @@ direct:
 <div class="n-label">Plan a visit</div>
 <h1 class="n-display" id="title-h" style="margin-top:14px;font-size:clamp(2.5rem,1.8rem + 3.4vw,5rem);line-height:.96;max-width:15ch;color:var(--n-evergreen)">Park once, then walk it</h1>
 </div>
-<p class="n-lead" style="margin:0;max-width:50ch">Niwot sits off the Diagonal Highway between Boulder and Longmont. Leave the car on or near Second Avenue and everything below is within a fifteen-minute walk.</p>
+<p class="n-lead" style="margin:0;max-width:50ch">Niwot sits off the Diagonal Highway between Boulder and Longmont. Leave the car on or near Second Avenue: the two commercial blocks are within a fifteen-minute walk of each other, and the park and the trail are at their edges.</p>
 </div>
 </div>
 </section>
@@ -208,7 +215,11 @@ direct:
 <span style="display:block;font-size:1rem;color:var(--n-evergreen)">{{ p.name }}</span>
 <span class="n-small" style="display:block;font-size:.875rem">{{ p.note }}</span>
 </span>
+{%- if p.href %}
+<a class="n-link" href="{{ p.href }}" rel="noopener" style="white-space:nowrap;font-size:12px">{{ p.linkLabel }} <span aria-hidden="true">&#8599;</span></a>
+{%- else %}
 <a class="n-link" href="{{ p.query | directions }}" rel="noopener" style="white-space:nowrap;font-size:12px">Directions <span aria-hidden="true">&#8599;</span></a>
+{%- endif %}
 </div>
 {%- endfor %}
 </div>
@@ -244,8 +255,9 @@ direct:
 <h2 class="n-h2" id="ground-h" style="margin-top:12px;max-width:16ch;color:var(--n-evergreen)">Parking, walking and transit</h2>
 <p class="n-small" style="margin:18px 0 0;max-width:46ch">Niwot is unincorporated, so parking rules, road work and trail closures are set by Boulder County rather than a town. Posted signs override anything written here.</p>
 <div class="n-btns" style="margin-top:22px">
-<a class="n-btn n-btn--ghost" href="https://bouldercounty.gov/" rel="noopener">Boulder County <span aria-hidden="true">&#8599;</span></a>
-<a class="n-btn n-btn--ghost" href="https://www.rtd-denver.com/" rel="noopener">Regional transit <span aria-hidden="true">&#8599;</span></a>
+<a class="n-btn n-btn--ghost" href="https://bouldercounty.gov/transportation/road-maintenance/" rel="noopener">County roads <span aria-hidden="true">&#8599;</span></a>
+<a class="n-btn n-btn--ghost" href="https://bouldercounty.gov/open-space/parks-and-trails/trail-closures/" rel="noopener">Trail closures <span aria-hidden="true">&#8599;</span></a>
+<a class="n-btn n-btn--ghost" href="https://app.rtd-denver.com/route/BOLT/schedule" rel="noopener">Route BOLT <span aria-hidden="true">&#8599;</span></a>
 </div>
 </div>
 <div>
@@ -271,7 +283,7 @@ direct:
 <div class="n-label" style="color:var(--n-sky-ink)">Accessibility</div>
 <h2 class="n-h3" id="acc-h" style="margin-top:10px;font-size:1.375rem;color:var(--n-evergreen)">What we can confirm</h2>
 <p class="n-body" style="margin:12px 0 0;font-size:.9375rem">Second Avenue has continuous sidewalks with curb ramps at the cross streets, and the Whistle Stop Park lawn is reached from a paved path. Entrances vary across the historic block: several have a single step at the door and some have raised wooden porches.</p>
-<p class="n-body" style="margin:12px 0 0;font-size:.9375rem">Step-free access differs building by building, so contact a business directly before relying on it. Corrections to this section are welcome and published with their date.</p>
+<p class="n-body" style="margin:12px 0 0;font-size:.9375rem">Step-free access differs building by building, so contact a business directly before relying on it. Public restrooms and designated accessible parking have not yet been confirmed on the ground and are not claimed here. Corrections and additions to this section are welcome and published with their date.</p>
 </div>
 <div>
 <div class="n-label n-label--quiet">Then go and see</div>
@@ -340,8 +352,14 @@ direct:
 </div>
 <div>
 <div class="n-label">Go direct instead</div>
-<p class="n-body" style="margin:12px 0 0;max-width:42ch;color:var(--n-paper)">For anything official &#8212; permits, roads, ballots, water &#8212; the responsible body is the only reliable contact.</p>
+<p class="n-body" style="margin:12px 0 0;max-width:42ch;color:var(--n-paper)">For anything official &#8212; permits, roads, ballots, water &#8212; the responsible body is the only reliable contact. None of the bodies below runs this website.</p>
 <div style="margin-top:20px">
+{%- if site.editor.email %}
+<div style="display:grid;gap:4px;padding:14px 0;border-top:1px solid rgba(158,173,152,.35)">
+<span class="n-label n-label--quiet" style="color:var(--n-sage-lt)">This guide&#8217;s editor{% if site.editor.name %} &#8212; {{ site.editor.name }}{% endif %}</span>
+<a class="n-link" data-editor-email href="mailto:{{ site.editor.email }}" style="justify-self:start;text-transform:none;letter-spacing:0">{{ site.editor.email }}</a>
+</div>
+{%- endif %}
 {%- for d in direct %}
 <div style="display:grid;gap:4px;padding:14px 0;border-top:1px solid rgba(158,173,152,.35)">
 <span class="n-label n-label--quiet" style="color:var(--n-sage-lt)">{{ d.what }}</span>

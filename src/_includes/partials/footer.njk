@@ -32,6 +32,9 @@
 <p class="n-disclaim" style="margin:clamp(28px,3.5vw,48px) 0 0;padding-top:18px;border-top:1px solid rgba(158,173,152,.3)">{{ site.disclaimer }}</p>
 <div class="n-foot-meta" style="margin-top:20px">
 <span>{{ footMetaLeft | default('Reviewed ' + site.reviewed) }}</span>
+{%- if site.editor.name %}
+<span>Edited by {{ site.editor.name }}</span>
+{%- endif %}
 <span>{{ footMetaRight | default('Photography licensed for use on this site') }}</span>
 <a href="/privacy/" style="font-size:inherit;letter-spacing:inherit">Privacy</a>
 </div>

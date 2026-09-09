@@ -45,14 +45,18 @@ pageStyles: |
 <div class="n-shead" style="border-bottom-color:var(--n-evergreen)">
 <div class="n-label">Timeline</div>
 <h2 class="n-h2" id="tl-h" style="color:var(--n-evergreen)">How the community got here</h2>
-<p class="n-body" style="margin:0;max-width:72ch">Each entry names what it rests on. Where a date is contested or unverified, it says so rather than carrying an approximation.</p>
+<p class="n-body" style="margin:0;max-width:72ch">Each entry names what it rests on and links to it where it is online. Where a date is contested or unverified, it says so rather than carrying an approximation.</p>
 </div>
 <ol style="list-style:none;margin:clamp(24px,3vw,44px) 0 0;padding:0">
 {%- for e in eras %}
 <li class="n-era" style="padding:clamp(22px,2.8vw,40px) 0;border-bottom:1px solid var(--n-rule)">
 <div>
 <div class="n-num" style="font-size:clamp(1.5rem,1.2rem + 1.3vw,2.5rem)">{{ e.when }}</div>
+{%- if e.sourceHref %}
+<a class="n-label n-label--quiet" href="{{ e.sourceHref }}" rel="noopener" style="display:inline-block;margin-top:10px;font-size:12px;text-decoration:none;border-bottom:1px solid currentColor">{{ e.source }} <span aria-hidden="true">&#8599;</span></a>
+{%- else %}
 <div class="n-label n-label--quiet" style="margin-top:10px;font-size:12px">{{ e.source }}</div>
+{%- endif %}
 </div>
 <div>
 <h3 class="n-h3" style="color:var(--n-evergreen)">{{ e.title }}</h3>
@@ -90,8 +94,21 @@ pageStyles: |
 <h2 class="n-h2" id="src-h" style="margin-top:12px;font-size:clamp(1.5rem,1.2rem + 1.2vw,2.25rem);max-width:18ch;color:var(--n-evergreen)">Editorial standards</h2>
 </div>
 <div>
-<p class="n-body" style="margin:0;max-width:66ch">Population is the 2020 census figure for the Niwot census designated place. Historical dates come from the recorded town plat and county records.</p>
-<p class="n-body" style="margin:18px 0 0;max-width:66ch">If something here is wrong, it is corrected with the date and a note describing what changed. A claim that cannot be supported is removed rather than softened.</p>
+<p class="n-body" style="margin:0;max-width:66ch">Population is the 2020 census figure for the Niwot census designated place. Historical dates come from the Niwot Historical Society&#8217;s timeline and the recorded town plat; the caboose&#8217;s identity and date from the Niwot Cultural Arts Association&#8217;s Whistle Stop Park page. Each timeline entry links to its source.</p>
+<p class="n-body" style="margin:18px 0 0;max-width:66ch">If something here is wrong, it is corrected with the date and a note describing what changed. A claim that cannot be supported is removed rather than softened. Every correction published on this site is listed below.</p>
+<h3 class="n-label n-label--quiet" id="corrections" style="margin:24px 0 0">Corrections and changes</h3>
+{%- if corrections.length %}
+<dl data-corrections style="margin:8px 0 0;max-width:66ch">
+{%- for c in corrections %}
+<div style="padding:12px 0;border-top:1px solid var(--n-rule)">
+<dt class="n-label n-label--quiet" style="font-size:12px">{{ c.date | humanDate }} &#183; <a href="{{ c.page }}" style="color:inherit">{{ c.page }}</a></dt>
+<dd class="n-body" style="margin:6px 0 0;font-size:.9375rem">{{ c.summary }}</dd>
+</div>
+{%- endfor %}
+</dl>
+{%- else %}
+<p class="n-body" data-corrections-none style="margin:8px 0 0;max-width:66ch">No corrections have been published yet.</p>
+{%- endif %}
 <div class="n-btns" style="margin-top:24px">
 <a class="n-btn" href="/plan-a-visit/#contact">Report a correction</a>
 </div>

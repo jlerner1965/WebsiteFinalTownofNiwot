@@ -21,90 +21,144 @@ pageStyles: |
   .n-civic .n-bg-green .n-link{color:var(--n-sky-lt)}
   .n-civic .n-link:hover{color:#24483A}
   .n-civic .n-btn:hover{background:#3E6E8C;border-color:#3E6E8C}
-  /* The default focus ring is caboose red. Keep this page free of it. */
+  /* The default focus ring is caboose red. Keep this page free of it: muted
+     blue on the light grounds, and the lightened sky on the dark ones, where
+     the blue would be 1.8:1 against evergreen. */
   .n-civic :where(a,button,input,select,textarea,summary):focus-visible{outline-color:#3E6E8C}
+  .n-civic .n-head :where(a,button):focus-visible,.n-civic .n-foot :where(a,button):focus-visible,.n-civic .n-bg-green :where(a,button,input,select,textarea,summary):focus-visible,.n-civic .n-skip:focus-visible{outline-color:var(--n-sky-lt)}
   .n-civic .n-head{border-bottom-color:#3E6E8C}
-  .n-status{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(18px,2vw,32px)}
+  .n-tasks{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(16px,2vw,32px)}
+  .n-tasks>div{padding:18px 20px;background:#FAF8F2;border-left:3px solid #24483A}
+  .n-strip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px clamp(16px,2vw,32px);margin:clamp(18px,2.4vw,30px) 0 0;padding-top:14px;border-top:1px solid #7FA9C2}
+  .n-strip>div{margin:0}
+  .n-toc{display:flex;flex-wrap:wrap;gap:8px 22px;list-style:none;margin:0;padding:0}
   /* The ballot lists sit in columns on a wide screen so the page reads in a
      few screens rather than a long scroll; they stack again on a phone. */
   .n-cols{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(18px,2.5vw,40px);list-style:none;margin:clamp(20px,2.5vw,32px) 0 0;padding:0}
   .n-cols>li{padding-top:14px;border-top:2px solid #24483A}
-  .n-civic [data-official]{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px;align-items:baseline;padding:12px 0;border-top:1px solid var(--n-rule);font-size:1rem;color:#24483A;text-decoration:none}
+  .n-civic [data-official]{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 14px;align-items:baseline;padding:12px 0;border-top:1px solid var(--n-rule);font-size:1rem;color:#24483A;text-decoration:none}
   .n-civic [data-official]:hover{color:#3E6E8C}
+  .n-civic [data-official] small{display:block;grid-column:1/-1;font-size:.875rem;color:var(--n-muted)}
   @media (max-width:1000px){.n-cols{grid-template-columns:repeat(2,minmax(0,1fr))}}
-  @media (max-width:900px){.n-status{grid-template-columns:minmax(0,1fr)}}
-  @media (max-width:640px){.n-cols{grid-template-columns:minmax(0,1fr)}}
+  @media (max-width:900px){.n-tasks{grid-template-columns:minmax(0,1fr)}.n-strip{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  @media (max-width:640px){.n-cols{grid-template-columns:minmax(0,1fr)}.n-strip{grid-template-columns:minmax(0,1fr)}}
 ---
 <section class="n-bg-white" aria-labelledby="title-h">
-<div class="n-wrap" style="padding-top:clamp(28px,4vw,60px);padding-bottom:clamp(24px,3vw,40px)">
+<div class="n-wrap" style="padding-top:clamp(28px,4vw,60px);padding-bottom:clamp(20px,2.5vw,36px)">
 <div class="n-g2-wide" style="align-items:end">
 <div>
 <div class="n-label">Civic information</div>
 <h1 class="n-display" id="title-h" style="margin-top:14px;font-size:clamp(2.25rem,1.6rem + 3vw,4.5rem);line-height:.98;max-width:20ch;color:#24483A">2026 Niwot Incorporation Election</h1>
 </div>
-<p class="n-lead" style="margin:0;max-width:52ch">A neutral voter-information page. It explains what is on the ballot, who may vote and where the official resources are. It does not argue for or against incorporation.</p>
+<div>
+<p class="n-lead" style="margin:0;max-width:52ch">A neutral voter-information page: what is on the ballot, who may vote and where the official resources are. It does not argue for or against incorporation, and the certified ballot text controls wherever this summary differs from it.</p>
+<nav aria-label="On this page" style="margin-top:18px">
+<ul class="n-toc">
+<li><a class="n-link" href="#meaning">What it decides</a></li>
+<li><a class="n-link" href="#ballot">Three questions</a></li>
+<li><a class="n-link" href="#fiscal">Five fiscal issues</a></li>
+<li><a class="n-link" href="#after">What happens next</a></li>
+<li><a class="n-link" href="#official">Official resources</a></li>
+<li><a class="n-link" href="#changes">Changes to this page</a></li>
+</ul>
+</nav>
+</div>
 </div>
 </div>
 </section>
 
-{#- 1. Status panel -#}
-<section class="n-bg-sky n-pad-sm" aria-labelledby="status-h" style="border-top:1px solid #7FA9C2;border-bottom:1px solid #7FA9C2">
+{#- 1. The three voting tasks, then the compact status strip. -#}
+<section class="n-bg-sky n-pad-sm" id="tasks" aria-labelledby="tasks-h" style="border-top:1px solid #7FA9C2;border-bottom:1px solid #7FA9C2">
 <div class="n-wrap">
-<h2 class="n-label" id="status-h" style="margin:0 0 18px">Election status</h2>
-<div class="n-status">
-{%- for s in election.status %}
-<div style="padding-top:14px;border-top:2px solid #24483A">
-<div class="n-label n-label--quiet" style="color:#252B27">{{ s.label }}</div>
-<div style="margin-top:10px;font-family:var(--n-serif);font-size:1.375rem;line-height:1.2;color:#24483A">{{ s.value }}</div>
-<p class="n-small" style="margin:8px 0 0;color:#252B27">{{ s.note }}</p>
+<h2 class="n-label" id="tasks-h" style="margin:0 0 18px">Before you vote</h2>
+<div class="n-tasks">
+{%- for t in election.tasks %}
+<div>
+<div style="font-family:var(--n-serif);font-size:1.375rem;line-height:1.2;color:#24483A">{{ t.label }}</div>
+<p class="n-small" style="margin:8px 0 0;color:#252B27">{{ t.note }}</p>
+<a class="n-link" href="{{ t.href }}" rel="noopener" style="display:inline-block;margin-top:12px">{{ t.linkLabel }} <span aria-hidden="true">&#8599;</span></a>
 </div>
 {%- endfor %}
 </div>
-<p class="n-body" style="margin:clamp(22px,3vw,34px) 0 0;padding:20px 22px;background:#FAF8F2;border-left:3px solid #24483A;max-width:86ch"><strong style="font-weight:600">The official ballot language controls.</strong> Wording on this page is a plain-language summary. Where it differs from the certified ballot text published by the Niwot Election Commission, the Commission&#8217;s text is authoritative.</p>
+<dl class="n-strip">
+{%- for s in election.status %}
+<div>
+<dt class="n-label n-label--quiet" style="color:#252B27">{{ s.label }}</dt>
+<dd style="margin:6px 0 0;font-family:var(--n-serif);font-size:1.25rem;line-height:1.2;color:#24483A">{{ s.value }}</dd>
+<dd class="n-small" style="margin:4px 0 0;font-size:.875rem;color:#252B27">{{ s.note }}</dd>
+</div>
+{%- endfor %}
+</dl>
 </div>
 </section>
 
-{#- 2. Three ballot questions -#}
-<section class="n-bg-white n-pad-sm" id="ballot" aria-labelledby="q-h">
+{#- 2. What a vote to incorporate decides, in plain language. -#}
+<section class="n-bg-white n-pad-sm" id="meaning" aria-labelledby="m-h">
+<div class="n-wrap">
+<div class="n-g2-wide">
+<div>
+<div class="n-label">In plain language</div>
+<h2 class="n-h2" id="m-h" style="margin-top:12px;max-width:16ch;color:#24483A">What incorporation would decide</h2>
+</div>
+<div>
+{%- for p in election.meaning %}
+<p class="n-body" style="margin:{{ '0' if loop.first else '14px' }} 0 0;max-width:68ch">{{ p }}</p>
+{%- endfor %}
+<p class="n-body" style="margin:18px 0 0;padding:16px 20px;background:#FAF8F2;border-left:3px solid #24483A;max-width:68ch"><strong style="font-weight:600">The official ballot language controls.</strong> Wording on this page is a plain-language summary. Where it differs from the certified ballot text published by the Niwot Election Commission, the Commission&#8217;s text is authoritative.</p>
+</div>
+</div>
+</div>
+</section>
+
+{#- 3. Three ballot questions -#}
+<section class="n-bg-paper n-pad-sm" id="ballot" aria-labelledby="q-h">
 <div class="n-wrap">
 <div class="n-shead" style="border-bottom-color:#24483A">
 <div class="n-label">On the ballot</div>
 <h2 class="n-h2" id="q-h" style="color:#24483A">Three questions</h2>
-<p class="n-body" style="max-width:74ch;margin:0">Voters inside the proposed boundary decide three separate matters. Approval of one does not automatically decide another.</p>
+<p class="n-body" style="max-width:74ch;margin:0">Voters inside the proposed boundary decide three separate matters. They are counted separately, but the second and third take effect only if the first is approved.</p>
 </div>
-{#- Unnumbered on purpose: this guide's ordering is not the ballot's, and a
-    numeral beside each item could be read as one. -#}
+{#- The Commission's own labels ("Question 1") render only once they have
+    been read from the certified ballot; see election.js. -#}
 <ul class="n-cols">
 {%- for q in election.questions %}
 <li>
+{%- if q.official %}
+<div class="n-label n-label--quiet" style="margin-bottom:8px">{{ q.official }}</div>
+{%- endif %}
 <h3 class="n-h3" style="font-size:clamp(1.25rem,1.1rem + .6vw,1.625rem);color:#24483A">{{ q.title }}</h3>
 <p class="n-body" style="margin:10px 0 0;font-size:.9375rem">{{ q.body }}</p>
+<a class="n-link" href="{{ q.sourceHref }}" rel="noopener" style="display:inline-block;margin-top:12px;font-size:12px">Official text <span aria-hidden="true">&#8599;</span></a>
 </li>
 {%- endfor %}
 </ul>
 </div>
 </section>
 
-{#- 3. Five fiscal issues, presented as filed and without advocacy -#}
-<section class="n-bg-paper n-pad-sm" id="fiscal" aria-labelledby="f-h">
+{#- 4. Five fiscal issues, presented as filed and without advocacy -#}
+<section class="n-bg-white n-pad-sm" id="fiscal" aria-labelledby="f-h">
 <div class="n-wrap">
 <div class="n-shead" style="border-bottom-color:#24483A">
 <div class="n-label">Fiscal questions</div>
 <h2 class="n-h2" id="f-h" style="color:#24483A">Five fiscal issues</h2>
-<p class="n-body" style="max-width:74ch;margin:0">Each is a separate authorization. They are listed here as filed, without argument about whether they are advisable.</p>
+<p class="n-body" style="max-width:74ch;margin:0">Each is a separate authorization, listed here as filed and without argument about whether it is advisable. All of them apply only if a municipality is created.</p>
 </div>
 <ul class="n-cols">
 {%- for f in election.fiscal %}
 <li>
+{%- if f.official %}
+<div class="n-label n-label--quiet" style="margin-bottom:8px">{{ f.official }}</div>
+{%- endif %}
 <h3 style="margin:0;font-size:1.0625rem;line-height:1.35;color:#24483A;font-weight:600">{{ f.title }}</h3>
 <p class="n-body" style="margin:8px 0 0;font-size:.9375rem">{{ f.body }}</p>
+<a class="n-link" href="{{ f.sourceHref }}" rel="noopener" style="display:inline-block;margin-top:12px;font-size:12px">Official text <span aria-hidden="true">&#8599;</span></a>
 </li>
 {%- endfor %}
 </ul>
 </div>
 </section>
 
-{#- 4. What happens next: the steps sit beside their heading. -#}
+{#- 5. What happens next: the steps sit beside their heading. -#}
 <section class="n-bg-green n-pad-sm" id="after" aria-labelledby="a-h">
 <div class="n-wrap">
 <div class="n-g2-wide">
@@ -125,24 +179,24 @@ pageStyles: |
 </div>
 </section>
 
-{#- 5. Official resources: a link list beside the notes, not a stack of buttons. -#}
+{#- 6. Official resources: one link per destination, beside the notes. -#}
 <section class="n-bg-white n-pad-sm" id="official" aria-labelledby="o-h">
 <div class="n-wrap">
 <div class="n-shead" style="border-bottom-color:#24483A">
 <div class="n-label">Official resources</div>
 <h2 class="n-h2" id="o-h" style="color:#24483A">Go to the source</h2>
-<p class="n-body" style="max-width:74ch;margin:0">The Niwot Election Commission, in coordination with the Boulder County Clerk and Recorder, administers this election. This guide is not an election authority.</p>
+<p class="n-body" style="max-width:74ch;margin:0">The Niwot Election Commission, appointed by the Boulder County District Court, administers this election in coordination with the Boulder County Clerk and Recorder. This guide is not an election authority.</p>
 </div>
 <div class="n-g2" style="margin-top:clamp(20px,2.5vw,32px)">
 <div style="border-bottom:1px solid var(--n-rule)">
 {%- for o in election.official %}
-<a class="n-shift n-shift--sm" data-official href="{{ o.href }}" rel="noopener">{{ o.label }} <span aria-hidden="true" style="color:#35617D">&#8599;</span></a>
+<a class="n-shift n-shift--sm" data-official href="{{ o.href }}" rel="noopener">{{ o.label }} <span aria-hidden="true" style="color:#35617D">&#8599;</span><small>{{ o.note }}</small></a>
 {%- endfor %}
 </div>
 <div>
 <div style="padding:18px 20px;background:#EEE7D9;border-left:3px solid #3E6E8C">
 <div class="n-label n-label--quiet" style="color:#252B27">Verification note</div>
-<p class="n-body" style="margin:8px 0 0;font-size:.9375rem">The Election Commission has stated that the printer&#8217;s proof was scheduled for review on September 11, 2026. Ballot language reproduced anywhere outside the Commission&#8217;s own pages should be re-checked against the official ballot page after that review before being treated as final.</p>
+<p class="n-body" style="margin:8px 0 0;font-size:.9375rem">The Election Commission has stated that the printer&#8217;s proof was scheduled for review on September 11, 2026. Ballot language reproduced anywhere outside the Commission&#8217;s own pages should be re-checked against the official ballot page after that review before being treated as final. This page will carry a dated note when it is.</p>
 </div>
 <div style="margin-top:16px;padding:18px 20px;border:1px solid #24483A;border-left-width:3px">
 <div class="n-label n-label--quiet" style="color:#252B27">Campaign material</div>
@@ -158,14 +212,26 @@ pageStyles: |
 </div>
 </section>
 
-{#- 6. Corrections -#}
-<section class="n-bg-white" aria-labelledby="corr-h" style="padding-bottom:clamp(32px,4vw,64px)">
+{#- 7. Changes and corrections, dated. -#}
+<section class="n-bg-white" id="changes" aria-labelledby="corr-h" style="padding-bottom:clamp(32px,4vw,64px)">
 <div class="n-wrap">
 <div class="n-rail" style="border-color:#3E6E8C;background-image:repeating-linear-gradient(90deg,#3E6E8C 0 2px,transparent 2px 12px)"></div>
 <div class="n-g2-wide" style="margin-top:clamp(20px,2.5vw,32px)">
-<h2 class="n-h2" id="corr-h" style="font-size:clamp(1.5rem,1.2rem + 1.2vw,2.25rem);max-width:18ch;color:#24483A">Corrections</h2>
+<h2 class="n-h2" id="corr-h" style="font-size:clamp(1.5rem,1.2rem + 1.2vw,2.25rem);max-width:18ch;color:#24483A">Changes to this page</h2>
 <div>
-<p class="n-body" style="margin:0;max-width:64ch">Anything on this page that cannot be supported by a filed document or an official publication is removed rather than softened. Corrections are published with their date and a note describing what changed.</p>
+<p class="n-body" style="margin:0;max-width:64ch">Anything on this page that cannot be supported by a filed document or an official publication is removed rather than softened. Every change to a published fact is listed here with its date.</p>
+{%- if pageCorrections.length %}
+<dl data-corrections style="margin:18px 0 0;max-width:64ch">
+{%- for c in pageCorrections %}
+<div style="padding:12px 0;border-top:1px solid var(--n-rule)">
+<dt class="n-label n-label--quiet" style="font-size:12px">{{ c.date | humanDate }}</dt>
+<dd class="n-body" style="margin:6px 0 0;font-size:.9375rem">{{ c.summary }}</dd>
+</div>
+{%- endfor %}
+</dl>
+{%- else %}
+<p class="n-body" data-corrections-none style="margin:14px 0 0;max-width:64ch">No corrections have been published for this page yet.</p>
+{%- endif %}
 <div class="n-btns" style="margin-top:16px">
 <a class="n-btn" href="/plan-a-visit/#contact">Report a correction</a>
 <a class="n-btn n-btn--ghost" href="/our-story/#sources">Editorial standards</a>

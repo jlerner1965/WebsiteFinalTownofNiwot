@@ -1,17 +1,20 @@
 /* Per-page computed data shared by every template. */
 import path from 'node:path';
 import site from './site.js';
+import corrections from './corrections.js';
 import { gitLastmod } from '../../lib/lastmod.js';
 import { buildNow } from '../../lib/events.js';
 
 /* Data files each page renders, for the sitemap's <lastmod>. */
+const CORRECTIONS = 'src/_data/corrections.js';
 const DEPS = {
   'index.njk': ['src/_data/events.js', 'src/_data/listings.js', 'src/_data/organizations.js'],
-  'eat-shop.njk': ['src/_data/listings.js'],
-  'events.njk': ['src/_data/events.js'],
-  'community.njk': ['src/_data/organizations.js', 'src/_data/services.js'],
-  'our-story.njk': ['src/_data/eras.js'],
-  'incorporation-election.njk': ['src/_data/election.js', 'src/_data/site.js'],
+  'eat-shop.njk': ['src/_data/listings.js', CORRECTIONS],
+  'events.njk': ['src/_data/events.js', CORRECTIONS],
+  'community.njk': ['src/_data/organizations.js', 'src/_data/services.js', CORRECTIONS],
+  'our-story.njk': ['src/_data/eras.js', CORRECTIONS],
+  'incorporation-election.njk': ['src/_data/election.js', 'src/_data/site.js', CORRECTIONS],
+  'privacy.njk': [CORRECTIONS],
 };
 
 const previewBuild = Boolean(process.env.VERCEL_ENV && process.env.VERCEL_ENV !== 'production');
@@ -26,6 +29,10 @@ export default {
   /* Only when a build is pinned to a date for testing; production pages
      leave it unset and the browser uses the real clock. */
   eventsNow: () => (pinned ? buildNow().toISOString() : null),
+
+  /* The dated corrections that belong to this page, newest first. Our
+     Story renders the whole log; other pages render their own entries. */
+  pageCorrections: (data) => (data.page && data.page.url ? corrections.filter((c) => c.page === data.page.url) : []),
 
   lastmod: (data) => {
     if (!data.page || !data.page.inputPath) return null;

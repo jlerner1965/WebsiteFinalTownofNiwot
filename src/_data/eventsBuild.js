@@ -14,11 +14,13 @@ import {
   buildArchive,
   buildExpected,
   detailFor,
-  instancesOn,
+  instancesInMonth,
+  monthDefault,
   parseIso,
   renderCells,
   renderDetail,
   renderExpected,
+  renderMonthEmpty,
   renderUpcoming,
   zonedParts,
 } from '../assets/js/calendar-core.js';
@@ -30,23 +32,23 @@ export default function () {
   const { y, m } = parseIso(now.date);
   const upcoming = buildUpcoming(events, now);
   const expected = buildExpected(events);
-  const cells = buildCells(events, y, m, null);
   const archive = buildArchive(events, now, 4);
 
-  /* The rail is never empty: with nothing selected it shows the next
-     occurrence, and every occurrence on that day. */
-  const detail = upcoming.length
-    ? instancesOn(events, upcoming[0].date).filter((i) => !i.endDate || i.endDate >= now.date).map((i) => detailFor(i, now))
-    : [];
+  /* The rail describes the month on screen, which at build time is the
+     current one: its first day still ahead, or a note that nothing in it
+     is, pointing at the next confirmed date. Same rule as page-events.js. */
+  const shown = monthDefault(events, y, m, now);
+  const cells = buildCells(events, y, m, shown ? shown.day : null);
+  const detailHtml = shown
+    ? renderDetail(shown.instances.map((i) => detailFor(i, now)), { interactive: false })
+    : renderMonthEmpty(y, m, now, upcoming[0] || null, instancesInMonth(events, y, m).length > 0);
 
   return {
     now,
     dows: DOWS,
     monthLabel: MONTHS[m - 1] + ' ' + y,
     cellsHtml: renderCells(cells),
-    detailHtml: detail.length
-      ? renderDetail(detail)
-      : '<p class="n-body" style="margin:0">No confirmed dates are on the calendar. The expected seasonal events are listed on this page.</p>',
+    detailHtml,
     upcomingHomeHtml: renderUpcoming(upcoming.slice(0, 3), 'link', now),
     upcomingEventsHtml: renderUpcoming(upcoming, 'select', now),
     expectedHtml: renderExpected(expected),

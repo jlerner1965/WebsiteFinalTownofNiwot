@@ -44,6 +44,12 @@ pageStyles: |
   button[data-day][data-has="yes"]::after{content:"";display:block;width:9px;height:9px;margin-top:6px;background:var(--n-red)}
   button[data-day][aria-pressed="true"]::after{background:var(--n-gold-lt)}
   }
+  /* A day with several events: a compact list, one expanded. The items are
+     buttons in the browser and plain text in the build. */
+  .n-daypick{display:flex;justify-content:space-between;align-items:baseline;gap:12px;width:100%;padding:11px 0 11px 12px;background:none;border:0;border-top:1px solid var(--n-rule);border-left:3px solid transparent;color:var(--n-ink);font:inherit;font-size:.9375rem;line-height:1.4;text-align:left}
+  button.n-daypick{cursor:pointer}
+  button.n-daypick:hover{color:var(--n-red-ink)}
+  .n-daypick[aria-pressed="true"],.n-daypick[aria-current="true"]{border-left-color:var(--n-red);color:var(--n-evergreen)}
   .n-expected{list-style:none;margin:clamp(18px,2vw,28px) 0 0;padding:0}
   @media (max-width:620px){.n-expected li{grid-template-columns:minmax(0,1fr) !important}}
 ---
@@ -91,7 +97,7 @@ pageStyles: |
 {%- endfor %}
 </div>
 <div class="n-grid7" data-cal-grid role="group" aria-label="Month">{{ eventsBuild.cellsHtml | safe }}</div>
-<p class="n-small" style="margin:16px 0 0">Shaded days &#8212; marked with a square on a narrow screen &#8212; carry a confirmed event. Select one for the detail, or use the list above.</p>
+<p class="n-small" style="margin:16px 0 0">Shaded days &#8212; marked with a square on a narrow screen &#8212; carry a confirmed event. Select one for the detail, or use the list above. The detail beside the grid always belongs to the month shown.</p>
 </div>
 <aside class="n-detail" aria-labelledby="detail-h">
 <h3 class="n-label n-label--quiet" id="detail-h" style="margin:0;padding-bottom:14px;border-bottom:2px solid var(--n-evergreen)">Event detail</h3>
@@ -134,6 +140,19 @@ pageStyles: |
 </div>
 </div>
 </div>
+{%- if pageCorrections.length %}
+<div data-corrections-block style="margin-top:clamp(28px,3.5vw,48px);max-width:72ch">
+<div class="n-label n-label--quiet">Changes to this page</div>
+<dl data-corrections style="margin:8px 0 0">
+{%- for c in pageCorrections %}
+<div style="padding:12px 0;border-top:1px solid var(--n-rule)">
+<dt class="n-label n-label--quiet" style="font-size:12px">{{ c.date | humanDate }}</dt>
+<dd class="n-body" style="margin:6px 0 0;font-size:.9375rem">{{ c.summary }}</dd>
+</div>
+{%- endfor %}
+</dl>
+</div>
+{%- endif %}
 </div>
 </section>
 

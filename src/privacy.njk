@@ -7,38 +7,12 @@ description: What TownofNiwot.com collects when you send a correction or sign up
 permalink: /privacy/
 footMetaLeft: Effective September 9, 2026
 footMetaRight: No cookies, analytics or advertising
-lastmodDeps: []
-sections:
-  - h: Who runs this guide
-    p:
-      - TownofNiwot.com is an independent community guide to Niwot, Colorado, published and edited privately by a resident. It is not a municipal government website, the Niwot Election Commission, Boulder County, or an incorporation campaign, and no public body collects anything through it.
-  - h: What is collected, and why
-    p:
-      - "The submission form. When you send a listing, an event or a correction, we receive what you type: the kind of submission, the name of the business, event or page, the details, a link to your page or source, and your email address if you choose to give one. The email address is optional and is used only to reply about that submission."
-      - "The notices form. When you ask for email notices, we receive your email address. It is used only to send those notices."
-      - "Server logs. The hosting provider records each request to the site — the address requested, the time, your IP address and browser details — for security and to keep the site running. We do not use these logs to identify readers."
-      - "Type from Google Fonts. The pages load two typefaces from Google Fonts. Your browser requests the font files from Google's servers, which receive your IP address and browser details under Google's own privacy policy. Nothing else on the site is loaded from a third party."
-  - h: Where it is processed and stored
-    p:
-      - "Form submissions are received by a small function at the site's hosting provider, Vercel, and relayed as an email through Resend, an email delivery service, to the editor's mailbox. Both providers operate in the United States. Each receives only what it needs to deliver the message, and neither is given the information for any other purpose."
-      - "Nothing you send is sold, shared with advertisers, or passed to any other organization."
-  - h: How long it is kept
-    p:
-      - "A submission is kept for as long as it is needed to act on it. Where it leads to a published correction or listing, the submission is kept as the record of what changed and why, because corrections here are published with their date and source. A submission that leads nowhere is deleted within twelve months."
-      - "Notice addresses are kept until you unsubscribe, and then deleted within seven days."
-  - h: Notices, and how to stop them
-    p:
-      - "Notices are sent only to addresses entered in the notices form; sending a correction does not sign you up. Every notice says how to unsubscribe — reply with the word unsubscribe, or use the link in the message — and the address is then removed."
-  - h: Access and deletion
-    p:
-      - "You can ask what we hold about you, ask for it to be corrected, or ask for it to be deleted. Send the request through the submission form on the visitor page, choosing “Something else”, or reply to any notice. We answer within thirty days."
-  - h: Cookies, analytics and tracking
-    p:
-      - "This site sets no cookies, runs no analytics, carries no advertising and includes no third-party tracking scripts. The only requests that leave the site are the font files described above."
-  - h: Questions and changes
-    p:
-      - "Privacy questions go through the submission form, choosing “Something else”. Changes to this page are published with the date they took effect."
 ---
+{#- The wording here has to match what the code does and what the providers
+    are set to do. The provider names, retention periods and the unsubscribe
+    route below are the site's own commitments; the owner verifies them
+    against the actual Vercel and Resend settings and operating practice, and
+    updates the effective date on any change. -#}
 <section class="n-bg-white" aria-labelledby="title-h">
 <div class="n-wrap" style="padding-top:clamp(28px,4vw,60px);padding-bottom:clamp(20px,2.5vw,36px)">
 <div class="n-g2-wide" style="align-items:end">
@@ -47,7 +21,7 @@ sections:
 <h1 class="n-display" id="title-h" style="margin-top:14px;font-size:clamp(2.5rem,1.8rem + 3.4vw,5rem);line-height:.96;max-width:16ch;color:var(--n-evergreen)">What this site keeps, and what it does not</h1>
 </div>
 <div>
-<p class="n-lead" style="margin:0;max-width:50ch">Two forms collect an email address. Nothing else on this site is collected about you. This page says what happens to what you send.</p>
+<p class="n-lead" style="margin:0;max-width:50ch">This guide collects the information you choose to submit through its two forms. The hosting and font providers also process the limited technical information needed to deliver the site. This page explains what is collected, why, how long it is kept, and how to reach the editor.</p>
 <div class="n-small" style="margin-top:14px">Effective September 9, 2026 &#183; Last updated September 9, 2026</div>
 </div>
 </div>
@@ -58,12 +32,51 @@ sections:
 <div class="n-wrap">
 <div class="n-rail"></div>
 <div class="n-read" style="margin-top:clamp(24px,3vw,44px)">
-{%- for s in sections %}
-<h2 class="n-h3" style="margin-top:{{ '0' if loop.first else 'clamp(28px,3vw,40px)' }};color:var(--n-evergreen)">{{ s.h }}</h2>
-{%- for para in s.p %}
-<p class="n-body" style="margin:14px 0 0">{{ para }}</p>
+
+<h2 class="n-h3" style="margin-top:0;color:var(--n-evergreen)">Who runs this guide</h2>
+<p class="n-body" style="margin:14px 0 0">TownofNiwot.com is an independent community guide to Niwot, Colorado, published and edited privately by a resident. It is not a municipal government website, the Niwot Election Commission, Boulder County, or an incorporation campaign, and no public body collects anything through it.</p>
+{%- if site.editor.email %}
+<p class="n-body" style="margin:14px 0 0" data-editor-contact>The responsible editor is {{ site.editor.name | default('the site&#8217;s editor') }}. Privacy questions and requests can be sent directly to <a href="mailto:{{ site.editor.email }}">{{ site.editor.email }}</a>, which is read by the editor, or through the submission form described below.</p>
+{%- else %}
+<p class="n-body" style="margin:14px 0 0" data-editor-contact>Requests and questions reach the editor through the submission form on the <a href="/plan-a-visit/#contact">visitor page</a>, choosing &#8220;Something else&#8221;. A direct editorial address will be published here as soon as one is in regular use.</p>
+{%- endif %}
+
+<h2 class="n-h3" style="margin-top:clamp(28px,3vw,40px);color:var(--n-evergreen)">What is collected, and why</h2>
+<p class="n-body" style="margin:14px 0 0">The submission form. When you send a listing, an event or a correction, we receive what you type: the kind of submission, the name of the business, event or page, the details, a link to your page or source, and your email address if you choose to give one. The email address is optional and is used only to reply about that submission.</p>
+<p class="n-body" style="margin:14px 0 0">The notices form. When you ask for email notices, we receive your email address. It is used only to send those notices.</p>
+<p class="n-body" style="margin:14px 0 0">Server logs. The hosting provider records each request to the site &#8212; the address requested, the time, your IP address and browser details &#8212; for security and to keep the site running. We do not use these logs to identify readers.</p>
+<p class="n-body" style="margin:14px 0 0">Type from Google Fonts. The pages load two typefaces from Google Fonts. Your browser requests the font files from Google&#8217;s servers, which receive your IP address and browser details under Google&#8217;s own privacy policy. Nothing else on the site is loaded from a third party.</p>
+
+<h2 class="n-h3" style="margin-top:clamp(28px,3vw,40px);color:var(--n-evergreen)">Where it is processed and stored</h2>
+<p class="n-body" style="margin:14px 0 0">Form submissions are received by a small function at the site&#8217;s hosting provider, Vercel, and relayed as an email through Resend, an email delivery service, to the editor&#8217;s mailbox. Both providers operate in the United States. Each receives only what it needs to deliver the message, and neither is given the information for any other purpose.</p>
+<p class="n-body" style="margin:14px 0 0">Nothing you send is sold or shared with advertisers. It is not passed to any organization other than the two providers named above, which handle it only to deliver it, and the editor who reads it.</p>
+
+<h2 class="n-h3" style="margin-top:clamp(28px,3vw,40px);color:var(--n-evergreen)">How long it is kept</h2>
+<p class="n-body" style="margin:14px 0 0">A submission is kept for as long as it is needed to act on it. Where it leads to a published correction or listing, the submission is kept as the record of what changed and why, because corrections here are published with their date and source. A submission that leads nowhere is deleted within twelve months.</p>
+<p class="n-body" style="margin:14px 0 0">Notice addresses are kept until you unsubscribe, and then deleted within seven days.</p>
+
+<h2 class="n-h3" style="margin-top:clamp(28px,3vw,40px);color:var(--n-evergreen)">Notices, and how to stop them</h2>
+<p class="n-body" style="margin:14px 0 0">Notices are sent only to addresses entered in the notices form; sending a correction does not sign you up. They are occasional &#8212; one when something on the guide changes, never on a fixed schedule and never for advertising. Every notice says how to unsubscribe &#8212; reply with the word unsubscribe, or use the link in the message &#8212; and the address is then removed.</p>
+
+<h2 class="n-h3" style="margin-top:clamp(28px,3vw,40px);color:var(--n-evergreen)">Access and deletion</h2>
+<p class="n-body" style="margin:14px 0 0">You can ask what we hold about you, ask for it to be corrected, or ask for it to be deleted. Send the request through the submission form on the visitor page, choosing &#8220;Something else&#8221;{% if site.editor.email %}, by email to <a href="mailto:{{ site.editor.email }}">{{ site.editor.email }}</a>{% endif %}, or reply to any notice. We answer within thirty days.</p>
+
+<h2 class="n-h3" style="margin-top:clamp(28px,3vw,40px);color:var(--n-evergreen)">Cookies, analytics and tracking</h2>
+<p class="n-body" style="margin:14px 0 0">This site sets no cookies, runs no analytics, carries no advertising and includes no third-party tracking scripts. The only requests that leave the site are the font files described above.</p>
+
+<h2 class="n-h3" style="margin-top:clamp(28px,3vw,40px);color:var(--n-evergreen)">Questions and changes</h2>
+<p class="n-body" style="margin:14px 0 0">Privacy questions go to the editor by the routes above. Changes to this page are published with the date they took effect and a note of what changed.</p>
+{%- if pageCorrections.length %}
+<dl data-corrections style="margin:14px 0 0">
+{%- for c in pageCorrections %}
+<div style="padding:12px 0;border-top:1px solid var(--n-rule)">
+<dt class="n-label n-label--quiet" style="font-size:12px">{{ c.date | humanDate }}</dt>
+<dd class="n-body" style="margin:6px 0 0;font-size:.9375rem">{{ c.summary }}</dd>
+</div>
 {%- endfor %}
-{%- endfor %}
+</dl>
+{%- endif %}
+
 <div class="n-btns" style="margin-top:clamp(28px,3.5vw,48px)">
 <a class="n-btn n-btn--ghost" href="/plan-a-visit/#contact">Send a request</a>
 <a class="n-btn n-btn--ghost" href="/">Back to the guide</a>

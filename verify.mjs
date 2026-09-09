@@ -74,9 +74,9 @@ const COUNTS = {
   explore: { '.n-entry': 4, '.n-entry--flip': 2 },
   'eat-shop': { '[data-listing]': listings.entries.length, 'input[name="category"]': listings.categories.length, 'fieldset legend': 1 },
   events: { '[data-upcoming] article': upcoming.length, '[data-day]': 28, '[data-expected] li': expectedCount },
-  community: { '.n-srow': 9, '#orgs li': 2 },
-  'our-story': { '.n-era': 4 },
-  civic: { '.n-status > div': 6, '#ballot li': 3, '#fiscal li': 5, '#after li': 5, '#official a[data-official]': 7 },
+  community: { '.n-srow': 10, '#orgs li': 6, '[data-orgs-public] li': 2 },
+  'our-story': { '.n-era': 5, '[data-corrections] dt': 1 },
+  civic: { '.n-tasks > div': 3, '.n-strip > div': 4, '#ballot li': 3, '#fiscal li': 5, '#after li': 5, '#official a[data-official]': 4, '.n-toc a': 6, '[data-corrections] dt': 1 },
   'plan-a-visit': { '.n-g4 > div': 4, 'form [name]': 6, 'form a[href="/privacy/"]': 1 },
   privacy: { 'main h2': 7 },
   404: { '.n-lost a': 6 },
@@ -123,7 +123,10 @@ function watch(page, errors, blockedExternal) {
   page.on('pageerror', (e) => errors.push('pageerror: ' + e.message));
   page.on('requestfailed', (r) => {
     if (!r.url().startsWith(BASE)) blockedExternal.push(r.url());
-    else errors.push('request failed: ' + r.url());
+    /* A navigation cancels whatever is still in flight — typically the
+       favicon the browser fetches after load. That is the script moving
+       on, not a request the server failed. */
+    else if (!/ERR_ABORTED/.test((r.failure() || {}).errorText || '')) errors.push('request failed: ' + r.url());
   });
   page.on('response', (r) => {
     if (r.status() >= 400 && r.url().startsWith(BASE)) errors.push('HTTP ' + r.status() + ' ' + r.url());
@@ -371,6 +374,59 @@ for (let i = 0; i < 12; i++) {
 ringResults.filter((r) => !r.ok).forEach((r) => note(`keyboard: no visible focus indicator on ${r.tag}`));
 console.log(`✓ keyboard: skip link works, ${ringResults.length} tabbed controls all show a focus ring`);
 
+/* Every focus ring must contrast with whatever is behind it — the audit
+   measured the red ring at 2.0:1 on the evergreen bands. Each control is
+   focused from the keyboard state (so :focus-visible applies) and the ring
+   colour is compared with the ground found just outside the ring, or with
+   the control's own ground when the ring is drawn inside it. */
+const FOCUS_PAGES = ['/', '/eat-shop/', '/events/', '/civic/incorporation-election/', '/plan-a-visit/', '/privacy/'];
+const lowRings = [];
+let ringsChecked = 0;
+for (const fpath of FOCUS_PAGES) {
+  await page.goto(BASE + fpath, { waitUntil: 'load' });
+  await page.keyboard.press('Tab');
+  const found = await page.evaluate(() => {
+    const parse = (c) => { const m = String(c).match(/[\d.]+/g); return m ? m.slice(0, 4).map(Number) : null; };
+    const opaque = (c) => c && (c.length < 4 || c[3] > 0.5);
+    const lum = ([r, g, b]) => { const f = (v) => { v /= 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); }; return 0.2126 * f(r) + 0.7152 * f(g) + 0.0722 * f(b); };
+    const ratio = (a, b) => { const x = lum(a); const y = lum(b); return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05); };
+    const bgOf = (start) => { let n = start; while (n && n !== document.documentElement) { const c = parse(getComputedStyle(n).backgroundColor); if (opaque(c)) return c; n = n.parentElement; } return parse(getComputedStyle(document.body).backgroundColor) || [250, 248, 242]; };
+    const groundOutside = (el, r, gap) => {
+      const x = r.left - gap; const y = r.top + r.height / 2;
+      if (x < 1 || y < 1 || y > window.innerHeight - 1) return bgOf(el.parentElement);
+      const stack = document.elementsFromPoint(x, y).filter((n) => n !== el && !el.contains(n));
+      return stack.length ? bgOf(stack[0]) : bgOf(el.parentElement);
+    };
+    const name = (el) => el.tagName.toLowerCase() + (el.className ? '.' + String(el.className).trim().split(/\s+/)[0] : '') + ' «' + (el.textContent || el.value || el.type || '').trim().slice(0, 24) + '»';
+    const out = { checked: 0, low: [] };
+    const controls = Array.from(document.querySelectorAll('a[href], button:not([disabled]), input:not([type="hidden"]):not([tabindex="-1"]), select, textarea, summary'));
+    for (const el of controls) {
+      if (el.closest('.n-sr') || el.closest('[hidden]')) continue;
+      const box = el.getBoundingClientRect();
+      if (!box.width && !box.height) continue;
+      el.scrollIntoView({ block: 'center' });
+      el.focus({ preventScroll: true });
+      if (document.activeElement !== el) continue;
+      const target = el.matches('.n-chip input') ? el.nextElementSibling : el;
+      const cs = getComputedStyle(target);
+      out.checked += 1;
+      if (cs.outlineStyle === 'none' || parseFloat(cs.outlineWidth) === 0) { out.low.push(name(el) + ' has no ring'); continue; }
+      const ring = parse(cs.outlineColor);
+      const offset = parseFloat(cs.outlineOffset) || 0;
+      const r = target.getBoundingClientRect();
+      const own = parse(cs.backgroundColor);
+      const ground = offset < 0 ? (opaque(own) ? own : bgOf(target.parentElement)) : groundOutside(target, r, offset + parseFloat(cs.outlineWidth) + 1);
+      const c = ratio(ring, ground);
+      if (c < 3) out.low.push(name(el) + ' ring ' + cs.outlineColor + ' on rgb(' + ground.slice(0, 3).join(',') + ') = ' + c.toFixed(2) + ':1');
+    }
+    return out;
+  });
+  ringsChecked += found.checked;
+  [...new Set(found.low)].forEach((f) => lowRings.push(`${fpath} ${f}`));
+}
+lowRings.forEach((f) => note(`focus: ${f}`));
+if (!lowRings.length) console.log(`✓ focus rings: ${ringsChecked} controls across ${FOCUS_PAGES.length} pages, every ring at least 3:1 against its ground`);
+
 // Explore flipped entries must not crush the photo into the 64px numeral track.
 await page.goto(BASE + '/explore/', { waitUntil: 'load' });
 const flip = await page.evaluate(() =>
@@ -487,6 +543,32 @@ await page.evaluate(() => window.scrollTo({ top: document.querySelector('#dir-h'
 await page.waitForTimeout(150);
 await page.screenshot({ path: `${SHOTS}/eat-shop-filtered-desktop.png`, fullPage: false });
 
+// The filter in force is named, with a reset beside it, and the page opens
+// on the search rather than on the photographs.
+const order = await page.evaluate(() => ({
+  search: document.getElementById('dir-q').getBoundingClientRect().top + window.scrollY,
+  firstRow: document.querySelector('[data-listing]:not([hidden])').getBoundingClientRect().top + window.scrollY,
+  photos: document.querySelector('.n-pair').getBoundingClientRect().top + window.scrollY,
+  lastRow: Array.from(document.querySelectorAll('[data-listing]')).pop().getBoundingClientRect().top + window.scrollY,
+  h1: document.querySelector('h1').getBoundingClientRect().bottom + window.scrollY,
+}));
+if (!(order.search > order.h1 && order.search < order.firstRow)) note(`eat-shop: search is not between the title and the first listing: ${JSON.stringify(order)}`);
+if (!(order.photos > order.lastRow)) note('eat-shop: the photographs are not below the listings');
+if (order.search - order.h1 > 200) note(`eat-shop: ${Math.round(order.search - order.h1)}px between the title and the search box`);
+const strip = await page.evaluate(() => {
+  const el = document.querySelector('[data-dir-active]');
+  return { shown: !el.hidden && getComputedStyle(el).display !== 'none', label: document.querySelector('[data-dir-active-label]').textContent.trim() };
+});
+if (!strip.shown || strip.label !== labelOf('coffee-bakery')) note(`eat-shop: active-filter strip wrong for coffee-bakery: ${JSON.stringify(strip)}`);
+await page.click('[data-dir-active] [data-dir-clear]');
+await page.waitForTimeout(150);
+s = await state();
+const stripHidden = await page.evaluate(() => document.querySelector('[data-dir-active]').hidden);
+if (!stripHidden || (await visible()) !== totalListings || s.search !== '') note(`eat-shop: the strip's Clear filters did not reset: ${JSON.stringify(s)}`);
+await page.goto(BASE + '/eat-shop/', { waitUntil: 'load' });
+await page.waitForTimeout(200);
+if (!(await page.evaluate(() => document.querySelector('[data-dir-active]').hidden))) note('eat-shop: active-filter strip shown with no filter in force');
+
 // Unknown category falls back to all, and the URL is normalised.
 await page.goto(BASE + '/eat-shop/?category=bogus', { waitUntil: 'load' });
 await page.waitForTimeout(300);
@@ -582,35 +664,111 @@ const expectedMonth = new Date().toLocaleString('en-US', { month: 'long', timeZo
 if (monthNow.trim() !== expectedMonth) note(`events: calendar opened on ${monthNow.trim()}, expected ${expectedMonth}`);
 const todayHidden = await page.evaluate(() => document.querySelector('[data-cal-today]').hidden);
 if (!todayHidden) note('events: "This month" button visible while on the current month');
-const detailFilled = (await page.textContent('[data-cal-detail]')).trim().length > 40;
-if (!detailFilled) note('events: detail rail is empty on load');
 const cards = await page.evaluate(() => Array.from(document.querySelectorAll('[data-upcoming] article')).map((a) => a.dataset.eventId + '@' + a.dataset.eventDate));
 const expectedCards = upcoming.map((i) => i.key);
 if (JSON.stringify(cards) !== JSON.stringify(expectedCards)) note(`events: upcoming cards ${JSON.stringify(cards)} differ from the records ${JSON.stringify(expectedCards)}`);
 const noTentative = await page.evaluate(() => !document.querySelector('[data-upcoming] [data-event-status="tentative"]'));
 if (!noTentative) note('events: a tentative record reached the upcoming list');
-if (upcoming.length) {
-  await page.click('[data-jump]');
-  await page.waitForTimeout(200);
-  const jumped = await page.evaluate(() => ({
-    pressed: (document.querySelector('[data-day][aria-pressed="true"]') || {}).dataset,
-    detail: document.querySelector('[data-cal-detail]').textContent,
-    focusedCell: document.activeElement.hasAttribute('data-day'),
-  }));
-  if (!jumped.pressed || jumped.pressed.iso !== upcoming[0].date) note(`events: View details did not select ${upcoming[0].date}: ${JSON.stringify(jumped.pressed)}`);
-  if (!jumped.detail.includes(upcoming[0].event.name)) note('events: detail rail does not show the jumped-to event');
-  if (!jumped.focusedCell) note('events: focus did not move to the selected day');
+
+/* The rail belongs to the month on screen: the first day still ahead in
+   it, or a note naming that month and pointing at the next date. */
+const railState = () =>
+  page.evaluate(() => {
+    const pressed = document.querySelector('[data-day][aria-pressed="true"]');
+    const empty = document.querySelector('[data-cal-detail] [data-cal-empty]');
+    const expanded = document.querySelector('[data-cal-detail] h4');
+    const pick = document.querySelector('[data-cal-detail] [data-pick][aria-pressed="true"]');
+    return {
+      label: document.querySelector('[data-cal-label]').textContent.trim(),
+      pressed: pressed ? pressed.dataset.iso : null,
+      empty: empty ? empty.dataset.calEmpty : null,
+      emptyText: empty ? empty.textContent : '',
+      expanded: expanded ? expanded.textContent : null,
+      pick: pick ? pick.dataset.pick : null,
+      picks: document.querySelectorAll('[data-cal-detail] [data-pick]').length,
+      text: document.querySelector('[data-cal-detail]').textContent,
+      url: window.location.search,
+    };
+  });
+const thisMonth = now.date.slice(0, 7);
+const aheadNow = upcoming.filter((i) => i.date.startsWith(thisMonth));
+let rail = await railState();
+if (aheadNow.length) {
+  if (rail.pressed !== aheadNow[0].date || !rail.text.includes(aheadNow[0].event.name)) note(`events: on load the rail should show ${aheadNow[0].date}: ${JSON.stringify({ pressed: rail.pressed, empty: rail.empty })}`);
+} else if (rail.empty !== monthNow.trim() || rail.pressed) {
+  note(`events: with nothing ahead this month the rail should say so: ${JSON.stringify({ pressed: rail.pressed, empty: rail.empty })}`);
 }
-await page.click('[data-cal-next]');
-await page.waitForTimeout(120);
+
+/* Page forward until the rail has had to change: it must never keep a day
+   from the month that was left. */
+const shownMonthOf = (iso) => new Date(iso + 'T12:00:00Z').toLocaleString('en-US', { month: 'long', year: 'numeric', timeZone: 'UTC' });
+for (let step = 1; step <= 3; step++) {
+  await page.click('[data-cal-next]');
+  await page.waitForTimeout(120);
+  rail = await railState();
+  if (rail.pressed && shownMonthOf(rail.pressed) !== rail.label) note(`events: after ${step} × Next the heading says ${rail.label} but the rail shows ${rail.pressed}`);
+  if (!rail.pressed && rail.empty !== rail.label) note(`events: after ${step} × Next, ${rail.label} has no selection and no empty-month note (${JSON.stringify(rail.empty)})`);
+  if (rail.pressed) {
+    const inst = upcoming.find((i) => i.date === rail.pressed);
+    if (!inst || !rail.text.includes(inst.event.name)) note(`events: rail for ${rail.pressed} does not show its event`);
+  } else if (upcoming.length && !upcoming.some((i) => rail.emptyText.includes(i.event.name))) {
+    note(`events: the empty-month note for ${rail.label} does not point at the next confirmed date`);
+  }
+}
 const shown = await page.evaluate(() => document.querySelector('[data-cal-today]').hidden === false);
 if (!shown) note('events: "This month" did not appear after moving off the current month');
 await page.click('[data-cal-today]');
 await page.waitForTimeout(120);
+rail = await railState();
+if (rail.label !== monthNow.trim()) note('events: "This month" did not return to the current month');
 const disabledNonEvent = await page.evaluate(() => document.querySelector('[data-day][data-has="no"][data-empty="no"]').disabled);
 if (!disabledNonEvent) note('events: days without events are not disabled');
-console.log(`✓ calendar: opens on ${monthNow.trim()}, cards match the records, jump selects the day, month nav works`);
+
+if (upcoming.length) {
+  /* "View details" in the strip selects that day and that event. */
+  const last = upcoming[upcoming.length - 1];
+  await page.click(`[data-jump="${last.date}"][data-jump-event="${last.id}"]`);
+  await page.waitForTimeout(200);
+  rail = await railState();
+  if (rail.pressed !== last.date || rail.expanded !== last.event.name) note(`events: View details did not open ${last.id} on ${last.date}: ${JSON.stringify({ pressed: rail.pressed, expanded: rail.expanded })}`);
+  if (!rail.url.includes('date=' + last.date) || !rail.url.includes('event=' + encodeURIComponent(last.id))) note(`events: the URL does not carry the selection: ${rail.url}`);
+  const focusedCell = await page.evaluate(() => document.activeElement.hasAttribute('data-day'));
+  if (!focusedCell) note('events: focus did not move to the selected day');
+
+  /* A deep link from the homepage opens on its day and event. */
+  const first = upcoming[0];
+  const sameDay = upcoming.filter((i) => i.date === first.date);
+  await page.goto(BASE + '/events/?date=' + first.date + '&event=' + encodeURIComponent(first.id) + '#cal-h', { waitUntil: 'load' });
+  await page.waitForTimeout(300);
+  rail = await railState();
+  if (rail.pressed !== first.date || rail.expanded !== first.event.name) note(`events: deep link did not select ${first.id}: ${JSON.stringify({ pressed: rail.pressed, expanded: rail.expanded })}`);
+  if (sameDay.length > 1) {
+    if (rail.picks !== sameDay.length || rail.pick !== first.id) note(`events: a day with ${sameDay.length} events should list them with ${first.id} chosen: ${JSON.stringify({ picks: rail.picks, pick: rail.pick })}`);
+    const other = sameDay.find((i) => i.id !== first.id);
+    await page.click(`[data-pick="${other.id}"]`);
+    await page.waitForTimeout(150);
+    rail = await railState();
+    if (rail.expanded !== other.event.name || rail.pick !== other.id || !rail.url.includes('event=' + encodeURIComponent(other.id))) note(`events: choosing ${other.id} in the day list did not expand it: ${JSON.stringify({ expanded: rail.expanded, pick: rail.pick, url: rail.url })}`);
+    const focusedPick = await page.evaluate(() => document.activeElement.hasAttribute('data-pick'));
+    if (!focusedPick) note('events: focus did not stay on the chosen event');
+  }
+  /* A deep link to a day with nothing on it opens the calendar as usual. */
+  await page.goto(BASE + '/events/?date=2031-01-01&event=nothing', { waitUntil: 'load' });
+  await page.waitForTimeout(300);
+  rail = await railState();
+  if (rail.label !== monthNow.trim()) note(`events: a deep link to an empty day moved the calendar to ${rail.label}`);
+}
+console.log(`✓ calendar: opens on ${monthNow.trim()}, the rail follows the month, cards match the records, deep links and the day list select the event`);
 await page.screenshot({ path: `${SHOTS}/events-selected.png` });
+
+/* The homepage cards open the calendar on their own day and event. */
+await page.goto(BASE + '/', { waitUntil: 'load' });
+await page.waitForTimeout(300);
+const homeLinks = await page.evaluate(() => Array.from(document.querySelectorAll('[data-upcoming] article')).map((a) => ({ id: a.dataset.eventId, date: a.dataset.eventDate, href: (a.querySelector('a') || {}).getAttribute('href') })));
+homeLinks.forEach((l) => {
+  if (l.href !== '/events/?date=' + l.date + '&event=' + encodeURIComponent(l.id) + '#cal-h') note(`home: card ${l.id} links to ${l.href}`);
+});
+if (homeLinks.length) console.log(`✓ home: ${homeLinks.length} event cards deep-link to their day and event`);
 
 // --- Forms: labels, and server-side field errors announced and associated ---
 await page.goto(BASE + '/plan-a-visit/', { waitUntil: 'load' });
@@ -686,10 +844,27 @@ await mp.waitForTimeout(150);
 const closed = await mp.evaluate(() => ({
   shown: getComputedStyle(document.querySelector('.n-nav')).display !== 'none',
   expanded: document.querySelector('.n-burger').getAttribute('aria-expanded'),
+  label: document.querySelector('.n-burger').getAttribute('aria-label'),
   focused: document.activeElement.classList.contains('n-burger'),
 }));
-if (closed.shown || closed.expanded !== 'false' || !closed.focused) note(`mobile: Escape did not close and restore focus: ${JSON.stringify(closed)}`);
-console.log('✓ mobile menu: collapses, toggles aria state, Tab enters it, Escape closes and restores focus');
+if (closed.shown || closed.expanded !== 'false' || closed.label !== 'Open menu' || !closed.focused) note(`mobile: Escape did not close, reset the label and restore focus: ${JSON.stringify(closed)}`);
+console.log('✓ mobile menu: collapses, toggles aria state and label, Tab enters it, Escape closes and restores focus');
+
+/* Without a script the menu cannot open, so the list is shown in full and
+   the button that could not open it is not. */
+const nojs = await browser.newContext({ viewport: { width: 390, height: 844 }, javaScriptEnabled: false });
+await isolate(nojs, []);
+const np = await nojs.newPage();
+await np.goto(BASE + '/', { waitUntil: 'load' });
+const fallback = await np.evaluate(() => ({
+  nav: getComputedStyle(document.querySelector('.n-nav')).display,
+  burger: getComputedStyle(document.querySelector('.n-burger')).display,
+  links: Array.from(document.querySelectorAll('.n-nav a')).filter((a) => a.getBoundingClientRect().height > 0).length,
+  overflow: document.documentElement.scrollWidth > window.innerWidth + 1,
+}));
+if (fallback.nav === 'none' || fallback.burger !== 'none' || fallback.links < 7 || fallback.overflow) note(`mobile: no-script navigation fallback wrong: ${JSON.stringify(fallback)}`);
+else console.log('✓ mobile: without JavaScript the navigation is shown in full');
+await nojs.close();
 
 /* Sticky rails are for two-column layouts. Once a page stacks into one
    column the rail has nothing to scroll against and pins itself on top of

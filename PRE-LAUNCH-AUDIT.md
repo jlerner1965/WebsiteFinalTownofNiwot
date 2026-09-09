@@ -1,5 +1,113 @@
 # Pre-launch audit — TownofNiwot.com
 
+## Second pass: the external audit of September 9, 2026
+
+An external reviewer audited the live site on September 9, 2026 and
+delivered a thirteen-page report ("TownofNiwot.com prelaunch audit") whose
+decision was: hold the promotional launch for a focused correction pass. It
+found the visual identity and the technical foundation sound, and
+concentrated its findings on event accuracy, civic clarity, access to
+practical information and proof that the forms deliver. This section records
+what the `claude/new-session-8ag6u8` branch does about each of its
+identified items, what it deliberately does not do, and what still needs a
+person. The first audit's record follows below, unchanged.
+
+The sandbox this work was done in could not open niwot.com, niwotarts.org,
+niwotelection.org or the county sites (the network policy refuses them), so
+no primary page was read directly. Where a fact was changed, it rests on the
+external audit's own dated primary-source reading, corroborated wherever
+possible through search-engine snippets of the same pages; the relevant data
+file says so beside the record. That is why several items below end with
+"confirm on the cited page".
+
+### Findings applied
+
+| ID | Finding | What changed |
+|---|---|---|
+| C1 (P1) | Event records disagree with current listings | `events.js`: the Second Friday Art Walk and the Osmosis Gallery opening carry 5–9pm from the organizers' September 11 listings; Enchanted Evening is a confirmed record for November 27, 2026, 6–9pm, from the organizer's dated listing, with a note that the page's general description says 5pm; the Why Not Niwot? awards night keeps the organizer's 6pm and says the Business Association's calendar lists 5:30pm. Rock & Rails is credited to the Niwot Cultural Arts Association, which produces it with the Business Association (the site had credited the Association alone). Cards, calendar rail and JSON-LD render from the same records, so all three agree by construction. |
+| F1 (P1) | October showed September 11 details | The detail rail now belongs to the month on screen: with no day chosen it shows that month's first day still ahead; a month with nothing ahead says so, names the month and points at the next confirmed date. A day with several events lists them compactly and expands one. Homepage cards link to `/events/?date=…&event=…` and the calendar opens on that day and event. `verify.mjs` pages forward three months and checks the rail each time. |
+| C2 (P1) | Civic summaries omit material qualifications | `election.js`: the sales and use tax notes the food-for-domestic-consumption exemption; the marijuana tax is an additional 3% from January 1, 2028, applying only if retail marijuana businesses operate; revenue retention refers to the constitutional (TABOR) revenue and spending limits from 2027; the transportation debt says its proposed repayment is the sales and use tax; the charter commission's dependency on incorporation is explicit, and "approval of one does not automatically decide another" is gone. Three voting tasks (boundary via the Commission's FAQ, which names petition Exhibits A and B; the ballot; registration and ballot help) sit at the top, followed by a four-cell status strip in place of the six large cells, a table of contents, a plain-language section on what incorporation decides and how the proposed boundary differs from the census place, an official-text link beside every measure, one link per official destination, and a dated "Changes to this page" list. |
+| T1 (P1) | Privacy contradictions; no editor contact | The opening now says the forms collect what you submit and the hosting and font providers process technical data; the sharing sentence names the two processors instead of denying any sharing. `site.editor` (name, email) is wired into the privacy page, the submission form's contact list and the footer, and is `null` until the owner supplies a monitored address — the pages say the form is the route until then. |
+| A1 (P1) | Focus ring 2.02:1 on dark sections | The ring is the light gold on `.n-head`, `.n-foot`, `.n-bg-green`, the skip link and the directory's checked chip (5.4:1 on evergreen), and the lightened sky on the civic page's dark band. `verify.mjs` focuses every control on six pages and fails any ring under 3:1 against the ground behind it. |
+| U1 (P2) | Useful actions too far down | Homepage: 42-word introduction, two actions, smaller wordmark, photo top-aligned; the caboose feature block, the separate parks section and the history photo band are gone; measured 5,497px tall at 1363×936 against the audit's 6,898px. Directory: search and categories directly under the title (search at y≈500 against the audit's 906), photographs below the listings, a one-sentence source note with the policy in an expandable block, and a strip naming any filter in force with a reset beside it. Civic: table of contents and the compact strip above. Community: jump links. |
+| L1 (P2) | Misleading destinations | John's Dry Cleaners links to the company's locations page after its address page returned 404 (the row's note records it). Rows that could only be traced to the Business Association's directory as a whole say "Find in the Association directory" instead of "Hours & contact"; Pebble Art Jewelry now links to its own Association listing. Resident services link to the county page that handles each service (planning, road maintenance, building permits, trail closures) rather than the county homepage; Plan a Visit's direct contacts do the same. |
+| C3 (P2) | Community guide thin | Organizations: the Cultural Arts Association, the Historical Society and the Community Association added, each described from its own site; the county's Niwot Local Improvement District added under a separate "public bodies" heading with the Election Commission, distinguishing public administration from volunteer groups; the unsourced "market" removed. Explore names the Longmont-to-Boulder (LoBo) Regional Trail with the county's trail page, its 2017 Niwot trails map and the closures page, and names the Niwot Sculpture Park as a verified art location; "Help us map it" is reworded. Plan a Visit names RTD's Route BOLT and its Niwot Road stop with a caveat about the CO 119 construction, replaces the vague "Niwot Trail" directions with the county trail page, and says plainly that restrooms and accessible parking are not yet confirmed. Community adds a sewer row for the Niwot Sanitation District with an address-coverage qualification and rewrites the "ask a neighbor" note. |
+| History and trust | Vague citations; promised corrections with nowhere to publish them; newsletter wording | Every timeline entry links to its source (the Historical Society's timeline, the Cultural Arts Association's Whistle Stop Park page) or names an identifiable record (the 2020 Census, Niwot CDP); "county records" is gone, and the caboose has its own dated entry. `src/_data/corrections.js` is the dated log the site had been promising: Our Story renders it in full, and each page renders its own entries. The newsletter is described as occasional, never on a schedule. |
+| Mobile | Menu label not reset on Escape; no fallback without scripting | `guide.js` routes every open and close through one function, so `aria-expanded` and the accessible name cannot disagree. Without scripting the navigation shows in full and the button is hidden (`@media (scripting: none)` in `guide.css` and a `<noscript>` rule in the header); `verify.mjs` checks both in a context with JavaScript off. |
+
+### Not applied, and why
+
+- **Official ballot numbering ("Question 1", "Issue 1").** The audit asks
+  for the Commission's numbering beside each summary. The sandbox could not
+  read the Commission's ballot page, the Courier reported that ballot content
+  was still before the Commission with wording to be finalized by September
+  11, and the previous PR removed this guide's own numerals precisely
+  because they could be mistaken for the ballot's. `election.js` now has an
+  `official` field on every question and issue and the template renders it;
+  it stays unset until the civic editor has read the labels from the
+  certified ballot after the proof review.
+- **Chief Niwot and the Arapaho context on Our Story.** The audit calls the
+  omission a material gap. The section, its timeline entry and its sources
+  were removed at the client's request in the previous PR ("Remove the Chief
+  Niwot material", commit `e499beb`), so this branch does not reverse that
+  decision on its own. The material is recoverable from git history in one
+  step if the decision changes.
+- **Redrawing the schematic map** with Niwot Road, 79th Street, named parking
+  and a north arrow. The first audit already questioned which side of the
+  tracks the map puts Whistle Stop Park and the Diagonal on, and no ground
+  truth or base map was available here; adding a north arrow to a map whose
+  orientation is in doubt would make it more misleading, not less. A local
+  needs to check it first (README item 12).
+- **Restrooms, accessible parking, sidewalk and curb-ramp assertions, an
+  itinerary.** On-the-ground facts; the page now says the first two are not
+  yet confirmed rather than inventing them.
+- **A "Call" action on listings.** The site deliberately publishes no phone
+  numbers because they change faster than anything else; the policy stands.
+- **Share and add-to-calendar actions.** The audit itself says to add them
+  only once the dates, times and source URLs are reliable, which is the
+  editor gate below.
+
+### Still needs a person (the audit's gates)
+
+1. **Confirm the four event readings on the organizers' pages** — the Art
+   Walk and Osmosis hours, the awards night start (organizer 6pm, Business
+   Association calendar 5:30pm), Enchanted Evening's date and hours — and
+   keep `verifiedAt` and the descriptions honest. The records say where each
+   time comes from.
+2. **Prove the forms deliver (G1):** one real submission and one signup into
+   an owner-controlled inbox, one unsubscribe processed, a failed delivery
+   showing an honest error. Nothing was sent during either audit.
+3. **Real devices and zoom (G2):** 320, 390, 768 and 1366 CSS pixels,
+   portrait and landscape, 200% zoom, iPhone/Safari and Android/Chrome. The
+   browser checks cover those widths in Chromium only.
+4. **Editor identity and a monitored address** in `site.editor`.
+5. **The ballot after the September 11 proof review:** re-verify every
+   summary, add the official labels, bump `verified` in `site.js`, and add a
+   `corrections.js` entry.
+6. **Photo-rights records, the privacy descriptions against the actual
+   Vercel and Resend settings, Search Console** — as in the first audit.
+7. **`npm run links` from an open network.** This branch adds destinations
+   confirmed only as indexed pages: the county planning, road maintenance,
+   building-permit, trail-closure, regulations and LoBo pages, the 2017
+   Niwot trails map, the Niwot LID page, the Sanitation District, the
+   Historical Society, the Community Association, RTD's BOLT route page and
+   John's Dry Cleaners' locations page.
+
+### Checks run on this branch
+
+| Check | Result |
+|---|---|
+| `npm run build` | Clean. 13 files; images from cache |
+| `npm test` | 70 / 70 pass (63 before; the seven new tests cover the September 11 hours and Enchanted Evening, the homepage deep links, the calendar rail's month rule, the directory's link labels and layout, the civic page's tasks, qualifications and change note, the privacy wording and editor route, the services destinations and organization kinds, and the corrections log) |
+| `npm run verify` | All checks pass with `CHROMIUM_PATH=/opt/pw-browsers/chromium`: no console or CSP errors, no overflow at 320–1440, every image loaded with alt, no text under 12px, no rounded corners, disclaimer verbatim, axe WCAG 2.2 AA zero violations on 10 pages × 2 widths, 337 focus rings on six pages all at 3:1 or better, the calendar rail following the month through three presses of Next, deep links and the day list selecting the event, the homepage cards deep-linking, the directory opening on its search with the active-filter strip, the menu label reset on Escape, and the navigation shown in full with JavaScript off. Note: the first audit's record below says `verify.mjs` passed in its sandbox; in this one the script could not launch Playwright's own browser until pointed at the installed Chromium, so the earlier "baseline passed" from this session was not a real run. This one is |
+| `node widths.mjs` | No horizontal overflow on any page at 26 widths from 320 to 2560 |
+| Page depth at 1363×936 (the audit's viewport) | Home 5,497px (audit: 6,898); directory search box at y=501 (audit: 906); events 4,581px; civic 5,075px |
+| `node lighthouse.mjs` | See the follow-up note below this table once the run completes; scores on this sandbox are a measurement of the machine (the first audit's note applies) |
+| External links | Still not checkable from this sandbox; run `npm run links` from an open network before launch (gate 7 above) |
+
+---
+
+
 Audited September 9, 2026, on the `claude/pre-launch-audit-ljvsjb` branch,
 against the state of `main` after PR #4. Everything below was either run or
 read in full: every template, data file, script, the endpoint, the tests

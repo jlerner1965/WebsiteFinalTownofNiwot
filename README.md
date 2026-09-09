@@ -84,7 +84,7 @@ template except the prose that belongs to a specific page.
 | File | Holds |
 |---|---|
 | `site.js` | Name, canonical URL, review dates, the legal disclaimer |
-| `nav.js` | Primary navigation, in render order |
+| `nav.js` | Primary navigation, in render order (six items; Plan a Visit is reached from the footer and in-page links) |
 | `listings.js` | Business directory records (see "The directory") |
 | `events.js` | Event records (see "The calendar") |
 | `organizations.js` | Community organizations |
@@ -374,10 +374,6 @@ government seals, marketing text over photographs, pure black body text.
   both show the list and hide the button. Do not hide the nav with
   JavaScript instead: `guide.js` is deferred, and the menu would flash
   open on every load.
-- **The masthead identifier wraps below 600px.** "Independent community
-  guide" is wider than a phone can give it beside the menu button, so
-  `guide.css` lets it take two lines there. Shortening it is not the fix; the
-  identifier is an editorial requirement.
 - **Data files export one default value.** See "Content model".
 
 ### Color
@@ -418,7 +414,9 @@ of the design, not a content-team preference:
    Our Story renders in full and each page renders for itself.
 5. **The disclaimer appears on every page.** It is rendered from `site.js` by
    the shared layout so it cannot be dropped from one page by accident, and
-   the masthead on every page reads "Independent community guide".
+   the footer on every page carries the "Independent community guide"
+   identifier under the wordmark. (It used to sit under the masthead too;
+   the client had it removed from the header in September 2026.)
 
 ## Content status
 

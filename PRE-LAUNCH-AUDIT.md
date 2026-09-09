@@ -21,6 +21,7 @@ Niwot.
 | `npm test` | 63 / 63 pass (data validation, event logic, endpoint, built site) |
 | `npm run verify` | All checks pass: no console or CSP errors, no overflow at 320–2560, every image loaded with alt, no text under 12px, no rounded corners, disclaimer verbatim, axe WCAG 2.2 AA zero violations on 10 pages × 2 widths, skip link, focus rings, directory URL state and Back/Forward, calendar, form error wiring, mobile menu, touch targets |
 | `node lighthouse.mjs` | Accessibility 100, Best Practices 100, SEO 100 on all six pages. Performance 85–91 on this sandbox, where the text-only privacy page also scores 91 — that is the machine's ceiling, not the site. Confirm on production with PageSpeed Insights after deploy |
+| `node widths.mjs` | No horizontal overflow on any of nine pages at 26 widths from 320 to 2560. The script hung in this sandbox until it was given the same off-origin request isolation `verify.mjs` has (see fix 13) |
 | HTML validation (`html-validate`) | Nothing of substance. It objects to inline `style` attributes (a deliberate design choice here) and to the id `2nd-nature-hair-lounge` starting with a digit, which HTML5 permits and nothing on the site selects by CSS |
 | Spelling sweep | 14 British spellings in reader-facing copy — fixed (see below) |
 | Dependency audit | 20 advisories, all in the Lighthouse → puppeteer → extract-zip chain. Development-only; nothing ships to the site or the function |
@@ -98,6 +99,11 @@ already says.
 12. **`linkcheck.mjs` / `npm run links`**: fetches every external href in
     `_site/` and lists anything that does not answer 2xx with the pages that
     link to it.
+13. **`widths.mjs` waited on Google Fonts and reported the hidden honeypot
+    as overflow.** It now aborts off-origin requests like `verify.mjs` does,
+    so it finishes anywhere the network is closed, and it ignores boxes
+    inside a clipped ancestor, which cannot paint past the edge. Result: no
+    overflow at any of 26 widths on any page.
 
 ## Before launch (needs a person)
 

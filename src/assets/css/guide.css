@@ -172,6 +172,12 @@ a:hover { color: var(--n-red-ink); }
 
 /* ---- visually hidden, but read aloud ---- */
 .n-sr { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+/* A form control keeps its own intrinsic width — a bare text input is about
+   185px — and `clip` only stops it being painted, so the box still reports as
+   sitting past the right edge of a phone. Nothing is visible, but the width
+   sweep is right to flag it, and a check that cries wolf gets ignored. The
+   honeypot fields are the only controls that live in here. */
+.n-sr input, .n-sr select, .n-sr textarea { width: 1px; min-width: 0; }
 
 /* ---- callout panels: 3px accent on the left edge only ---- */
 .n-callout { padding: 22px; border-left: 3px solid var(--n-evergreen); }

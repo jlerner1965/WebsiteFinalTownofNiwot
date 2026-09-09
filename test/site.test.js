@@ -87,10 +87,10 @@ test('the 404 and thank-you pages are noindex and carry no canonical', () => {
   }
 });
 
-test('the bare wordmark, the footer identifier and disclaimer, and the privacy links are on every page', () => {
+test('the "NIWOT Colorado" wordmark, the footer identifier and disclaimer, and the privacy links are on every page', () => {
   for (const url of [...INDEXABLE, '/thanks/', '/404.html']) {
     const html = read(url);
-    assert.match(html, /<a class="n-mark" href="\/">NIWOT<\/a>/, url);
+    assert.match(html, /<a class="n-mark" href="\/">NIWOT<span class="n-mark-co"> Colorado<\/span><\/a>/, url);
     assert.ok(!html.includes('<small>Independent community guide</small>'), `${url} header identifier removed`);
     assert.ok(html.includes('>Independent community guide</div>'), `${url} footer identifier`);
     assert.ok(html.includes(site.disclaimer), `${url} disclaimer`);

@@ -3,17 +3,18 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{{ title }} — {{ site.name }}</title>
+<title>{{ seoTitle | default(title + ' — ' + site.name) }}</title>
 <meta name="description" content="{{ description }}">
-{%- if noindex %}
+{%- if noindex or previewBuild %}
 <meta name="robots" content="noindex, follow">
-{%- else %}
+{%- endif %}
+{%- if not noindex %}
 <link rel="canonical" href="{{ site.url }}{{ page.url }}">
 {%- endif %}
 
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="{{ site.name }}">
-<meta property="og:title" content="{{ title }}">
+<meta property="og:title" content="{{ seoTitle | default(title + ' — ' + site.name) }}">
 <meta property="og:description" content="{{ description }}">
 <meta property="og:url" content="{{ site.url }}{{ page.url }}">
 <meta property="og:image" content="{{ site.url }}/assets/photos/{{ ogImage | default('second-avenue-patios.jpg') }}">
@@ -24,31 +25,51 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/css/guide.css">
-<script src="/assets/js/guide.js" defer></script>
+{% lcpPreload %}
+<link rel="stylesheet" href="{{ '/assets/css/guide.css' | asset }}">
+<script src="{{ '/assets/js/guide.js' | asset }}" defer></script>
 {%- if pageStyles %}
 <style>{{ pageStyles | safe }}</style>
 {%- endif %}
 {%- if structuredData %}
 <script type="application/ld+json">{{ structuredData | jsonify | safe }}</script>
 {%- endif %}
+{%- if eventsJsonLd %}
+<script type="application/ld+json">{{ eventsJsonLd | jsonify | safe }}</script>
+{%- endif %}
+{%- if breadcrumbs %}
+<script type="application/ld+json">{{ breadcrumbs.jsonLd | jsonify | safe }}</script>
+{%- endif %}
 </head>
 <body>
 <div{% if bodyClass %} class="{{ bodyClass }}"{% endif %}>
 <a class="n-skip" href="#main">Skip to main content</a>
 {% include "partials/header.njk" %}
+{%- if breadcrumbs %}
+{#- The visible trail and the BreadcrumbList markup are built from the same
+    list, so the two cannot disagree. -#}
+<nav class="n-crumbs" aria-label="Breadcrumb">
+<div class="n-wrap">
+<ol>
+{%- for crumb in breadcrumbs.items %}
+<li>{% if loop.last %}<span aria-current="page">{{ crumb.name }}</span>{% else %}<a href="{{ crumb.url }}">{{ crumb.name }}</a>{% endif %}</li>
+{%- endfor %}
+</ol>
+</div>
+</nav>
+{%- endif %}
 <main id="main">
 {{ content | safe }}
 </main>
 {% include "partials/footer.njk" %}
 </div>
-{%- if needsSeries %}
-{#- The event series, emitted once so the browser and the build read exactly
+{%- if needsEvents %}
+{#- The event records, emitted once so the browser and the build read exactly
     the same data. -#}
-<script type="application/json" id="niwot-series">{{ series | jsonify | safe }}</script>
+<script type="application/json" id="niwot-events" data-built="{{ eventsBuild.now.date }} {{ eventsBuild.now.time }}"{% if eventsNow %} data-now="{{ eventsNow }}"{% endif %}>{{ events | jsonify | safe }}</script>
 {%- endif %}
 {%- for src in scripts %}
-<script type="module" src="{{ src }}"></script>
+<script type="module" src="{{ src | asset }}"></script>
 {%- endfor %}
 </body>
 </html>

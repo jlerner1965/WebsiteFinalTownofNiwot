@@ -1,10 +1,11 @@
 ---
 layout: layouts/base.njk
 title: Niwot, Colorado
+seoTitle: Niwot, Colorado Community Guide | TownofNiwot.com
 description: An independent community guide to Niwot, Colorado — what to see, where to eat, what is on, who runs what, and neutral information on the November 2026 incorporation election.
 navKey: home
 permalink: /
-needsSeries: true
+needsEvents: true
 scripts:
   - /assets/js/page-home.js
   - /assets/js/forms.js
@@ -158,10 +159,10 @@ facts:
 <div>
 <div class="n-label">Feature</div>
 <h3 class="n-h3" style="margin-top:12px;color:var(--n-evergreen)">Summer evenings run out of a railroad caboose.</h3>
-<p class="n-body" style="margin:16px 0 0;max-width:56ch">Whistle Stop Park keeps a restored Burlington Route caboose at the edge of Old Town. The Niwot Business Association runs its free summer concert series beside it on Thursday evenings.</p>
+<p class="n-body" style="margin:16px 0 0;max-width:56ch">Whistle Stop Park keeps a restored Burlington Route caboose at the edge of Old Town. The Niwot Business Association runs its free Rock &amp; Rails concert series beside it on Thursday evenings each summer, and publishes the season&#8217;s dates in the spring.</p>
 <div class="n-btns" style="margin-top:22px">
 <a class="n-btn" href="/events/">Open the calendar</a>
-<a class="n-btn n-btn--ghost" href="https://niwot.com/" rel="noopener">Organizer&#8217;s listings</a>
+<a class="n-btn n-btn--ghost" href="https://niwot.com/upcoming-events/" rel="noopener">Organizer&#8217;s calendar</a>
 </div>
 </div>
 </div>
@@ -233,8 +234,8 @@ facts:
 <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:0 clamp(16px,2vw,36px);margin-top:10px">
 {#- The same categories the directory renders, counted from the same data,
     so the two pages cannot drift apart. -#}
-{%- for c in listings.categories %}{% if c.value != 'All' %}
-<a class="n-shift n-shift--sm" href="/eat-shop/" style="display:block;padding:14px 0;border-top:1px solid var(--n-rule);font-size:1rem;text-decoration:none">{{ c.label }} <span style="color:var(--n-muted)">{{ c.count }}</span></a>
+{%- for c in listings.categories %}{% if c.slug != 'all' %}
+<a class="n-shift n-shift--sm" href="/eat-shop/?category={{ c.slug }}" style="display:block;padding:14px 0;border-top:1px solid var(--n-rule);font-size:1rem;text-decoration:none">{{ c.label }} <span style="color:var(--n-muted)">{{ c.count }}</span></a>
 {%- endif %}{% endfor %}
 </div>
 </div>
@@ -346,12 +347,12 @@ facts:
 <input type="hidden" name="kind" value="newsletter">
 <span class="n-sr" aria-hidden="true"><label for="nl-company">Leave this field empty</label><input id="nl-company" name="company" type="text" tabindex="-1" autocomplete="off"></span>
 <label class="n-sr" for="nl-email">Your email address</label>
-<input id="nl-email" name="email" type="email" required placeholder="you@example.com" style="flex:1 1 220px;min-width:0;padding:14px;background:var(--n-white);border:2px solid var(--n-white);font:inherit;font-size:1rem;color:var(--n-ink)">
+<input id="nl-email" name="email" type="email" required autocomplete="email" inputmode="email" placeholder="you@example.com" style="flex:1 1 220px;min-width:0;padding:14px;background:var(--n-white);border:2px solid var(--n-white);font:inherit;font-size:1rem;color:var(--n-ink)">
 <button class="n-btn" type="submit" style="cursor:pointer;font-family:inherit">Subscribe</button>
 </form>
-<template data-form-success><p role="status" style="margin:22px 0 0;padding-top:14px;border-top:3px solid var(--n-gold-lt);max-width:48ch;color:var(--n-white)">Thank you &#8212; your address is ready to send from your email client.</p></template>
+<template data-form-success><p role="status" style="margin:22px 0 0;padding-top:14px;border-top:3px solid var(--n-gold-lt);max-width:48ch;color:var(--n-white)">Thank you &#8212; your address has been received.</p></template>
 <template data-form-unavailable><p role="status" data-message style="margin:22px 0 0;padding-top:14px;border-top:3px solid var(--n-gold-lt);max-width:48ch;color:var(--n-white)">Email notices are not running yet, so nothing was sent. The <a href="/events/">events calendar</a> carries the same updates in the meantime.</p></template>
-<p class="n-small" style="margin:12px 0 0;max-width:48ch;color:var(--n-sage-lt)">Your address is used only for these notices. No advertising and no third-party tracking.</p>
+<p class="n-small" style="margin:12px 0 0;max-width:48ch;color:var(--n-sage-lt)">Your address is used only for these notices, and every notice says how to unsubscribe. No advertising and no third-party tracking. <a href="/privacy/">How your address is handled</a>.</p>
 </div>
 <div>
 <div class="n-label">Contribute</div>

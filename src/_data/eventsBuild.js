@@ -1,58 +1,58 @@
-/* Build-time render of the calendar, so the events page and the homepage ship
-   complete markup for crawlers and for readers without JavaScript.
+/* Build-time render of the calendar, so the events page and the homepage
+   ship complete markup for crawlers and for readers without JavaScript.
 
-   The browser re-renders both from the real current date on load — a static
-   build goes stale as soon as the month turns over.
+   The browser re-renders both from the real current time on load — a static
+   build goes stale as soon as an event ends.
 
-   Set NIWOT_TODAY=YYYY-MM-DD to build a fixed date for testing. */
+   Set NIWOT_TODAY=YYYY-MM-DD (or NIWOT_NOW=<ISO instant>) to build a fixed
+   moment for testing. */
 import {
   MONTHS,
   DOWS,
   buildUpcoming,
   buildCells,
   buildArchive,
+  buildExpected,
   detailFor,
+  instancesOn,
+  parseIso,
   renderCells,
   renderDetail,
+  renderExpected,
   renderUpcoming,
+  zonedParts,
 } from '../assets/js/calendar-core.js';
-import series from './series.js';
-
-function today() {
-  const iso = process.env.NIWOT_TODAY;
-  if (iso) {
-    const parsed = new Date(iso);
-    if (!Number.isNaN(parsed.getTime())) return parsed;
-  }
-  return new Date();
-}
+import { buildNow } from '../../lib/events.js';
+import events from './events.js';
 
 export default function () {
-  const now = today();
-  const upcoming = buildUpcoming(series, now, 3);
-  const cells = buildCells(series, now.getFullYear(), now.getMonth(), null);
+  const now = zonedParts(buildNow());
+  const { y, m } = parseIso(now.date);
+  const upcoming = buildUpcoming(events, now);
+  const expected = buildExpected(events);
+  const cells = buildCells(events, y, m, null);
+  const archive = buildArchive(events, now, 4);
+
+  /* The rail is never empty: with nothing selected it shows the next
+     occurrence, and every occurrence on that day. */
   const detail = upcoming.length
-    ? detailFor(upcoming[0].series, upcoming[0].date)
-    : detailFor(series[0], null);
-  const archive = buildArchive(series, now, 4);
+    ? instancesOn(events, upcoming[0].date).filter((i) => !i.endDate || i.endDate >= now.date).map((i) => detailFor(i, now))
+    : [];
 
   return {
+    now,
     dows: DOWS,
-    monthLabel: MONTHS[now.getMonth()] + ' ' + now.getFullYear(),
+    monthLabel: MONTHS[m - 1] + ' ' + y,
     cellsHtml: renderCells(cells),
-    detailHtml: renderDetail(detail),
-    upcomingHomeHtml: renderUpcoming(upcoming, 'link', now),
+    detailHtml: detail.length
+      ? renderDetail(detail)
+      : '<p class="n-body" style="margin:0">No confirmed dates are on the calendar. The expected seasonal events are listed on this page.</p>',
+    upcomingHomeHtml: renderUpcoming(upcoming.slice(0, 3), 'link', now),
     upcomingEventsHtml: renderUpcoming(upcoming, 'select', now),
+    expectedHtml: renderExpected(expected),
+    upcomingCount: upcoming.length,
+    expectedCount: expected.length,
     archive,
     hasArchive: archive.length > 0,
-    /* Plain data for the homepage cards and for Event structured data. */
-    upcoming: upcoming.map((occ) => ({
-      when: DOWS[(occ.date.getDay() + 6) % 7] + ' ' + occ.date.getDate() + ' ' + MONTHS[occ.date.getMonth()],
-      iso: new Date(occ.date.getTime() - occ.date.getTimezoneOffset() * 60000).toISOString().slice(0, 10),
-      name: occ.series.name,
-      place: occ.series.place,
-      host: occ.series.host,
-      cost: occ.series.cost,
-    })),
   };
 }

@@ -1,12 +1,13 @@
 ---
 layout: layouts/base.njk
 title: Eat & Shop
-description: Every Niwot business we can source — kitchens, coffee, groceries, shops, wellness, trades and professional services across Old Town, Cottonwood Square and the roads around them. Search or filter by category.
+seoTitle: Niwot Restaurants, Shops & Local Services | TownofNiwot.com
+description: A curated directory of Niwot, Colorado businesses — restaurants, coffee, shops, wellness and local services across Old Town and Cottonwood Square — checked against business-owned and community sources.
 navKey: eat-shop
 permalink: /eat-shop/
 ogImage: second-avenue-patios.jpg
 ogImageAlt: Patios and hanging baskets on the 300 block of Second Avenue in Niwot
-footMetaRight: Hours and contact details via the Business Association
+footMetaRight: Hours and contact details via each business
 scripts:
   - /assets/js/directory.js
 pageStyles: |
@@ -14,11 +15,16 @@ pageStyles: |
   .n-filters{position:sticky;top:88px}
   .n-pair{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(16px,2vw,32px)}
   .n-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(150px,.34fr);gap:16px 28px;align-items:start;padding:22px 0;border-bottom:1px solid var(--n-rule)}
-  .n-cats{margin-top:8px;border-bottom:1px solid var(--n-rule)}
-  button[data-chip]{display:flex;justify-content:space-between;gap:12px;width:100%;text-align:left;padding:13px 14px;background:transparent;border:0;border-top:1px solid var(--n-rule);color:var(--n-ink);font:inherit;font-size:1rem;cursor:pointer;transition:background .18s ease,color .18s ease}
-  button[data-chip]:hover{background:var(--n-paper)}
-  button[data-chip][aria-pressed="true"]{background:var(--n-evergreen);color:var(--n-white)}
-  button[data-chip][aria-pressed="true"] span{color:var(--n-gold-lt)}
+  .n-cats{margin:26px 0 0;padding:0;border:0;min-width:0;border-bottom:1px solid var(--n-rule)}
+  .n-cats legend{padding:0;margin:0 0 8px}
+  .n-chip{position:relative;display:block}
+  .n-chip input{position:absolute;top:50%;left:14px;width:1px;height:1px;margin:0;opacity:0;pointer-events:none}
+  .n-chip-l{display:flex;justify-content:space-between;gap:12px;width:100%;padding:13px 14px;border-top:1px solid var(--n-rule);color:var(--n-ink);font-size:1rem;line-height:1.35;cursor:pointer;transition:background .18s ease,color .18s ease}
+  .n-chip:hover .n-chip-l{background:var(--n-paper)}
+  .n-chip input:checked + .n-chip-l{background:var(--n-evergreen);color:var(--n-white)}
+  .n-chip-n{color:var(--n-muted)}
+  .n-chip input:checked + .n-chip-l .n-chip-n{color:var(--n-gold-lt)}
+  .n-chip input:focus-visible + .n-chip-l{outline:2px solid var(--n-red);outline-offset:-4px}
   @media (max-width:900px){
   .n-dir,.n-pair{grid-template-columns:minmax(0,1fr)}
   .n-row{grid-template-columns:minmax(0,1fr)}
@@ -29,7 +35,8 @@ pageStyles: |
      business. Two columns of square tiles, one column on the narrowest
      phones, and every tile a 48px tap target. */
   .n-cats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;border-bottom:0}
-  button[data-chip]{align-items:center;min-height:48px;padding:10px 12px;font-size:.9375rem;border:1px solid var(--n-rule)}
+  .n-cats legend{grid-column:1/-1}
+  .n-chip-l{align-items:center;min-height:48px;padding:10px 12px;font-size:.9375rem;border:1px solid var(--n-rule)}
   }
 ---
 <section class="n-bg-white" aria-labelledby="title-h">
@@ -64,33 +71,39 @@ pageStyles: |
 <div class="n-rail"></div>
 <div class="n-dir" style="margin-top:clamp(24px,3vw,44px)">
 <div class="n-filters">
+{#- Without JavaScript this is an ordinary GET form; with it, the filters
+    apply as they change and the URL follows. One category at a time, so the
+    control is a radio group — the platform's own semantics for that. -#}
+<form data-dir-filters action="/eat-shop/" method="get" role="search" aria-label="Search and filter the directory">
 <label class="n-label n-label--quiet" for="dir-q" style="display:block">Search</label>
-<input id="dir-q" type="search" placeholder="Name, street or keyword" style="width:100%;margin-top:8px;padding:13px 14px;background:var(--n-white);border:2px solid var(--n-evergreen);font:inherit;font-size:1rem;color:var(--n-ink)">
-<div class="n-label n-label--quiet" style="margin-top:26px" id="cats-h">Categories</div>
-<div class="n-cats" role="group" aria-labelledby="cats-h">
+<input id="dir-q" name="q" type="search" placeholder="Name, street or keyword" autocomplete="off" style="width:100%;margin-top:8px;padding:13px 14px;background:var(--n-white);border:2px solid var(--n-evergreen);font:inherit;font-size:1rem;color:var(--n-ink)">
+<fieldset class="n-cats">
+<legend class="n-label n-label--quiet">Filter by category</legend>
 {%- for c in listings.categories %}
-<button type="button" data-chip="{{ c.value }}" aria-pressed="{{ 'true' if c.value == 'All' else 'false' }}">{{ c.label }} <span style="color:var(--n-muted)">{{ c.count }}</span></button>
+<label class="n-chip"><input type="radio" name="category" value="{{ c.slug }}"{% if c.slug == 'all' %} checked{% endif %}><span class="n-chip-l"><span data-chip-label>{{ c.label }}</span> <span class="n-chip-n">{{ c.count }}</span></span></label>
 {%- endfor %}
-</div>
+</fieldset>
+</form>
 <a class="n-btn n-btn--ghost" href="https://niwot.com/" rel="noopener" style="margin-top:22px;width:100%">Association directory &#8599;</a>
 </div>
 <div>
 <div class="n-shead n-shead-row" style="border-bottom-color:var(--n-evergreen)">
 <h2 class="n-h2" id="dir-h" data-dir-heading style="font-size:clamp(1.5rem,1.2rem + 1.2vw,2.25rem);color:var(--n-evergreen)">Local businesses</h2>
-<span aria-live="polite" class="n-label n-label--quiet" data-dir-count>{{ listings.entries.length }} listings</span>
+<span aria-live="polite" aria-atomic="true" class="n-label n-label--quiet" data-dir-count>{{ listings.entries.length }} listings</span>
 </div>
-<p class="n-small" style="margin:16px 0 0;max-width:74ch">Compiled from the Niwot Business Association directory, the Left Hand Valley Courier and each business&#8217;s own site, last checked {{ listings.verified }}. Phone numbers are not reproduced here because they change faster than anything else &#8212; each row links out for current hours and contact details. Businesses that keep no public listing will not appear; <a href="/plan-a-visit/#contact">send yours</a> and it goes in.</p>
-{#- Every listing ships in the HTML; filtering only hides rows. Phone numbers
-    are held with the Association rather than duplicated here, so each row
-    links there or to the business's own site. -#}
+<p class="n-small" style="margin:16px 0 0;max-width:74ch">A curated directory of Niwot businesses, checked against business-owned and community sources: each business&#8217;s own site, the Niwot Business Association directory and the Left Hand Valley Courier. <span data-dir-verified>{{ listings.verified.summary }}</span> Phone numbers are not reproduced here because they change faster than anything else &#8212; each row links out for current hours and contact details. A business that keeps no public listing will not appear; <a href="/plan-a-visit/#contact">send yours</a> and it goes in.</p>
+{#- Every published listing ships in the HTML; filtering only hides rows. -#}
 <ul data-dir-list style="list-style:none;margin:clamp(18px,2vw,28px) 0 0;padding:0">
 {%- for r in listings.entries %}
-<li class="n-row" data-listing data-name="{{ r.name }}" data-category="{{ r.category }}" data-note="{{ r.note }}" data-area="{{ r.area }}" data-address="{{ r.address }}">
+<li class="n-row" id="{{ r.slug }}" data-listing data-cat="{{ r.category }}" data-name="{{ r.name }}" data-category="{{ r.categoryLabel }}" data-note="{{ r.description }}" data-area="{{ r.area }}" data-address="{{ r.address }}">
 <div>
 <h3 class="n-h3" style="font-size:1.5rem;color:var(--n-evergreen)">{{ r.name }}</h3>
-<div class="n-label" style="margin-top:8px">{{ r.category }}</div>
-{%- if r.note %}
-<p class="n-body" style="margin:10px 0 0;max-width:58ch;font-size:.9375rem">{{ r.note }}</p>
+<div class="n-label" style="margin-top:8px">{{ r.categoryLabel }}{% if r.status == 'temporarily_closed' %} &#183; Temporarily closed{% endif %}</div>
+{%- if r.description %}
+<p class="n-body" style="margin:10px 0 0;max-width:58ch;font-size:.9375rem">{{ r.description }}</p>
+{%- endif %}
+{%- if r.publicNote %}
+<p class="n-small" style="margin:8px 0 0;max-width:58ch;font-size:.875rem">{{ r.publicNote }}</p>
 {%- endif %}
 </div>
 <div style="display:grid;gap:8px;align-content:start">
@@ -101,13 +114,14 @@ pageStyles: |
 <div class="n-small" style="font-size:.875rem">{{ r.area }}</div>
 {%- endif %}
 <a class="n-link" href="{{ r.href }}" rel="noopener" style="justify-self:start">{{ r.linkLabel }} &#8599;</a>
+<div class="n-small" style="font-size:.8125rem" data-verified="{{ r.verifiedAt }}">Checked {{ r.verifiedLabel }}</div>
 </div>
 </li>
 {%- endfor %}
 </ul>
 <div data-dir-empty hidden style="padding:clamp(24px,3vw,44px) 0">
-<p class="n-h3" style="max-width:52ch;color:var(--n-evergreen)">Nothing matches that search.</p>
-<p class="n-body" style="margin:16px 0 0;max-width:58ch">Try a different word, clear the category filter, or browse the full members&#8217; directory.</p>
+<p class="n-h3" style="max-width:52ch;color:var(--n-evergreen)">No matching businesses.</p>
+<p class="n-body" style="margin:16px 0 0;max-width:58ch">Try a different word, choose another category, or browse the full members&#8217; directory.</p>
 <div class="n-btns" style="margin-top:22px">
 <button class="n-btn n-btn--ghost" type="button" data-dir-clear style="cursor:pointer;font-family:inherit">Clear filters</button>
 <a class="n-btn n-btn--ghost" href="https://niwot.com/" rel="noopener">Association directory</a>
@@ -116,7 +130,7 @@ pageStyles: |
 <div class="n-g2" style="margin-top:clamp(32px,4vw,56px)">
 <div class="n-callout n-callout--paper">
 <div class="n-label">Own a business here?</div>
-<p class="n-body" style="margin:10px 0 0;font-size:.9375rem">Send your name, category, address, phone, website and hours and it goes into the directory.</p>
+<p class="n-body" style="margin:10px 0 0;font-size:.9375rem">Send your name, category, address, website and hours and it goes into the directory with the date it was checked.</p>
 <a class="n-link" href="/plan-a-visit/#contact" style="display:inline-block;margin-top:14px">Add a listing &#8594;</a>
 </div>
 <div class="n-callout n-callout--sky">

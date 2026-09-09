@@ -1,0 +1,15 @@
+---
+permalink: /robots.txt
+eleventyExcludeFromCollections: true
+---
+{%- if previewBuild %}
+# Preview deployment: not for indexing. The production site is {{ site.url }}.
+User-agent: *
+Disallow: /
+{%- else %}
+User-agent: *
+Allow: /
+Disallow: /api/
+
+Sitemap: {{ site.url }}/sitemap.xml
+{%- endif %}

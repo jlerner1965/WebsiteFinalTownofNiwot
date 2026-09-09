@@ -481,8 +481,9 @@ if (s.checked !== 'coffee-bakery' || s.heading !== labelOf('coffee-bakery') || (
   note(`eat-shop: ?category=coffee-bakery did not load the filtered state: ${JSON.stringify(s)}`);
 }
 if (s.count !== `${countOf('coffee-bakery')} listings`) note(`eat-shop: count label "${s.count}" for coffee-bakery`);
-await page.locator('#dir-h').scrollIntoViewIfNeeded();
-await page.evaluate(() => window.scrollBy(0, -90));
+/* Scroll so the filter rail and the first rows are in frame, instantly —
+   the page's smooth scrolling would otherwise still be moving. */
+await page.evaluate(() => window.scrollTo({ top: document.querySelector('#dir-h').getBoundingClientRect().top + window.scrollY - 110, behavior: 'instant' }));
 await page.waitForTimeout(150);
 await page.screenshot({ path: `${SHOTS}/eat-shop-filtered-desktop.png`, fullPage: false });
 
@@ -568,8 +569,7 @@ await isolate(fctx, []);
 const fp = await fctx.newPage();
 await fp.goto(BASE + '/eat-shop/?category=restaurants-bars', { waitUntil: 'load' });
 await fp.waitForTimeout(300);
-await fp.locator('fieldset.n-cats').scrollIntoViewIfNeeded();
-await fp.evaluate(() => window.scrollBy(0, -80));
+await fp.evaluate(() => window.scrollTo({ top: document.querySelector('fieldset.n-cats').getBoundingClientRect().top + window.scrollY - 90, behavior: 'instant' }));
 await fp.waitForTimeout(150);
 await fp.screenshot({ path: `${SHOTS}/eat-shop-filtered-mobile.png` });
 await fctx.close();

@@ -15,6 +15,7 @@ import { extname, join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import listings from './src/_data/listings.js';
 import events from './src/_data/events.js';
+import nav from './src/_data/nav.js';
 import { buildUpcoming, zonedParts } from './src/assets/js/calendar-core.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -862,7 +863,7 @@ const fallback = await np.evaluate(() => ({
   links: Array.from(document.querySelectorAll('.n-nav a')).filter((a) => a.getBoundingClientRect().height > 0).length,
   overflow: document.documentElement.scrollWidth > window.innerWidth + 1,
 }));
-if (fallback.nav === 'none' || fallback.burger !== 'none' || fallback.links < 7 || fallback.overflow) note(`mobile: no-script navigation fallback wrong: ${JSON.stringify(fallback)}`);
+if (fallback.nav === 'none' || fallback.burger !== 'none' || fallback.links < nav.length || fallback.overflow) note(`mobile: no-script navigation fallback wrong: ${JSON.stringify(fallback)}`);
 else console.log('✓ mobile: without JavaScript the navigation is shown in full');
 await nojs.close();
 

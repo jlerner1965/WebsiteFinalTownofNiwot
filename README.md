@@ -326,8 +326,8 @@ government seals, marketing text over photographs, pure black body text.
   own `aria-label` and a screen reader hears a single map. `verify.mjs`
   measures the rendered label size at eleven widths from 320 to 2560.
 - **Flipped Explore entries** are placed by explicit `grid-column`, never by
-  `order: -1` — `order` moves the figure into the 64px numeral track and
-  crushes the photo to 64px wide.
+  `order: -1` — the two tracks are unequal, and `order` moves the content
+  without moving the widths, so the photo lands in the narrow track.
 - **The masthead identifier wraps below 600px.** "Independent community
   guide" is wider than a phone can give it beside the menu button, so
   `guide.css` lets it take two lines there. Shortening it is not the fix; the

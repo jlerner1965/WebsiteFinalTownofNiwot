@@ -11,7 +11,11 @@ import path from 'node:path';
 import listings from '../src/_data/listings.js';
 import events from '../src/_data/events.js';
 import site from '../src/_data/site.js';
-import { buildUpcoming, expandEvents, instancesOn, dateLabel, parseIso, MONTHS } from '../src/assets/js/calendar-core.js';
+import services from '../src/_data/services.js';
+import organizations from '../src/_data/organizations.js';
+import election from '../src/_data/election.js';
+import corrections from '../src/_data/corrections.js';
+import { buildUpcoming, expandEvents, instancesOn, dateLabel, parseIso, monthDefault, MONTHS } from '../src/assets/js/calendar-core.js';
 import { HASHED_NAME } from '../lib/assets.js';
 
 const ROOT = path.resolve('_site');
@@ -208,6 +212,35 @@ test('the directory ItemList carries only active businesses with stable URLs and
   assert.equal(wheel.item.url, 'https://www.niwotwheelhouse.com/');
 });
 
+test('every directory row says where its link goes, and none calls the Association homepage "Hours & contact"', () => {
+  const html = read('/eat-shop/');
+  for (const row of listings.entries) {
+    const block = html.slice(html.indexOf(`id="${row.slug}"`));
+    const link = block.match(/<a class="n-link" href="([^"]+)" rel="noopener" style="justify-self:start">([^<]+)</);
+    assert.ok(link, `${row.slug} link`);
+    const [, href, label] = link;
+    assert.equal(href, row.href);
+    if (row.website) assert.equal(label.trim(), 'Website', row.slug);
+    else if (href === 'https://niwot.com/') assert.equal(label.trim(), 'Find in the Association directory', row.slug);
+    else if (href.startsWith('https://niwot.com/listing/')) assert.equal(label.trim(), 'Hours &amp; contact', row.slug);
+  }
+  const johns = listings.entries.find((e) => e.slug === 'johns-dry-cleaners');
+  assert.equal(johns.href, 'https://www.johnsdrycleaners.com/locations/');
+  assert.ok(!html.includes('/6964-n-79th-st/'));
+});
+
+test('the directory opens on its search, names the filter in force and keeps its policy note short', () => {
+  const html = read('/eat-shop/');
+  const search = html.indexOf('id="dir-q"');
+  const firstRow = html.indexOf('data-listing');
+  const photos = html.indexOf('class="n-pair"');
+  assert.ok(search > 0 && search < firstRow, 'search before the first listing');
+  assert.ok(photos > html.lastIndexOf('data-listing'), 'photographs after the listings');
+  assert.match(html, /<div class="n-active" data-dir-active hidden>/);
+  assert.match(html, /<details class="n-how">\s*<summary>How this directory is compiled<\/summary>/);
+  assert.ok(html.split('data-dir-clear').length >= 3, 'a reset in the strip and in the empty state');
+});
+
 test('the homepage category links open the matching filtered directory', () => {
   const html = read('/');
   const links = [...html.matchAll(/href="\/eat-shop\/\?category=([a-z-]+)"/g)].map((m) => m[1]);
@@ -238,12 +271,26 @@ test('event list, month calendar, detail panel and structured data agree', () =>
   assert.deepEqual(cellDays, monthDays, 'calendar cells match the records');
   assert.match(html, new RegExp(`data-cal-label[^>]*>${MONTHS[m - 1]} ${y}<`));
 
+  /* The rail belongs to the month on screen: its first day still ahead
+     with everything on it, or a note naming the month. */
   const detail = html.slice(html.indexOf('data-cal-detail'), html.indexOf('</aside>'));
-  const firstDay = instancesOn(events, expected[0].date);
-  for (const inst of firstDay) {
-    assert.ok(detail.includes(inst.event.name.replace(/&/g, '&amp;').replace(/'/g, '&#39;')) || detail.includes(inst.event.name), `detail shows ${inst.event.name}`);
+  const shown = monthDefault(events, y, m, now);
+  if (shown) {
+    for (const inst of shown.instances) {
+      assert.ok(detail.includes(inst.event.name.replace(/&/g, '&amp;').replace(/'/g, '&#39;')) || detail.includes(inst.event.name), `detail shows ${inst.event.name}`);
+    }
+    assert.ok(detail.includes(dateLabel(shown.instances[0], now)), 'detail date matches the shown day');
+    assert.match(html, new RegExp(`aria-pressed="true"[^>]*data-iso="${shown.date}"`), 'the shown day is marked in the grid');
+    if (shown.instances.length > 1) {
+      assert.ok(detail.includes(`${shown.instances.length} events`), 'a busy day lists its events');
+      assert.equal((detail.match(/class="n-daypick"/g) || []).length, shown.instances.length);
+      assert.ok(!detail.includes('<button'), 'the build writes the day list as text, not inert buttons');
+    }
+  } else {
+    assert.match(detail, new RegExp(`data-cal-empty="${MONTHS[m - 1]} ${y}"`), 'an empty month says so');
+    assert.ok(!html.includes('aria-pressed="true"'), 'nothing is marked in the grid');
+    if (expected.length) assert.ok(detail.includes(expected[0].event.name), 'the note points at the next confirmed date');
   }
-  assert.ok(detail.includes(dateLabel(expected[0], now)), 'detail date matches the card date');
 
   const graph = jsonLd(html).find((d) => d['@graph'])['@graph'];
   assert.deepEqual(
@@ -270,9 +317,102 @@ test('expected events are labelled, listed separately and kept out of structured
   assert.ok(!html.includes('2027-06-03'));
 });
 
-test('the homepage "Coming up" cards are the first three upcoming instances', () => {
+test('the homepage "Coming up" cards are the first three upcoming instances, each opening its own day and event', () => {
   const html = read('/');
   const now = buildClock(html);
   const cards = [...html.matchAll(/<article data-event-id="([^"]+)" data-event-date="([^"]+)"/g)].map((m) => m[1] + '@' + m[2]);
   assert.deepEqual(cards, buildUpcoming(events, now, 3).map((i) => i.key));
+  for (const inst of buildUpcoming(events, now, 3)) {
+    assert.ok(html.includes(`href="/events/?date=${inst.date}&amp;event=${encodeURIComponent(inst.id)}#cal-h"`), `${inst.id} deep link`);
+  }
+  assert.ok(!html.includes('href="/events/#cal-h"'), 'no card sends every reader to the same anchor');
+});
+
+test('the September 11 records carry hours and Enchanted Evening is a confirmed date', () => {
+  const byId = new Map(events.map((e) => [e.id, e]));
+  for (const id of ['second-friday-art-walk-2026-09-11', 'osmosis-opening-diane-pike-2026-09-11']) {
+    assert.equal(byId.get(id).startTime, '17:00', id);
+    assert.equal(byId.get(id).endTime, '21:00', id);
+  }
+  const enchanted = byId.get('enchanted-evening-2026');
+  assert.equal(enchanted.status, 'confirmed');
+  assert.equal(enchanted.startDate, '2026-11-27');
+  assert.equal(enchanted.startTime, '18:00');
+  const graph = jsonLd(read('/events/')).find((d) => d['@graph'])['@graph'];
+  const marked = graph.find((e) => e.name === 'Enchanted Evening');
+  assert.ok(marked && String(marked.startDate).startsWith('2026-11-27T18:00:00-07:00'), 'structured data agrees');
+  assert.equal(byId.get('rock-rails-2026').organizer.name, 'Niwot Cultural Arts Association');
+});
+
+/* ---- civic, privacy, community, corrections ---- */
+
+test('the election page puts the three voting tasks first, links the boundary to the FAQ and each measure to the ballot', () => {
+  const html = read('/civic/incorporation-election/');
+  const tasks = html.indexOf('id="tasks"');
+  const ballot = html.indexOf('id="ballot"');
+  assert.ok(tasks > 0 && tasks < ballot, 'tasks before the ballot');
+  assert.match(html, /Check the proposed boundary/);
+  assert.ok(html.includes('href="https://niwotelection.org/faq"'), 'boundary task goes to the FAQ');
+  assert.ok(!html.includes('Proposed boundary information'), 'no boundary link to the Commission homepage');
+  assert.equal((html.match(/>Official text </g) || []).length, election.questions.length + election.fiscal.length, 'an official-text link beside each measure');
+  assert.equal((html.match(/<a class="n-shift n-shift--sm" data-official/g) || []).length, election.official.length);
+  assert.equal(new Set(election.official.map((o) => o.href)).size, election.official.length, 'one link per destination');
+  for (const phrase of ['food for domestic consumption', 'January 1, 2028', 'Article X, Section 20', '2027 onward', 'depends on that tax being approved', 'formed only if incorporation is approved', 'census designated place']) {
+    assert.ok(html.includes(phrase), phrase);
+  }
+  assert.ok(!html.includes('statutory limit'));
+  assert.ok(!html.includes('Approval of one does not automatically decide another'));
+  /* The Commission's numbering renders only once it has been read from the certified ballot. */
+  for (const item of [...election.questions, ...election.fiscal]) {
+    if (!item.official) assert.ok(!/>(Question|Issue) \d</.test(html), 'no invented ballot numbering');
+  }
+  assert.ok(html.indexOf('id="changes"') > 0);
+  assert.equal((html.slice(html.indexOf('id="changes"')).match(/<dt class="n-label n-label--quiet" style="font-size:12px">/g) || []).length, corrections.filter((c) => c.page === '/civic/incorporation-election/').length);
+});
+
+test('the privacy page opens without contradicting its own sections, and names an editor route', () => {
+  const html = read('/privacy/');
+  /* The policy text itself; the dated change note below it quotes the old wording. */
+  const policy = html.slice(0, html.indexOf('data-corrections'));
+  assert.ok(!policy.includes('Nothing else on this site is collected about you'));
+  assert.ok(!policy.includes('passed to any other organization'));
+  assert.ok(html.includes('hosting and font providers also process'));
+  assert.ok(html.includes('other than the two providers named above'));
+  assert.match(html, /data-editor-contact/);
+  if (site.editor.email) {
+    assert.ok(html.includes(`mailto:${site.editor.email}`), 'the editor address is published');
+    assert.ok(read('/plan-a-visit/').includes('data-editor-email'), 'and listed beside the form');
+  } else {
+    assert.ok(html.includes('A direct editorial address will be published here'), 'the page says the form is the route');
+  }
+  assert.equal((html.match(/<h2 class="n-h3"/g) || []).length, 8, 'eight policy sections');
+});
+
+test('resident services link to the responsible page, not a homepage, and the organizations are split by kind', () => {
+  const html = read('/community/');
+  for (const s of services) {
+    assert.ok(html.includes(`href="${s.href}"`), s.service);
+    /* A single-purpose district's front page is its service page; the county's is not. */
+    if (s.href.includes('bouldercounty.gov')) assert.ok(!/^https?:\/\/[^/]+\/?$/.test(s.href), `${s.service} links to the county homepage`);
+  }
+  assert.ok(services.some((s) => s.who === 'Niwot Sanitation District'));
+  assert.equal(organizations.filter((o) => o.kind === 'community').length, 4);
+  assert.equal(organizations.filter((o) => o.kind === 'public').length, 2);
+  for (const name of ['Niwot Cultural Arts Association', 'Niwot Historical Society', 'Niwot Community Association', 'Niwot Local Improvement District']) assert.ok(html.includes(name), name);
+  assert.ok(!/the market\b/.test(html), 'no unsourced market');
+  assert.ok(!html.includes('Ask a neighbor'));
+});
+
+test('the corrections log is published in full on Our Story and per page elsewhere', () => {
+  const story = read('/our-story/');
+  for (const c of corrections) assert.ok(story.includes(c.summary.replace(/&/g, '&amp;').replace(/'/g, '&#39;')) || story.includes(c.summary), c.page);
+  assert.ok(corrections.every((c) => /^\d{4}-\d{2}-\d{2}$/.test(c.date) && c.page.startsWith('/') && c.summary.length > 20));
+  assert.ok(story.includes('href="https://niwothistoricalsociety.org/history/"'), 'timeline sources are links');
+  assert.ok(!story.includes('county records'), 'no generic source labels');
+  for (const url of new Set(corrections.map((c) => c.page))) {
+    if (url === '/our-story/') continue;
+    const html = read(url);
+    const own = corrections.filter((c) => c.page === url);
+    assert.equal((html.match(/<dl data-corrections/g) || []).length, own.length ? 1 : 0, url);
+  }
 });

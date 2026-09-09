@@ -10,6 +10,7 @@ ogImageAlt: The Niwot Tribune false-front building on Second Avenue
 pageStyles: |
   .n-srow{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1fr) minmax(130px,auto);gap:12px 28px;align-items:baseline;padding:16px 0;border-bottom:1px solid var(--n-rule)}
   .n-orow{display:grid;grid-template-columns:minmax(0,1fr) minmax(140px,auto);gap:16px 28px;align-items:start;padding:24px 0;border-bottom:1px solid rgba(36,72,58,.22)}
+  .n-toc{display:flex;flex-wrap:wrap;gap:8px 22px;list-style:none;margin:16px 0 0;padding:0}
   /* Both lists stack at the same width. Left in two columns on a phone, the
      140px reserved for "Visit site" leaves about 150px for the body copy,
      which reads four words to a line. */
@@ -22,7 +23,16 @@ pageStyles: |
 <div class="n-label">Community</div>
 <h1 class="n-display" id="title-h" style="margin-top:14px;font-size:clamp(2.5rem,1.8rem + 3.4vw,5rem);line-height:.96;max-width:17ch;color:var(--n-evergreen)">No town hall, so neighbors run it</h1>
 </div>
+<div>
 <p class="n-lead" style="margin:0;max-width:50ch">Almost everything that happens in Niwot is organized by residents through local groups, and almost every public service comes from somewhere else. Both lists are below.</p>
+<nav aria-label="On this page">
+<ul class="n-toc">
+<li><a class="n-link" href="#orgs">Community groups</a></li>
+<li><a class="n-link" href="#public">Public bodies</a></li>
+<li><a class="n-link" href="#resources">Resident resources</a></li>
+</ul>
+</nav>
+</div>
 </div>
 </div>
 </section>
@@ -32,12 +42,13 @@ pageStyles: |
 <div class="n-shead n-shead-row" style="border-bottom-color:var(--n-evergreen)">
 <div>
 <div class="n-label">Who organizes what</div>
-<h2 class="n-h2" id="orgs-h" style="margin-top:12px;color:var(--n-evergreen)">Community organizations</h2>
+<h2 class="n-h2" id="orgs-h" style="margin-top:12px;color:var(--n-evergreen)">Community groups</h2>
 </div>
 <a class="n-link" href="/plan-a-visit/#contact">Add your organization <span aria-hidden="true">&#8594;</span></a>
 </div>
-<ul style="list-style:none;margin:clamp(22px,2.6vw,36px) 0 0;padding:0">
-{%- for o in organizations %}
+<p class="n-body" style="margin:clamp(18px,2vw,28px) 0 0;max-width:72ch">Volunteer and membership organizations. Each line says what the group actually runs, so you know which one to approach for what.</p>
+<ul data-orgs-community style="list-style:none;margin:clamp(14px,1.6vw,22px) 0 0;padding:0">
+{%- for o in organizations %}{% if o.kind == 'community' %}
 <li class="n-orow">
 <div>
 <h3 class="n-h3" style="font-size:1.5rem;color:var(--n-evergreen)">{{ o.name }}</h3>
@@ -46,7 +57,21 @@ pageStyles: |
 </div>
 <a class="n-link" href="{{ o.href }}" rel="noopener" style="white-space:nowrap">Visit site <span aria-hidden="true">&#8599;</span></a>
 </li>
-{%- endfor %}
+{%- endif %}{% endfor %}
+</ul>
+<h2 class="n-h2" id="public" style="margin-top:clamp(36px,4.5vw,64px);font-size:clamp(1.5rem,1.2rem + 1.2vw,2.25rem);color:var(--n-evergreen)">Public bodies with a Niwot remit</h2>
+<p class="n-body" style="margin:14px 0 0;max-width:72ch">Public administration, not clubs: each is part of, or appointed through, government, and is approached as such.</p>
+<ul data-orgs-public style="list-style:none;margin:clamp(14px,1.6vw,22px) 0 0;padding:0">
+{%- for o in organizations %}{% if o.kind == 'public' %}
+<li class="n-orow">
+<div>
+<h3 class="n-h3" style="font-size:1.5rem;color:var(--n-evergreen)">{{ o.name }}</h3>
+<p class="n-body" style="margin:12px 0 0;max-width:64ch;font-size:.9375rem">{{ o.body }}</p>
+<div class="n-label n-label--quiet" style="margin-top:12px;font-size:12px">Runs: {{ o.runs }}</div>
+</div>
+<a class="n-link" href="{{ o.href }}" rel="noopener" style="white-space:nowrap">Visit site <span aria-hidden="true">&#8599;</span></a>
+</li>
+{%- endif %}{% endfor %}
 </ul>
 </div>
 </section>
@@ -56,7 +81,7 @@ pageStyles: |
 <div class="n-shead">
 <div class="n-label">Resident resources</div>
 <h2 class="n-h2" id="res-h" style="color:var(--n-evergreen)">Who to contact for what</h2>
-<p class="n-body" style="margin:0;max-width:74ch">Niwot is unincorporated, so there is no town hall. Services come from Boulder County, the special districts and a water company. Each row names the body responsible and links to its own site.</p>
+<p class="n-body" style="margin:0;max-width:74ch">Niwot is unincorporated, so there is no town hall. Services come from Boulder County, the special districts and a water district. Each row names the body responsible and links to the page of its site that handles that service.</p>
 </div>
 <dl style="margin:clamp(22px,2.6vw,36px) 0 0">
 {%- for s in services %}
@@ -71,8 +96,9 @@ pageStyles: |
 </dl>
 <div class="n-g2" style="margin-top:clamp(30px,3.6vw,52px)">
 <div class="n-callout n-callout--paper">
-<div class="n-label">Arranged privately</div>
-<p class="n-body" style="margin:10px 0 0;font-size:.9375rem">Waste and recycling collection is arranged household by household in the unincorporated area, and sanitation service varies by address. Ask a neighbor which provider covers your street.</p>
+<div class="n-label">Sewer and trash</div>
+<p class="n-body" style="margin:10px 0 0;font-size:.9375rem">Sewer service comes from the Niwot Sanitation District where its lines run &#8212; a special district with its own elected board, funded by its service fees, covering about seven square miles around Niwot &#8212; and from septic systems elsewhere. Check your address with the district. Trash and recycling collection is arranged household by household with a private hauler; there is no municipal service.</p>
+<a class="n-link" href="https://niwotsd.colorado.gov/" rel="noopener" style="display:inline-block;margin-top:12px">Niwot Sanitation District <span aria-hidden="true">&#8599;</span></a>
 </div>
 <div class="n-callout n-callout--sky">
 <div class="n-label" style="color:var(--n-sky-ink)">In an emergency</div>
@@ -80,6 +106,19 @@ pageStyles: |
 <a class="n-link" href="https://bouldercounty.gov/sheriff/" rel="noopener" style="display:inline-block;margin-top:12px">Sheriff&#8217;s office <span aria-hidden="true">&#8599;</span></a>
 </div>
 </div>
+{%- if pageCorrections.length %}
+<div style="margin-top:clamp(30px,3.6vw,52px);max-width:72ch">
+<div class="n-label n-label--quiet">Changes to this page</div>
+<dl data-corrections style="margin:8px 0 0">
+{%- for c in pageCorrections %}
+<div style="padding:12px 0;border-top:1px solid var(--n-rule)">
+<dt class="n-label n-label--quiet" style="font-size:12px">{{ c.date | humanDate }}</dt>
+<dd class="n-body" style="margin:6px 0 0;font-size:.9375rem">{{ c.summary }}</dd>
+</div>
+{%- endfor %}
+</dl>
+</div>
+{%- endif %}
 </div>
 </section>
 
@@ -91,7 +130,7 @@ pageStyles: |
 <h2 class="n-h2" id="get-h" style="margin-top:12px;max-width:16ch">The quickest way in is to turn up</h2>
 </div>
 <div>
-<p class="n-body" style="margin:0;max-width:60ch;color:var(--n-paper)">The events calendar lists what has been published, and the Business Association runs much of the public program &#8212; the summer concerts beside the caboose, the market, and the seasonal gatherings in Old Town.</p>
+<p class="n-body" style="margin:0;max-width:60ch;color:var(--n-paper)">The events calendar lists what has been published: the summer concerts beside the caboose, the art walks, and the seasonal gatherings in Old Town. Most of them are run by the groups above, and every one of them is looking for hands.</p>
 <div class="n-btns" style="margin-top:24px">
 <a class="n-btn" href="/events/">See what&#8217;s on</a>
 <a class="n-btn n-btn--ghost" href="/civic/incorporation-election/">Civic information</a>

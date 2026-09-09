@@ -1,6 +1,7 @@
 import Image from '@11ty/eleventy-img';
 import path from 'node:path';
 import { buildAssetManifest, writeAssets, assertHashedOnly } from './lib/assets.js';
+import { humanDate } from './lib/directory.js';
 
 /* Responsive photographs.
 
@@ -124,6 +125,10 @@ export default function (eleventyConfig) {
   );
 
   eleventyConfig.addFilter('isoDate', (value) => new Date(value).toISOString().slice(0, 10));
+
+  /* "September 9, 2026" from "2026-09-09", without a timezone conversion,
+     so the date on the page is the date in the data file. */
+  eleventyConfig.addFilter('humanDate', humanDate);
 
   return {
     dir: {

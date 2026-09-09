@@ -216,6 +216,24 @@ export function buildCells(events, year, month1, sel) {
   return cells;
 }
 
+/* The instances in one month, in calendar order. */
+export function instancesInMonth(events, year, month1) {
+  const prefix = isoDate(year, month1, 1).slice(0, 7);
+  return expandEvents(events).filter((i) => i.date.slice(0, 7) === prefix).sort(compareInstances);
+}
+
+/* What the detail rail shows for a month when no day has been chosen: the
+   first day of that month with an instance still ahead, and everything on
+   that day. Null when the month holds nothing ahead — the rail then says so
+   (renderMonthEmpty) instead of showing a day from some other month, so the
+   heading and the detail can never disagree. */
+export function monthDefault(events, year, month1, now) {
+  const ahead = instancesInMonth(events, year, month1).filter((i) => !isPast(i, now));
+  if (!ahead.length) return null;
+  const date = ahead[0].date;
+  return { date, day: parseIso(date).d, instances: instancesOn(events, date) };
+}
+
 /* ---- labels ---- */
 
 export function statusLabel(status) {
@@ -276,9 +294,12 @@ export function detailFor(inst, now) {
   if (ev.accessibility) rows.push({ k: 'Access', v: ev.accessibility });
   rows.push({ k: 'Checked', v: humanDate(ev.verifiedAt) + ' against the organizer’s page' });
   return {
+    id: ev.id,
+    date: inst.date,
     when: dateLabel(inst, now),
     name: ev.name,
     status: ev.status,
+    time: time ? time.replace(', ' + TZ_LABEL, '') : null,
     rows,
     note: ev.description,
     href: ev.sourceUrl,
@@ -334,22 +355,76 @@ function renderRows(rows) {
     .join('');
 }
 
-/* One or more instances on the same day. */
-export function renderDetail(details) {
+function renderOne(detail, inList) {
+  return (
+    '<div' + (inList ? ' style="margin-top:20px;padding-top:18px;border-top:2px solid var(--n-evergreen)"' : '') + '>' +
+    '<div class="n-label">' + escapeHtml(detail.when) + '</div>' +
+    '<h4 class="n-h3" style="margin-top:12px;font-size:clamp(1.375rem,1.15rem + .8vw,1.875rem);color:var(--n-evergreen)">' + escapeHtml(detail.name) + '</h4>' +
+    (detail.status !== 'confirmed' ? '<div class="n-label" style="margin-top:8px">' + escapeHtml(statusLabel(detail.status)) + '</div>' : '') +
+    '<dl style="margin:20px 0 0">' + renderRows(detail.rows) + '</dl>' +
+    (detail.note ? '<p class="n-body" style="margin:18px 0 0;font-size:.9375rem">' + escapeHtml(detail.note) + '</p>' : '') +
+    '<a class="n-btn" href="' + escapeHtml(detail.href) + '" rel="noopener" style="margin-top:20px">' + escapeHtml(detail.linkLabel) + ' <span aria-hidden="true">&#8599;</span></a>' +
+    '</div>'
+  );
+}
+
+/* One or more instances on the same day. A day with several shows a compact
+   list of them and one expanded; `pick` names the expanded one by event id
+   (the first, otherwise). In the browser the list items are buttons that
+   re-render with another one expanded; the build writes them as plain text,
+   since without a script there is nothing for a button to do. */
+export function renderDetail(details, options = {}) {
   const list = Array.isArray(details) ? details : [details];
-  return list
-    .map(
-      (detail, i) =>
-        '<div' + (i ? ' style="margin-top:28px;padding-top:20px;border-top:2px solid var(--n-evergreen)"' : '') + '>' +
-        '<div class="n-label">' + escapeHtml(detail.when) + '</div>' +
-        '<h4 class="n-h3" style="margin-top:12px;font-size:clamp(1.375rem,1.15rem + .8vw,1.875rem);color:var(--n-evergreen)">' + escapeHtml(detail.name) + '</h4>' +
-        (detail.status !== 'confirmed' ? '<div class="n-label" style="margin-top:8px">' + escapeHtml(statusLabel(detail.status)) + '</div>' : '') +
-        '<dl style="margin:20px 0 0">' + renderRows(detail.rows) + '</dl>' +
-        (detail.note ? '<p class="n-body" style="margin:18px 0 0;font-size:.9375rem">' + escapeHtml(detail.note) + '</p>' : '') +
-        '<a class="n-btn" href="' + escapeHtml(detail.href) + '" rel="noopener" style="margin-top:20px">' + escapeHtml(detail.linkLabel) + ' <span aria-hidden="true">&#8599;</span></a>' +
-        '</div>'
-    )
+  const interactive = options.interactive === true;
+  let picked = options.pick ? list.findIndex((d) => d.id === options.pick) : -1;
+  if (picked < 0) picked = 0;
+  if (list.length < 2) return renderOne(list[0], false);
+  const items = list
+    .map((d, i) => {
+      const inner =
+        '<span>' + escapeHtml(d.name) + '</span>' +
+        '<span class="n-small" style="font-size:.8125rem;white-space:nowrap">' + escapeHtml(d.time || 'Time not published') + '</span>';
+      const current = i === picked;
+      return (
+        '<li>' +
+        (interactive
+          ? '<button type="button" class="n-daypick" data-pick="' + escapeHtml(d.id) + '" aria-pressed="' + (current ? 'true' : 'false') + '">' + inner + '</button>'
+          : '<span class="n-daypick"' + (current ? ' aria-current="true"' : '') + '>' + inner + '</span>') +
+        '</li>'
+      );
+    })
     .join('');
+  return (
+    '<div data-day-list>' +
+    '<div class="n-label">' + escapeHtml(list[0].when) + ' &#183; ' + list.length + ' events</div>' +
+    '<ol class="n-daylist" style="list-style:none;margin:12px 0 0;padding:0">' + items + '</ol>' +
+    '</div>' +
+    renderOne(list[picked], true)
+  );
+}
+
+/* The rail for a month with nothing ahead in it. It says which month, and
+   points at the next confirmed date elsewhere on the calendar, so a reader
+   who has paged forward is never shown a day from a different month. */
+export function renderMonthEmpty(year, month1, now, next, hadAny) {
+  const month = MONTHS[month1 - 1] + ' ' + year;
+  const lead = hadAny
+    ? 'The ' + month + ' dates on this calendar have already taken place.'
+    : 'Nothing is confirmed for ' + month + ' yet.';
+  const pointer = next
+    ? ' The next confirmed date is ' + escapeHtml(dateLabel(next, now)) + ' &#8212; ' + escapeHtml(next.event.name) + '; it is in the <a href="#next-h">Coming up</a> list.'
+    : ' The annual events still waiting on a date are listed under <a href="#expected">Expected</a>.';
+  return (
+    '<p class="n-body" data-cal-empty="' + escapeHtml(month) + '" style="margin:0">' +
+    escapeHtml(lead) + pointer +
+    ' The organizers’ own pages carry anything announced since this page was checked.</p>'
+  );
+}
+
+/* The events page opened on one occurrence: the calendar reads `date` and
+   `event` from the query string and selects that day and that event. */
+export function eventUrl(inst) {
+  return '/events/?date=' + inst.date + '&event=' + encodeURIComponent(inst.id) + '#cal-h';
 }
 
 /* `mode: 'link'` sends the reader to the events page (used on the homepage).
@@ -372,9 +447,9 @@ export function renderUpcoming(list, mode, now) {
       const ev = inst.event;
       const action =
         mode === 'select'
-          ? '<button type="button" class="n-jump" data-jump="' + inst.date + '"' +
+          ? '<button type="button" class="n-jump" data-jump="' + inst.date + '" data-jump-event="' + escapeHtml(inst.id) + '"' +
             ' style="margin-top:auto;align-self:start;background:none;border:0;border-bottom:1px solid currentColor;color:var(--n-sky-ink);font:inherit;font-size:13px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer">View details <span aria-hidden="true">&#8594;</span></button>'
-          : '<a class="n-link" href="/events/#cal-h" style="margin-top:auto;align-self:start">View details <span aria-hidden="true">&#8594;</span></a>';
+          : '<a class="n-link" href="' + escapeHtml(eventUrl(inst)) + '" style="margin-top:auto;align-self:start">View details <span aria-hidden="true">&#8594;</span></a>';
       const time = timeLabel(inst);
       return (
         '<article data-event-id="' + escapeHtml(inst.id) + '" data-event-date="' + inst.date + '" data-event-status="' + escapeHtml(ev.status) + '" style="display:flex;flex-direction:column;gap:10px;padding-top:16px;border-top:3px solid var(--n-red)">' +

@@ -1,4 +1,8 @@
 <header class="n-head">
+{#- Without a script the menu button could not open anything, so the list
+    shows in full instead. guide.css carries the same rule under the
+    `scripting` media feature; this covers browsers that lack it. -#}
+<noscript><style>@media (max-width:1080px){.n-burger{display:none}.n-nav{display:flex;position:static;padding:0 0 12px;border-bottom:0}}</style></noscript>
 <div class="n-wrap n-head-in">
 <a class="n-mark" href="/">NIWOT<small>Independent community guide</small></a>
 <button class="n-burger" type="button" aria-expanded="false" aria-controls="n-menu" aria-label="Open menu"><span></span><span></span><span></span></button>

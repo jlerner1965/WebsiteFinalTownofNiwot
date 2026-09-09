@@ -22,8 +22,10 @@ npm run links      # every external link in _site/ answers 2xx (needs an open ne
 node lighthouse.mjs   # Lighthouse against _site/, six pages on desktop
 ```
 
-The September 2026 pre-launch audit — what was checked, what was fixed and
-what still needs a person — is in `PRE-LAUNCH-AUDIT.md`.
+The two September 2026 pre-launch audits — what was checked, what was fixed
+and what still needs a person — are recorded in `PRE-LAUNCH-AUDIT.md`. The
+second, an external review of the live site, is the source of most of the
+"needs a human" items below.
 
 Output is plain static HTML in `_site/`. It needs no server-side runtime and
 deploys to any static host; the one function (`api/contact.js`) is a Vercel
@@ -88,8 +90,9 @@ template except the prose that belongs to a specific page.
 | `organizations.js` | Community organizations |
 | `services.js` | Resident resources — which body handles what |
 | `eras.js` | The Our Story timeline, each entry with its source |
-| `election.js` | 2026 election: status, ballot questions, fiscal issues, official resources |
-| `eleventyComputed.js` | Per-page breadcrumbs, sitemap dates, preview-build flag |
+| `election.js` | 2026 election: voting tasks, status strip, plain-language summary, ballot questions, fiscal issues, official resources |
+| `corrections.js` | The dated corrections log: every change to a published fact, with the page it belongs to |
+| `eleventyComputed.js` | Per-page breadcrumbs, per-page corrections, sitemap dates, preview-build flag |
 
 Point these at a CMS and the templates take the new data unchanged. Data
 files export a single default value — Eleventy 3 treats a file with named
@@ -121,7 +124,15 @@ validation rules and the freshness threshold are documented at the top of
 
 Phone numbers are deliberately not reproduced. They change more often than
 anything else on a listing, so every row links out — to the business's own
-site, or to its Association listing.
+site ("Website"), to its Association listing page ("Hours & contact"), or,
+for the few businesses that could only be traced to the Association's
+directory as a whole, to that directory with a label that says the reader
+will have to search there (`linkLabelFor` in `lib/directory.js`). A row
+never calls a homepage "Hours & contact".
+
+The page opens on the search box and the category filter; the photographs
+sit below the listings. Whenever a category or search is in force, a strip
+under the heading names it with a reset beside it.
 
 Category filtering is a native radio group (one category at a time) and the
 chosen category lives in the URL: `/eat-shop/?category=restaurants-bars`.
@@ -159,6 +170,16 @@ There is no scraper. When an organizer publishes dates, add or update the
 record and cite the page. Past instances leave the upcoming list on their own
 — on Niwot's clock, at their end time — and the last four are kept under
 "Recently held".
+
+The month view's detail rail always belongs to the month on screen. With no
+day chosen it shows that month's first day still ahead, with everything on
+that day; a month with nothing ahead says so and points at the next confirmed
+date rather than showing a day from another month. A day with several events
+lists them compactly and expands one. The chosen day and event live in the
+URL — `/events/?date=2026-09-11&event=second-friday-art-walk-2026-09-11` —
+which is how the homepage cards open one occurrence directly (`eventUrl` in
+`calendar-core.js`). A deep link to a day with nothing on it opens the
+calendar as usual.
 
 `src/assets/js/calendar-core.js` holds the occurrence logic and the markup for
 the month grid, the detail rail and the "Coming up" strips. It is imported
@@ -237,7 +258,12 @@ itself; sending a correction never signs anyone up.
 The privacy page (`/privacy/`) is linked beside both forms and in the footer.
 It names the providers involved (Vercel, Resend, Google Fonts), retention,
 unsubscribe behaviour and how to ask for access or deletion. Update its
-effective date when it changes.
+effective date when it changes, and add an entry to `corrections.js`.
+
+`site.editor` in `site.js` holds the responsible editor's name and a
+monitored address. Both are `null` until the owner supplies them; once set
+they are published on the privacy page, beside the submission form and in
+the footer, and the tests check that they are.
 
 ### Titles, breadcrumbs and structured data
 
@@ -338,6 +364,16 @@ government seals, marketing text over photographs, pure black body text.
 - **Flipped Explore entries** are placed by explicit `grid-column`, never by
   `order: -1` — `order` moves the figure into the 64px numeral track and
   crushes the photo to 64px wide.
+- **Focus rings on the dark grounds are gold, not red.** `guide.css` sets
+  the ring to `--n-gold-lt` inside `.n-head`, `.n-foot`, `.n-bg-green` and
+  on the skip link, and the directory's checked chip does the same; the
+  civic page uses `--n-sky-lt` there. Caboose red measures 2.0:1 on
+  evergreen, and `verify.mjs` fails any ring under 3:1.
+- **The menu is shown in full without JavaScript.** `guide.css` (under
+  `@media (scripting: none)`) and a `<noscript>` rule in the header partial
+  both show the list and hide the button. Do not hide the nav with
+  JavaScript instead: `guide.js` is deferred, and the menu would flash
+  open on every load.
 - **The masthead identifier wraps below 600px.** "Independent community
   guide" is wider than a phone can give it beside the menu button, so
   `guide.css` lets it take two lines there. Shortening it is not the fix; the
@@ -378,7 +414,8 @@ of the design, not a content-team preference:
    the official text controls, and the page says so beside its title.
 4. **Dated verification.** "Last verified" stamps on civic content and on
    every directory row; "Checked" dates on every event; corrections published
-   with their date and what changed.
+   with their date and what changed, in `src/_data/corrections.js`, which
+   Our Story renders in full and each page renders for itself.
 5. **The disclaimer appears on every page.** It is rendered from `site.js` by
    the shared layout so it cannot be dropped from one page by accident, and
    the masthead on every page reads "Independent community guide".
@@ -395,10 +432,14 @@ of the design, not a content-team preference:
   not a claim of completeness — the Association directory was searched rather
   than crawled, and a sole trader with no public listing will not be in it —
   and the page says so.
-- **Events** — six confirmed 2026 records read from niwot.com, niwotarts.org
-  and the Courier, and four expected annual events without dates. The Niwot
+- **Events** — seven confirmed 2026 records read from niwot.com, niwotarts.org
+  and the Courier, and three expected annual events without dates. The Niwot
   Farmers Market is not listed: no organizer source for a current season was
-  found.
+  found. The hours on the September 11 records and the Enchanted Evening date
+  were taken from the external audit's reading of the organizers' dated
+  listings on September 9, 2026 (the audit sandbox could not open those
+  sites); each record's description says where its time comes from and the
+  editor should confirm them on the cited pages before promotion.
 
 Both accept real data through `src/_data/` with no template changes.
 
@@ -434,9 +475,38 @@ Both accept real data through `src/_data/` with no template changes.
    [niwotelection.org](https://niwotelection.org/) after the September 11, 2026
    printer's-proof review, and update `verified` in `src/_data/site.js`.
 8. **Re-check the directory rows** flagged in their `editorialNote` — The
-   Wheel House's address and La Musette's status in particular — on the next
-   pass, and keep `verifiedAt` current; the build fails on a row older than
-   180 days.
+   Wheel House's address, La Musette's status and John's Dry Cleaners'
+   address page in particular — on the next pass, and keep `verifiedAt`
+   current; the build fails on a row older than 180 days.
+9. **Name an editor and a monitored address** in `site.editor`
+   (`src/_data/site.js`). Until then the privacy page says the form is the
+   only route, which the external audit flagged: if the form fails, the
+   fallback contacts beside it are public bodies that do not run this site.
+10. **Confirm the four event readings on the organizers' pages** — the
+    Art Walk and Osmosis opening hours, the awards night start (the
+    organizer's page says 6pm, the Business Association's calendar 5:30pm)
+    and Enchanted Evening's date and hours — and prove the forms deliver:
+    one real submission and one signup into an inbox you control, one
+    unsubscribe processed. Neither could be done from the audit sandbox.
+11. **Add the Commission's own labels** ("Question 1", "Issue 1") to
+    `election.js` once they have been read from the certified ballot after
+    the September 11 proof review. The field exists (`official`) and the
+    template renders it; it is unset because this guide's order is not
+    evidence of the ballot's.
+12. **Ground the Plan a Visit schematic** in real geography before it is
+    used anywhere else: a local should confirm which side of the tracks
+    Whistle Stop Park and the Diagonal sit on, and add Niwot Road, 79th
+    Street, named parking and a north arrow. Public restrooms and designated
+    accessible parking are not claimed on the page until someone has
+    confirmed them on the ground.
+13. **Decide on the Chief Niwot material.** The external audit calls its
+    absence from Our Story a material gap; it was removed at the client's
+    request in the previous PR. The section and its sources are in git
+    history (commit `e499beb^`) if the decision is reversed.
+14. **Run a real-device pass** at 320, 390, 768 and 1366 CSS pixels,
+    portrait and landscape, at 200% zoom, on an iPhone with Safari and an
+    Android phone with Chrome. The browser checks cover those widths in
+    Chromium only.
 
 ### Submitting the sitemap
 
@@ -481,18 +551,29 @@ counts, and an axe-core audit against the WCAG 2.2 AA rule set.
 
 Then the targeted checks: HTTP 404 with the custom noindex page for an unknown
 route; the skip link first in tab order, visible when focused and working;
-a visible focus ring on every tabbed control; the hero photo aligned to the
+a visible focus ring on every tabbed control, and on six pages every
+control's ring measured against the ground behind it at 3:1 or better (the
+external audit found the red ring at 2.0:1 on the evergreen bands, so those
+grounds use the light gold); the hero photo aligned to the
 content edge at 390 through 2560; the Explore flip not crushing its photo;
 anchor clearance under the sticky header; the schematic map's labels at
 eleven widths; the directory's radio semantics, URL-driven filtering, Back and
 Forward restoration, combined search-and-category state, zero-result
 announcement with hidden rows out of the accessibility tree, and native
 arrow-key behaviour; the calendar opening on the current Niwot month with
-cards matching the records and "View details" selecting the day; form labels,
+cards matching the records, the detail rail following the month through
+three presses of Next (a day from the month shown, or a note naming the
+month), "View details" selecting the day and the event, a homepage-style
+deep link opening its day and event, the day list on a busy day switching the
+expanded event, and the homepage cards carrying those deep links; the
+directory opening on its search with the photographs below the listings and
+the active-filter strip naming the filter and clearing it; form labels,
 `autocomplete="email"`, the honeypot hidden and out of tab order, and a
 mocked server error tied to its field and announced (nothing is ever sent);
-the mobile menu's `aria-expanded`, Tab into the menu, Escape-to-close and
-focus restoration; no sticky rails in stacked layouts; calendar day labels
+the mobile menu's `aria-expanded` and accessible name, Tab into the menu,
+Escape-to-close with the name reset and focus restored, and the navigation
+shown in full when JavaScript is off; no sticky rails in stacked layouts;
+calendar day labels
 inside their cells; and every standalone control at least 40px tall.
 
 `widths.mjs` is a slower companion: it sweeps 26 viewport widths from 320 to

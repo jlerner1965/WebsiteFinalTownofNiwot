@@ -18,6 +18,16 @@ export default {
   reviewed: 'September 2026',
   verified: 'September 8, 2026',
 
+  /* The responsible editor and a monitored address. As soon as both are
+     set here they are published on the privacy page, beside the submission
+     form and in the footer; until then those pages say the form is the only
+     route. Publishing an address nobody reads would be worse than none, so
+     they stay null until the owner has confirmed one. */
+  editor: {
+    name: null,
+    email: null,
+  },
+
   /* Required verbatim in the footer of every page. This is an editorial rule,
      not a preference: the site publishes civic information during a live
      election and must not be mistaken for an official source. */

@@ -18,7 +18,9 @@ const heading = document.querySelector('[data-dir-heading]');
 const resultLabel = document.querySelector('[data-dir-count]');
 const emptyState = document.querySelector('[data-dir-empty]');
 const list = document.querySelector('[data-dir-list]');
-const clearButton = document.querySelector('[data-dir-clear]');
+const clearButtons = Array.from(document.querySelectorAll('[data-dir-clear]'));
+const activeStrip = document.querySelector('[data-dir-active]');
+const activeLabel = document.querySelector('[data-dir-active-label]');
 
 if (rows.length && search && radios.length) {
   const known = new Map(radios.map((r) => [r.value, r.closest('label').querySelector('[data-chip-label]').textContent.trim()]));
@@ -76,6 +78,14 @@ if (rows.length && search && radios.length) {
     }
     if (list) list.hidden = shown === 0;
     if (emptyState) emptyState.hidden = shown !== 0;
+
+    /* Whenever a filter is in force, say which, with a reset beside it, so
+       a reader who arrived on a filtered URL can see why the list is short. */
+    const parts = [];
+    if (state.cat !== 'all') parts.push(known.get(state.cat));
+    if (query) parts.push('“' + state.q.trim() + '”');
+    if (activeStrip) activeStrip.hidden = parts.length === 0;
+    if (activeLabel) activeLabel.textContent = parts.join(' · ');
   }
 
   function sync(fromUrl) {
@@ -105,8 +115,8 @@ if (rows.length && search && radios.length) {
     });
   });
 
-  if (clearButton) {
-    clearButton.addEventListener('click', () => {
+  clearButtons.forEach((button) => {
+    button.addEventListener('click', () => {
       state.cat = 'all';
       state.q = '';
       search.value = '';
@@ -114,7 +124,7 @@ if (rows.length && search && radios.length) {
       apply();
       search.focus();
     });
-  }
+  });
 
   window.addEventListener('popstate', () => sync(readUrl()));
 

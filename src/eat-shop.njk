@@ -25,6 +25,17 @@ pageStyles: |
   .n-chip-n{color:var(--n-muted)}
   .n-chip input:checked + .n-chip-l .n-chip-n{color:var(--n-gold-lt)}
   .n-chip input:focus-visible + .n-chip-l{outline:2px solid var(--n-red);outline-offset:-4px}
+  /* The ring sits inside the chip, so on the checked chip's evergreen ground
+     it has to be the light gold, as on the site's other dark grounds. */
+  .n-chip input:checked:focus-visible + .n-chip-l{outline-color:var(--n-gold-lt)}
+  /* The strip that names the filter in force, with its reset. */
+  .n-active{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;margin-top:14px;padding:10px 14px;background:var(--n-paper);border-left:3px solid var(--n-red)}
+  .n-dir-clear{padding:0;background:none;border:0;border-bottom:1px solid currentColor;color:var(--n-sky-ink);font:inherit;font-size:13px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer}
+  .n-dir-clear:hover{color:var(--n-red-ink)}
+  .n-how{margin-top:12px;max-width:74ch}
+  .n-how summary{cursor:pointer;color:var(--n-sky-ink);font-size:13px;letter-spacing:.08em;text-transform:uppercase}
+  .n-how summary:hover{color:var(--n-red-ink)}
+  @media (max-width:1080px){.n-dir-clear,.n-how summary{padding-top:12px;padding-bottom:12px}}
   @media (max-width:900px){
   .n-dir,.n-pair{grid-template-columns:minmax(0,1fr)}
   .n-row{grid-template-columns:minmax(0,1fr)}
@@ -39,37 +50,25 @@ pageStyles: |
   .n-chip-l{align-items:center;min-height:48px;padding:10px 12px;font-size:.9375rem;border:1px solid var(--n-rule)}
   }
 ---
+{#- The title, then the search and the categories straight under it: the
+    function people came for opens the page. The photographs sit below the
+    listings. -#}
 <section class="n-bg-white" aria-labelledby="title-h">
-<div class="n-wrap" style="padding-top:clamp(28px,4vw,60px);padding-bottom:clamp(20px,2.5vw,36px)">
+<div class="n-wrap" style="padding-top:clamp(28px,4vw,60px);padding-bottom:clamp(16px,2vw,28px)">
 <div class="n-g2-wide" style="align-items:end">
 <div>
 <div class="n-label">Eat &amp; shop</div>
 <h1 class="n-display" id="title-h" style="margin-top:14px;font-size:clamp(2.5rem,1.8rem + 3.4vw,5rem);line-height:.96;max-width:16ch;color:var(--n-evergreen)">Two blocks, and most of it independent</h1>
 </div>
-<p class="n-lead" style="margin:0;max-width:50ch">Kitchens, coffee, groceries and shops, nearly all of it within a short walk of Second Avenue &#8212; plus the practices, trades and offices on the roads around the two blocks.</p>
+<p class="n-lead" style="margin:0;max-width:50ch">Kitchens, coffee, groceries and shops within a short walk of Second Avenue, plus the practices, trades and offices on the roads around the two blocks.</p>
 </div>
 </div>
 </section>
 
-<section class="n-bg-white" aria-label="Photographs of the commercial blocks">
-<div class="n-wrap" style="padding-bottom:clamp(28px,3.5vw,52px)">
-<div class="n-pair">
-<figure style="margin:0">
-{% photo "second-avenue-patios.jpg", "Brick and clapboard buildings on the 300 block of Second Avenue with hanging baskets and patio tables out front", "(max-width: 900px) calc(100vw - 40px), (max-width: 1440px) 46vw, 636px", "display:block;width:100%;height:clamp(200px,23vw,330px);object-fit:cover;object-position:center 56%", true %}
-<figcaption class="n-cap">Second Avenue, the 300 block</figcaption>
-</figure>
-<figure style="margin:0">
-{% photo "niwot-tavern-patios.jpg", "Umbrella-shaded patios outside the Niwot Tavern and Raza Fresa Mexican Kitchen with two bronze bear sculptures on the corner", "(max-width: 900px) calc(100vw - 40px), (max-width: 1440px) 46vw, 636px", "display:block;width:100%;height:clamp(200px,23vw,330px);object-fit:cover;object-position:center 52%", true %}
-<figcaption class="n-cap">Cottonwood Square, bear sculptures on the corner</figcaption>
-</figure>
-</div>
-</div>
-</section>
-
-<section class="n-bg-white" aria-labelledby="dir-h" style="padding-bottom:clamp(44px,6vw,104px)">
+<section class="n-bg-white" aria-labelledby="dir-h" style="padding-bottom:clamp(36px,5vw,72px)">
 <div class="n-wrap">
 <div class="n-rail"></div>
-<div class="n-dir" style="margin-top:clamp(24px,3vw,44px)">
+<div class="n-dir" style="margin-top:clamp(20px,2.5vw,36px)">
 <div class="n-filters">
 {#- Without JavaScript this is an ordinary GET form; with it, the filters
     apply as they change and the URL follows. One category at a time, so the
@@ -91,7 +90,15 @@ pageStyles: |
 <h2 class="n-h2" id="dir-h" data-dir-heading style="font-size:clamp(1.5rem,1.2rem + 1.2vw,2.25rem);color:var(--n-evergreen)">Local businesses</h2>
 <span aria-live="polite" aria-atomic="true" class="n-label n-label--quiet" data-dir-count>{{ listings.entries.length }} listings</span>
 </div>
-<p class="n-small" style="margin:16px 0 0;max-width:74ch">A curated directory of Niwot businesses, checked against business-owned and community sources: each business&#8217;s own site, the Niwot Business Association directory and the Left Hand Valley Courier. <span data-dir-verified>{{ listings.verified.summary }}</span> Phone numbers are not reproduced here because they change faster than anything else &#8212; each row links out for current hours and contact details. A business that keeps no public listing will not appear; <a href="/plan-a-visit/#contact">send yours</a> and it goes in.</p>
+<div class="n-active" data-dir-active hidden>
+<span class="n-small" style="color:var(--n-ink)">Showing <strong data-dir-active-label style="font-weight:600"></strong></span>
+<button type="button" class="n-dir-clear" data-dir-clear>Clear filters</button>
+</div>
+<p class="n-small" style="margin:14px 0 0;max-width:74ch">Each row is checked against the business&#8217;s own site, the Niwot Business Association directory or the Left Hand Valley Courier, and shows the date it was checked. <span data-dir-verified>{{ listings.verified.summary }}</span></p>
+<details class="n-how">
+<summary>How this directory is compiled</summary>
+<p class="n-small" style="margin:10px 0 0">A curated directory of Niwot businesses, checked against business-owned and community sources: each business&#8217;s own site, the Niwot Business Association directory and the Left Hand Valley Courier. Phone numbers are not reproduced here because they change faster than anything else &#8212; each row links out for current hours and contact details, and says where the link goes. A business that keeps no public listing will not appear; <a href="/plan-a-visit/#contact">send yours</a> and it goes in.</p>
+</details>
 {#- Every published listing ships in the HTML; filtering only hides rows. -#}
 <ul data-dir-list style="list-style:none;margin:clamp(18px,2vw,28px) 0 0;padding:0">
 {%- for r in listings.entries %}
@@ -139,7 +146,35 @@ pageStyles: |
 <a class="n-link" href="/plan-a-visit/" style="display:inline-block;margin-top:14px">Plan a visit <span aria-hidden="true">&#8594;</span></a>
 </div>
 </div>
+{%- if pageCorrections.length %}
+<div data-corrections-block style="margin-top:clamp(28px,3.5vw,48px);max-width:72ch">
+<div class="n-label n-label--quiet">Changes to this page</div>
+<dl data-corrections style="margin:8px 0 0">
+{%- for c in pageCorrections %}
+<div style="padding:12px 0;border-top:1px solid var(--n-rule)">
+<dt class="n-label n-label--quiet" style="font-size:12px">{{ c.date | humanDate }}</dt>
+<dd class="n-body" style="margin:6px 0 0;font-size:.9375rem">{{ c.summary }}</dd>
 </div>
+{%- endfor %}
+</dl>
+</div>
+{%- endif %}
+</div>
+</div>
+</div>
+</section>
+
+<section class="n-bg-paper" aria-label="Photographs of the commercial blocks" style="padding-block:clamp(28px,3.5vw,52px);border-top:1px solid var(--n-rule)">
+<div class="n-wrap">
+<div class="n-pair">
+<figure style="margin:0">
+{% photo "second-avenue-patios.jpg", "Brick and clapboard buildings on the 300 block of Second Avenue with hanging baskets and patio tables out front", "(max-width: 900px) calc(100vw - 40px), (max-width: 1440px) 46vw, 636px", "display:block;width:100%;height:clamp(180px,20vw,280px);object-fit:cover;object-position:center 56%" %}
+<figcaption class="n-cap">Second Avenue, the 300 block</figcaption>
+</figure>
+<figure style="margin:0">
+{% photo "niwot-tavern-patios.jpg", "Umbrella-shaded patios outside the Niwot Tavern and Raza Fresa Mexican Kitchen with two bronze bear sculptures on the corner", "(max-width: 900px) calc(100vw - 40px), (max-width: 1440px) 46vw, 636px", "display:block;width:100%;height:clamp(180px,20vw,280px);object-fit:cover;object-position:center 52%" %}
+<figcaption class="n-cap">Cottonwood Square, bear sculptures on the corner</figcaption>
+</figure>
 </div>
 </div>
 </section>

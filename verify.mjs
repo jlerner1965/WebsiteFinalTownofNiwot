@@ -76,7 +76,7 @@ const COUNTS = {
   events: { '[data-upcoming] article': upcoming.length, '[data-day]': 28, '[data-expected] li': expectedCount },
   community: { '.n-srow': 9, '#orgs li': 2 },
   'our-story': { '.n-era': 4 },
-  civic: { '.n-status > div': 6, '#ballot li': 3, '#fiscal li': 5, '#after li': 5, '#official a.n-btn': 7 },
+  civic: { '.n-status > div': 6, '#ballot li': 3, '#fiscal li': 5, '#after li': 5, '#official a[data-official]': 7 },
   'plan-a-visit': { '.n-g4 > div': 4, 'form [name]': 6, 'form a[href="/privacy/"]': 1 },
   privacy: { 'main h2': 7 },
   404: { '.n-lost a': 6 },

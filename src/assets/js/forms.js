@@ -7,7 +7,9 @@
 
    Outcome text comes from the endpoint, not from here — so a form that
    cannot deliver says exactly why rather than showing a thank-you the
-   server never earned. */
+   server never earned. Field errors from the endpoint are written under the
+   field they belong to and tied to it with aria-describedby, and a summary
+   is announced. */
 
 function outcomeNode(form, selector, text) {
   const template = form.parentElement.querySelector(selector);
@@ -35,6 +37,47 @@ function setBusy(form, busy) {
   button.textContent = busy ? 'Sending…' : button.dataset.label || button.textContent;
 }
 
+function clearFieldErrors(form) {
+  form.querySelectorAll('[data-field-error]').forEach((node) => node.remove());
+  form.querySelectorAll('[aria-invalid="true"]').forEach((field) => {
+    field.removeAttribute('aria-invalid');
+    field.removeAttribute('aria-describedby');
+  });
+}
+
+function showFieldErrors(form, errors) {
+  let first = null;
+  errors.forEach((error) => {
+    const field = error.field && form.querySelector('[name="' + error.field + '"]');
+    if (!field || !field.id) return;
+    const id = field.id + '-error';
+    const note = document.createElement('p');
+    note.id = id;
+    note.setAttribute('data-field-error', '');
+    note.className = 'n-small';
+    note.style.cssText = 'margin:8px 0 0;max-width:48ch;color:var(--n-gold-lt)';
+    note.textContent = error.message;
+    field.setAttribute('aria-invalid', 'true');
+    field.setAttribute('aria-describedby', id);
+    field.insertAdjacentElement('afterend', note);
+    if (!first) first = field;
+  });
+  return first;
+}
+
+function summary(form, text) {
+  let error = form.querySelector('[data-form-error]');
+  if (!error) {
+    error = document.createElement('p');
+    error.setAttribute('data-form-error', '');
+    error.setAttribute('role', 'alert');
+    error.className = 'n-small';
+    error.style.cssText = 'margin:14px 0 0;max-width:48ch;color:var(--n-gold-lt)';
+    form.appendChild(error);
+  }
+  error.textContent = text;
+}
+
 document.querySelectorAll('[data-contact-form]').forEach((form) => {
   const button = form.querySelector('button[type="submit"]');
   if (button) button.dataset.label = button.textContent;
@@ -44,6 +87,9 @@ document.querySelectorAll('[data-contact-form]').forEach((form) => {
     if (!form.reportValidity()) return;
 
     event.preventDefault();
+    clearFieldErrors(form);
+    const old = form.querySelector('[data-form-error]');
+    if (old) old.remove();
     setBusy(form, true);
 
     let payload;
@@ -77,15 +123,8 @@ document.querySelectorAll('[data-contact-form]').forEach((form) => {
       return;
     }
 
-    let error = form.querySelector('[data-form-error]');
-    if (!error) {
-      error = document.createElement('p');
-      error.setAttribute('data-form-error', '');
-      error.setAttribute('role', 'alert');
-      error.className = 'n-small';
-      error.style.cssText = 'margin:14px 0 0;max-width:48ch;color:var(--n-gold-lt)';
-      form.appendChild(error);
-    }
-    error.textContent = payload ? payload.message : 'That could not be sent.';
+    summary(form, payload ? payload.message : 'That could not be sent.');
+    const first = Array.isArray(payload && payload.errors) ? showFieldErrors(form, payload.errors) : null;
+    if (first) first.focus();
   });
 });

@@ -1,44 +1,12 @@
-/* Event structured data for the next occurrences.
+/* Event structured data for the unexpired, dated instances.
 
-   These are generated from recurring-series definitions, so `startDate` is the
-   computed date and the description repeats what the page says: the organizer
-   sets the confirmed dates. No time of day is asserted, because none is
-   confirmed. */
-import series from './_data/series.js';
-import { buildUpcoming } from './assets/js/calendar-core.js';
-
-function today() {
-  const iso = process.env.NIWOT_TODAY;
-  if (iso) {
-    const parsed = new Date(iso);
-    if (!Number.isNaN(parsed.getTime())) return parsed;
-  }
-  return new Date();
-}
+   Built by lib/events.js from the same records the page renders, so the
+   list, the calendar, the detail rail and the markup agree by construction.
+   Tentative ("expected") records are excluded there and cannot be marked
+   scheduled. */
+import { buildNow, eventsJsonLd } from '../lib/events.js';
+import events from './_data/events.js';
 
 export default {
-  structuredData: {
-    '@context': 'https://schema.org',
-    '@graph': buildUpcoming(series, today(), 3).map((occ) => ({
-      '@type': 'Event',
-      name: occ.series.name,
-      startDate: new Date(occ.date.getTime() - occ.date.getTimezoneOffset() * 60000)
-        .toISOString()
-        .slice(0, 10),
-      eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
-      eventStatus: 'https://schema.org/EventScheduled',
-      description: occ.series.note,
-      location: {
-        '@type': 'Place',
-        name: occ.series.place,
-        address: {
-          '@type': 'PostalAddress',
-          addressLocality: 'Niwot',
-          addressRegion: 'CO',
-          addressCountry: 'US',
-        },
-      },
-      organizer: { '@type': 'Organization', name: occ.series.host, url: occ.series.href },
-    })),
-  },
+  eventsJsonLd: eventsJsonLd(events, buildNow()),
 };

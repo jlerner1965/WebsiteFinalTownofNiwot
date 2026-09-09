@@ -1,6 +1,7 @@
 ---
 layout: layouts/base.njk
 title: Plan a Visit
+seoTitle: "Visit Niwot, Colorado: Directions, Parking & Accessibility"
 description: How to get to Niwot, Colorado, where to park, how to get around on foot and by bike, what can be confirmed about accessibility, and how to send a correction.
 navKey: visit
 permalink: /plan-a-visit/
@@ -323,15 +324,16 @@ direct:
 </div>
 <div>
 <label class="n-label" for="v-src" style="color:var(--n-gold-lt)">Link to your own page or the source</label>
-<input class="n-field" id="v-src" name="source" type="url" placeholder="https://">
+<input class="n-field" id="v-src" name="source" type="url" inputmode="url" autocomplete="url" placeholder="https://">
 </div>
 <div>
 <label class="n-label" for="v-email" style="color:var(--n-gold-lt)">Your email</label>
-<input class="n-field" id="v-email" name="email" type="email" placeholder="Used only to reply about this submission">
+<input class="n-field" id="v-email" name="email" type="email" autocomplete="email" inputmode="email" placeholder="Used only to reply about this submission">
 </div>
 <div style="display:flex;flex-wrap:wrap;gap:16px;align-items:center">
 <button class="n-btn" type="submit" style="cursor:pointer;font-family:inherit">Send submission</button>
 </div>
+<p class="n-small" style="margin:0;max-width:54ch;color:var(--n-sage-lt)">Your email is optional and is used only to reply about this submission. Sending a correction does not sign you up for notices. <a href="/privacy/">How submissions are handled</a>.</p>
 </form>
 <template data-form-success><p role="status" style="margin:24px 0 0;padding-top:16px;border-top:3px solid var(--n-gold-lt);max-width:54ch;color:var(--n-white)">Thank you &#8212; your submission has been sent. It goes in with the date it was verified.</p></template>
 <template data-form-unavailable><p role="status" data-message style="margin:24px 0 0;padding-top:16px;border-top:3px solid var(--n-gold-lt);max-width:54ch;color:var(--n-white)">This form is not connected yet, so nothing was sent. Use the direct contacts listed beside this form &#8212; each one is the responsible body for its subject.</p></template>

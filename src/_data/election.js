@@ -53,17 +53,14 @@ const status = [
 
 const questions = [
   {
-    n: '01',
     title: 'Whether Niwot should incorporate as a municipality',
     body: 'Whether the territory described in the petition should be organized as a Colorado municipality. Approval would begin the creation of a town government; rejection would leave the area unincorporated and administered by Boulder County.',
   },
   {
-    n: '02',
     title: 'Whether to form a nine-member home rule charter commission',
     body: 'Whether a commission of nine members should be formed to draft a proposed home rule charter for the new municipality. The commission drafts a charter; it does not adopt one.',
   },
   {
-    n: '03',
     title: 'Which nine charter commission candidates should be elected',
     body: 'Which candidates would serve on that charter commission if the applicable measures are approved. Candidates appear on the same ballot.',
   },
@@ -71,27 +68,22 @@ const questions = [
 
 const fiscal = [
   {
-    n: '01',
     title: 'A 2.5% sales and use tax beginning January 1, 2028',
     body: 'Authorization to levy a municipal sales and use tax at 2.5%, with collection beginning January 1, 2028.',
   },
   {
-    n: '02',
     title: 'A four-mill property tax',
     body: 'Authorization to levy a property tax of four mills within the municipal boundary.',
   },
   {
-    n: '03',
     title: 'A 3% marijuana special sales tax',
     body: 'Authorization to levy a special sales tax of 3% on marijuana sales.',
   },
   {
-    n: '04',
     title: 'Authorization to retain and spend collected revenue',
     body: 'Authorization for the municipality to retain and spend the revenue it collects, rather than refunding amounts above a statutory limit.',
   },
   {
-    n: '05',
     title: 'Authorization for up to $15 million in debt for transportation infrastructure',
     body: 'Authorization to incur up to $15 million in debt for transportation infrastructure, with a maximum total repayment cost of up to $28 million.',
   },

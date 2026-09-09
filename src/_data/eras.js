@@ -3,12 +3,6 @@
    unverified the entry says so rather than carrying an approximation. */
 export default [
   {
-    when: 'Before 1875',
-    source: 'Arapaho and Cheyenne nations; NPS; History Colorado',
-    title: 'Arapaho presence, and Chief Niwot',
-    body: 'The Southern Arapaho and Cheyenne lived in and moved through the Left Hand valley and the plains below the foothills. Chief Niwot, for whom the community is named, led a band of Southern Arapaho in this area. He was wounded at the Sand Creek Massacre in November 1864 and died soon after. This entry is a pointer, not a summary: read the nations’ own accounts and the National Park Service record.',
-  },
-  {
     when: '1870s',
     source: 'Recorded town plat; county records',
     title: 'The railroad, and the 1875 town plat',
